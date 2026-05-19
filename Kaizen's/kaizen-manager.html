@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Short Kaizen — Zubex</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f2f5fb;--surface:#fff;--surface2:#f0f3f9;
+  --border:#d8dde8;--blue:#1a3fa8;--blue2:#2a57d6;--blue-l:#e8eeff;--blue-m:#b8c8f8;
+  --green:#00c47a;--green-d:#009960;--warn:#f59e0b;--danger:#ef4444;
+  --text:#0f1629;--text2:#4a5470;--text3:#8892aa;
+  --r:10px;--r2:14px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
+
+/* HEADER */
+.hdr{background:var(--blue);height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.hdr-brand{display:flex;align-items:center;gap:10px}
+.hdr-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff}
+.hdr-tag{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:2px 10px;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:1px}
+.hdr-nav{display:flex;gap:4px}
+.nb{background:none;border:none;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 14px;border-radius:8px;cursor:pointer;transition:.2s}
+.nb:hover,.nb.on{background:rgba(255,255,255,.15);color:#fff}
+
+/* BODY */
+.wrap{max-width:960px;margin:0 auto;padding:2rem 1.5rem}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:.9rem 1rem}
+.sc .sl{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
+.sc .sv{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--text)}
+.sc.bl{border-top:3px solid var(--blue2)}
+.sc.or{border-top:3px solid var(--warn)}
+.sc.pu{border-top:3px solid #7c3aed}
+.sc.re{border-top:3px solid var(--danger)}
+.sc.gr{border-top:3px solid var(--green)}
+
+/* LIST */
+.lhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.ptitle{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:4px}
+.psub{color:var(--text2);font-size:13px;margin-bottom:1.5rem}
+
+.kcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1rem 1.25rem;margin-bottom:8px;display:flex;align-items:center;gap:1rem;cursor:pointer;transition:.2s}
+.kcard:hover{border-color:var(--blue-m);box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.knum{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--blue2);background:var(--blue-l);padding:4px 10px;border-radius:6px;white-space:nowrap}
+.kinfo{flex:1;min-width:0}
+.kname{font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.kmeta{font-size:11px;color:var(--text3)}
+.kbadge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.b1{background:#fff7e6;color:#b45309}
+.b2{background:#e8eeff;color:#1a3fa8}
+.b3{background:#fdf4ff;color:#7e22ce}
+.b4{background:#fdf2f8;color:#9d174d}
+.b5{background:#f0fdf4;color:#166534}
+.b6{background:#fef2f2;color:#991b1b}
+
+/* FORM CARD */
+.fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05)}
+.fhdr{background:var(--blue);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.ftitle{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#fff}
+.fstep{font-size:12px;color:rgba(255,255,255,.7)}
+.fbody{padding:1.5rem}
+.ffoot{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-top:1px solid var(--border);background:var(--surface2)}
+
+/* SECTION PROGRESS */
+.sprg{display:flex;gap:6px;margin-bottom:1.5rem;align-items:center}
+.sps{flex:1;height:5px;border-radius:5px;background:var(--border);position:relative}
+.sps.done{background:var(--green)}
+.sps.active{background:var(--blue2)}
+.sps.locked{background:#fcd34d}
+.sps.rejected{background:var(--danger)}
+.spl{font-size:11px;color:var(--text3);white-space:nowrap}
+
+/* SECTION HEADER */
+.stitle{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1rem;padding-bottom:8px;border-bottom:2px solid var(--blue-l);display:flex;align-items:center;gap:8px}
+.snum{background:var(--blue2);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.divider{height:1px;background:var(--border);margin:1.25rem 0}
+
+/* FORM ELEMENTS */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem}
+label{font-size:12px;font-weight:500;color:var(--text2)}
+input[type=text],input[type=date],input[type=number],input[type=email],select,textarea{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);transition:.2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue2);background:#fff}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+
+/* PHOTO */
+.pup{border:2px dashed var(--border);border-radius:var(--r);padding:1rem;text-align:center;cursor:pointer;transition:.2s;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--surface2);position:relative}
+.pup:hover{border-color:var(--blue2);background:var(--blue-l)}
+.pup-icon{font-size:28px;color:var(--text3)}
+.pup-lbl{font-size:12px;font-weight:500;color:var(--text2)}
+.pup-sub{font-size:11px;color:var(--text3)}
+.pimg{width:100%;height:130px;object-fit:cover;border-radius:8px;display:none}
+
+/* CHECKBOXES */
+.chkgrp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.chi{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:.2s}
+.chi:hover,.chi.on{border-color:var(--blue2);background:var(--blue-l)}
+.chi input{width:16px;height:16px;accent-color:var(--blue2);cursor:pointer;flex-shrink:0}
+.chi span{font-size:13px}
+
+/* BUTTONS */
+.btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:9px 20px;border-radius:8px;cursor:pointer;transition:.2s;border:none;display:inline-flex;align-items:center;gap:6px}
+.btn-blue{background:var(--blue2);color:#fff}.btn-blue:hover{background:var(--blue)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:var(--green-d)}
+.btn-out{background:none;border:1px solid var(--border);color:var(--text2)}.btn-out:hover{border-color:var(--text2);color:var(--text)}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#dc2626}
+.btn-warn{background:var(--warn);color:#fff}.btn-warn:hover{background:#d97706}
+.btn-pdf{background:#7c3aed;color:#fff}.btn-pdf:hover{background:#6d28d9}
+
+/* ALERTS */
+.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:1rem;line-height:1.5}
+.al-info{background:var(--blue-l);color:var(--blue);border:1px solid var(--blue-m)}
+.al-warn{background:#fff7e6;color:#92400e;border:1px solid #fcd34d}
+.al-success{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0}
+.al-danger{background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+
+/* FIRMA */
+.firmabox{border:2px solid var(--border);border-radius:var(--r);padding:1.25rem;background:var(--surface2);margin-bottom:1rem}
+.frmhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.frmtitle{font-size:13px;font-weight:600}
+.bp{background:#fff7e6;color:#b45309;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.bok{background:#f0fdf4;color:#166534;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+canvas.sigpad{border:1px solid var(--border);border-radius:8px;background:#fff;cursor:crosshair;touch-action:none;display:block;width:100%;height:100px}
+.sigact{display:flex;gap:8px;margin-top:8px}
+.btn-clr{background:none;border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer}
+.btn-clr:hover{border-color:var(--danger);color:var(--danger)}
+
+/* EMAIL MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal{background:#fff;border-radius:var(--r2);width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-hdr{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px}
+.modal-body{padding:1.5rem}
+.modal-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;background:var(--surface2)}
+.email-preview{background:#f8faff;border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:13px}
+.ep-hdr{background:var(--blue);padding:.75rem 1rem;color:#fff;font-size:12px}
+.ep-meta{padding:.75rem 1rem;border-bottom:1px solid var(--border);background:#fff}
+.ep-meta div{font-size:12px;color:var(--text2);margin-bottom:3px}
+.ep-meta strong{color:var(--text)}
+.ep-body{padding:1rem;background:#fff;line-height:1.7;color:var(--text)}
+.ep-btns{display:flex;gap:10px;padding:1rem;background:#f0f3f9;border-top:1px solid var(--border)}
+.ep-btn-a{flex:1;text-align:center;padding:10px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:none;background:var(--green);color:#fff}
+.ep-btn-r{flex:1;text-align:center;padding:10px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:none;background:var(--danger);color:#fff}
+
+/* REJECTED STATE */
+.rejected-card{text-align:center;padding:2.5rem;background:#fef2f2;border:2px solid #fecaca;border-radius:var(--r2);margin-bottom:1rem}
+.rejected-icon{font-size:48px;margin-bottom:12px}
+.rejected-title{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--danger);margin-bottom:8px}
+.rejected-reason{font-size:13px;color:#7f1d1d;background:#fff;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-top:12px;text-align:left}
+
+/* DETAIL */
+.dl{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.dv{font-size:14px;color:var(--text)}
+.det-img{width:100%;border-radius:8px;border:1px solid var(--border);max-height:200px;object-fit:cover}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:999;transform:translateY(80px);opacity:0;transition:.3s;pointer-events:none;color:#fff;background:var(--text)}
+.toast.show{transform:translateY(0);opacity:1}
+.tg{background:var(--green-d)}.tr{background:var(--danger)}.tw{background:var(--warn)}
+
+.view{display:none}.view.on{display:block}
+.empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <span class="hdr-logo">zubex</span>
+    <span class="hdr-tag">SK · SHORT KAIZEN</span>
+  </div>
+  <nav class="hdr-nav">
+    <button class="nb on" id="nb-dash">Dashboard</button>
+    <button class="nb" id="nb-new">+ Nueva Solicitud</button>
+  </nav>
+</header>
+
+<div class="wrap">
+
+  <!-- DASHBOARD -->
+  <div id="v-dash" class="view on">
+    <p class="ptitle">Gestión de Short Kaizens</p>
+    <p class="psub">Equipo Lean · Zubex</p>
+    <div class="stats">
+      <div class="sc bl"><div class="sl">Total</div><div class="sv" id="st0">0</div></div>
+      <div class="sc or"><div class="sl">Pend. Líder</div><div class="sv" id="st1">0</div></div>
+      <div class="sc pu"><div class="sl">En proceso</div><div class="sv" id="st2">0</div></div>
+      <div class="sc re"><div class="sl">Pend. Gerente</div><div class="sv" id="st3">0</div></div>
+      <div class="sc gr"><div class="sl">Cerrados</div><div class="sv" id="st4">0</div></div>
+    </div>
+    <div class="lhdr">
+      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Historial de solicitudes</span>
+      <button class="btn btn-blue" id="nb-new2">+ Nueva Solicitud</button>
+    </div>
+    <div id="klist"></div>
+  </div>
+
+  <!-- FORM VIEW -->
+  <div id="v-form" class="view">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem">
+      <button class="btn btn-out" onclick="goTo('dash')">← Volver</button>
+      <p class="ptitle" style="margin-bottom:0" id="form-title">Nueva Solicitud</p>
+    </div>
+    <!-- progress -->
+    <div class="sprg">
+      <div class="sps" id="pg0"></div>
+      <span class="spl">→</span>
+      <div class="sps" id="pg1"></div>
+      <span class="spl">→</span>
+      <div class="sps" id="pg2"></div>
+      <span class="spl">→</span>
+      <div class="sps" id="pg3"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:1.5rem;margin-top:-1rem">
+      <span style="font-size:11px;color:var(--text3)">Sección 1</span>
+      <span style="font-size:11px;color:var(--text3)">Aprobación Líder</span>
+      <span style="font-size:11px;color:var(--text3)">Sección 2</span>
+      <span style="font-size:11px;color:var(--text3)">Aprobación Gerente</span>
+    </div>
+    <div id="form-area"></div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div id="v-det" class="view">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem">
+      <button class="btn btn-out" onclick="goTo('dash')">← Volver</button>
+      <p class="ptitle" style="margin-bottom:0" id="det-title">Detalle</p>
+    </div>
+    <div id="det-body"></div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- MODAL EMAIL -->
+<div class="modal-bg" id="email-modal" style="display:none">
+  <div class="modal">
+    <div class="modal-hdr">
+      <span class="modal-title" id="em-title">Notificación de correo</span>
+      <button class="btn btn-out" style="padding:6px 12px" onclick="closeModal()">✕ Cerrar</button>
+    </div>
+    <div class="modal-body" id="em-body"></div>
+    <div class="modal-foot" id="em-foot"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const SK='zubex_sk_v4';
+let KZ=JSON.parse(localStorage.getItem(SK)||'[]');
+let fd={},curSection=0,editId=null;
+const sigD={};
+let pendingAction=null; // callback after modal action
+
+const STATUS={
+  s1:    ['b1','📝 Solicitud iniciada'],
+  pend_l:['b1','⏳ Esperando Líder'],
+  rej_l: ['b6','❌ Rechazado por Líder'],
+  s3:    ['b2','🔄 En proceso (Sección 2)'],
+  pend_g:['b4','⏳ Esperando Gerente'],
+  rej_g: ['b6','❌ Rechazado por Gerente'],
+  done:  ['b5','✅ Cerrado y aprobado'],
+};
+
+function save(){localStorage.setItem(SK,JSON.stringify(KZ));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+function toast(m,t=''){const el=document.getElementById('toast');el.textContent=m;el.className='toast show '+(t||'');setTimeout(()=>el.classList.remove('show'),3200);}
+function gv(id){const e=document.getElementById(id);return e?e.value:'';}
+
+function goTo(v){
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
+  document.getElementById('v-'+v).classList.add('on');
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  if(v==='dash'){document.getElementById('nb-dash').classList.add('on');renderDash();}
+  else if(v==='form'){document.getElementById('nb-new').classList.add('on');}
+}
+
+/* ═══════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════ */
+function renderDash(){
+  const t=KZ.length;
+  document.getElementById('st0').textContent=t;
+  document.getElementById('st1').textContent=KZ.filter(k=>k.status==='pend_l').length;
+  document.getElementById('st2').textContent=KZ.filter(k=>k.status==='s3').length;
+  document.getElementById('st3').textContent=KZ.filter(k=>k.status==='pend_g').length;
+  document.getElementById('st4').textContent=KZ.filter(k=>k.status==='done').length;
+  const el=document.getElementById('klist');
+  if(!t){el.innerHTML=`<div class="empty"><div style="font-size:48px">📋</div><div style="margin-top:12px">No hay solicitudes. Crea la primera.</div></div>`;return;}
+  el.innerHTML=KZ.slice().reverse().map(k=>{
+    const[cls,lbl]=STATUS[k.status]||['b1','—'];
+    return`<div class="kcard" onclick="showDet('${k.id}')">
+      <span class="knum">SK-${k.id.slice(-4).toUpperCase()}</span>
+      <div class="kinfo"><div class="kname">${k.donde||k.nombre||'Sin descripción'}</div><div class="kmeta">${k.nombre||''} · ${k.equipo||''} · ${k.fechaId||''}</div></div>
+      <span class="kbadge ${cls}">${lbl}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
+   PROGRESS BAR
+══════════════════════════════════════ */
+function renderProg(k){
+  // 0=s1, 1=pend_l/rej_l, 2=s3, 3=pend_g/rej_g/done
+  const map={s1:0,pend_l:1,rej_l:1,s3:2,pend_g:3,rej_g:3,done:3};
+  const cur=map[k?.status]??0;
+  for(let i=0;i<4;i++){
+    const el=document.getElementById('pg'+i);
+    const st=k?.status;
+    if(i<cur) el.className='sps done';
+    else if(i===cur){
+      if(st==='rej_l'&&i===1) el.className='sps rejected';
+      else if(st==='rej_g'&&i===3) el.className='sps rejected';
+      else if(st==='pend_l'||st==='pend_g') el.className='sps locked';
+      else el.className='sps active';
+    }
+    else el.className='sps';
+  }
+}
+
+/* ═══════════════════════════════════════
+   START NEW
+══════════════════════════════════════ */
+function startNew(){
+  editId=null;
+  fd={id:uid(),status:'s1'};
+  curSection=1;
+  document.getElementById('form-title').textContent='Nueva Solicitud de Kaizen';
+  goTo('form');
+  renderSection();
+}
+
+function renderSection(){
+  renderProg(fd);
+  const el=document.getElementById('form-area');
+  if(curSection===1) renderSec1(el);
+  else if(curSection==='pend_l') renderSecPendL(el);
+  else if(curSection==='rej_l') renderRejected(el,'líder',fd.rechazoLiderRazon);
+  else if(curSection===3) renderSec3(el);
+  else if(curSection==='pend_g') renderSecPendG(el);
+  else if(curSection==='rej_g') renderRejected(el,'gerente',fd.rechazoGerenteRazon);
+  else if(curSection==='done') renderDone(el);
+}
+
+/* ═══════════════════════════════════════
+   SECCIÓN 1 – Identificación + ANTES
+══════════════════════════════════════ */
+function renderSec1(el){
+  el.innerHTML=`
+  <div class="fcard">
+    <div class="fhdr">
+      <span class="ftitle">Sección 1 · Solicitud e Identificación</span>
+      <span class="fstep" style="background:rgba(255,255,255,.15);padding:3px 10px;border-radius:6px;font-weight:600">SK</span>
+    </div>
+    <div class="fbody">
+      <div class="stitle"><span class="snum">A</span>Datos del solicitante</div>
+      <div class="fg2">
+        <div class="fg"><label>Nómina *</label><input type="text" id="f-nom" value="${fd.nomina||''}"></div>
+        <div class="fg"><label>Nombre completo *</label><input type="text" id="f-nom2" value="${fd.nombre||''}"></div>
+        <div class="fg"><label>Equipo Lean</label><input type="text" id="f-eq" value="${fd.equipo||''}"></div>
+        <div class="fg"><label>Fecha de identificación</label><input type="date" id="f-fi" value="${fd.fechaId||new Date().toISOString().slice(0,10)}"></div>
+      </div>
+      <div class="fg"><label>¿Quién identificó la mejora? *</label><input type="text" id="f-quien" placeholder="Nombre(s)" value="${fd.quien||''}"></div>
+      <div class="fg"><label>¿Dónde se aplicará? *</label><input type="text" id="f-donde" placeholder="Área, línea, proceso..." value="${fd.donde||''}"></div>
+      <div class="fg"><label>Correo del Líder / Coordinador *</label><input type="email" id="f-email-lider" placeholder="lider@zubex.com.mx" value="${fd.emailLider||''}"></div>
+
+      <div class="divider"></div>
+      <div class="stitle"><span class="snum">B</span>Enfoque de la mejora</div>
+      <div class="chkgrp">
+        ${[['rentabilidad','📈 Rentabilidad'],['bienestar','🧑‍💼 Bienestar del personal'],['sustentabilidad','🌱 Sustentabilidad'],['proceso','⚙️ Mejora en el proceso']].map(([k,l])=>`
+        <label class="chi ${(fd.enfoques||[]).includes(k)?'on':''}">
+          <input type="checkbox" id="cb-${k}" ${(fd.enfoques||[]).includes(k)?'checked':''}><span>${l}</span>
+        </label>`).join('')}
+      </div>
+
+      <div class="divider"></div>
+      <div class="stitle"><span class="snum">C</span>Situación actual — ANTES</div>
+      <div class="alert al-info">📸 Adjunta la foto o dibujo del estado <strong>ANTES</strong> de la mejora</div>
+      <div class="fg"><label>Foto / Dibujo — ANTES</label>
+        <div class="pup" id="pu-a" onclick="document.getElementById('fi-a').click()">
+          <input type="file" id="fi-a" accept="image/*" style="display:none" onchange="prevPhoto('fi-a','pi-a','pu-a','fotoAntes')">
+          <img id="pi-a" class="pimg">
+          <span class="pup-icon" id="pu-a-i">📷</span>
+          <span class="pup-lbl" id="pu-a-l">Subir foto ANTES</span>
+          <span class="pup-sub" id="pu-a-s">Click para seleccionar imagen</span>
+        </div>
+      </div>
+      <div class="fg"><label>Descripción del ANTES *</label><textarea id="f-da" placeholder="Describe la situación actual y el problema identificado...">${fd.descAntes||''}</textarea></div>
+      <div class="fg"><label>Causa raíz (5 Porqués)</label><textarea id="f-cr" placeholder="¿Por qué ocurre este problema?" style="min-height:60px">${fd.causeRoot||''}</textarea></div>
+    </div>
+    <div class="ffoot">
+      <div></div>
+      <button class="btn btn-blue" onclick="submitSec1()">Enviar para autorización de Líder →</button>
+    </div>
+  </div>`;
+  if(fd.fotoAntes){const i=document.getElementById('pi-a');i.src=fd.fotoAntes;i.style.display='block';hidePhUI('pu-a');}
+  el.querySelectorAll('.chi input').forEach(cb=>cb.addEventListener('change',function(){this.closest('.chi').classList.toggle('on',this.checked);}));
+}
+
+function submitSec1(){
+  if(!gv('f-nom')||!gv('f-nom2')||!gv('f-quien')||!gv('f-donde')||!gv('f-da')){toast('Completa los campos obligatorios (*)','tr');return;}
+  if(!gv('f-email-lider')){toast('Ingresa el correo del Líder','tr');return;}
+  fd.nomina=gv('f-nom');fd.nombre=gv('f-nom2');fd.equipo=gv('f-eq');
+  fd.fechaId=gv('f-fi');fd.quien=gv('f-quien');fd.donde=gv('f-donde');
+  fd.emailLider=gv('f-email-lider');fd.descAntes=gv('f-da');fd.causeRoot=gv('f-cr');
+  fd.enfoques=['rentabilidad','bienestar','sustentabilidad','proceso'].filter(k=>document.getElementById('cb-'+k)?.checked);
+  fd.status='pend_l';
+  saveKaizen();
+  showEmailModal('lider');
+}
+
+/* ═══════════════════════════════════════
+   EMAIL MODAL
+══════════════════════════════════════ */
+function showEmailModal(tipo){
+  const modal=document.getElementById('email-modal');
+  const title=document.getElementById('em-title');
+  const body=document.getElementById('em-body');
+  const foot=document.getElementById('em-foot');
+  modal.style.display='flex';
+
+  if(tipo==='lider'){
+    title.textContent='📧 Correo enviado al Líder / Coordinador';
+    body.innerHTML=`
+      <div class="alert al-info" style="margin-bottom:1rem">✅ Simulación de envío de correo activada. En producción esto se enviaría vía EmailJS u otro servicio.</div>
+      <div class="email-preview">
+        <div class="ep-hdr">📧 Vista previa del correo — Notificación de Aprobación</div>
+        <div class="ep-meta">
+          <div><strong>Para:</strong> ${fd.emailLider}</div>
+          <div><strong>De:</strong> kaizen@zubex.com.mx</div>
+          <div><strong>Asunto:</strong> [Aprobación requerida] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
+        </div>
+        <div class="ep-body">
+          <p>Estimado Líder / Coordinador,</p><br>
+          <p>Se ha generado una solicitud de <strong>Short Kaizen</strong> que requiere su autorización para continuar.</p><br>
+          <table style="width:100%;font-size:12px;border-collapse:collapse">
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600;width:40%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre} (${fd.nomina})</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Equipo Lean:</td><td style="padding:4px 8px">${fd.equipo||'—'}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Área de mejora:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha:</td><td style="padding:4px 8px">${fd.fechaId}</td></tr>
+          </table><br>
+          <p style="font-weight:600">Descripción de la situación actual (ANTES):</p>
+          <p style="background:#f8faff;padding:10px;border-radius:6px;border-left:3px solid var(--blue2);margin-top:6px">${fd.descAntes}</p>
+          ${fd.causeRoot?`<br><p style="font-weight:600">Causa raíz:</p><p style="background:#f8faff;padding:10px;border-radius:6px;border-left:3px solid var(--blue2);margin-top:6px">${fd.causeRoot}</p>`:''}
+          ${fd.fotoAntes?`<br><p style="font-weight:600">Foto ANTES:</p><img src="${fd.fotoAntes}" style="max-width:100%;border-radius:8px;margin-top:6px;max-height:180px;object-fit:cover">`:''}
+          <br><br><p>Por favor haz clic en uno de los botones de abajo para <strong>Aprobar</strong> o <strong>Rechazar</strong> esta solicitud.</p>
+        </div>
+        <div class="ep-btns">
+          <button class="ep-btn-a" onclick="liderAproba()">✓ APROBAR</button>
+          <button class="ep-btn-r" onclick="showRejForm('lider')">✕ RECHAZAR</button>
+        </div>
+      </div>`;
+    foot.innerHTML=`<button class="btn btn-out" onclick="closeModal()">Cerrar vista previa</button>`;
+  }
+  else if(tipo==='gerente'){
+    title.textContent='📧 Correo enviado al Gerente de Área';
+    body.innerHTML=`
+      <div class="alert al-info" style="margin-bottom:1rem">✅ Simulación de envío de correo activada.</div>
+      <div class="email-preview">
+        <div class="ep-hdr">📧 Vista previa del correo — Autorización Final</div>
+        <div class="ep-meta">
+          <div><strong>Para:</strong> ${fd.emailGerente}</div>
+          <div><strong>De:</strong> kaizen@zubex.com.mx</div>
+          <div><strong>Asunto:</strong> [Autorización Final] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
+        </div>
+        <div class="ep-body">
+          <p>Estimado Gerente de Área,</p><br>
+          <p>El siguiente Short Kaizen ha sido completado y requiere su autorización final.</p><br>
+          <table style="width:100%;font-size:12px;border-collapse:collapse">
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600;width:40%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre} (${fd.nomina})</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Área:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha ID:</td><td style="padding:4px 8px">${fd.fechaId}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha Impl.:</td><td style="padding:4px 8px">${fd.fechaImpl||'—'}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Tiempo:</td><td style="padding:4px 8px">${fd.tiempoImpl?fd.tiempoImpl+' '+fd.unidadTiempo:'—'}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Aprobado por Líder:</td><td style="padding:4px 8px">✓ ${fd.firmaLiderNombre||'Líder'} — ${fd.firmaLiderFecha||''}</td></tr>
+          </table><br>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div style="border:1px solid #fecaca;border-radius:8px;overflow:hidden">
+              <div style="background:#fef2f2;padding:6px 10px;font-size:11px;font-weight:700;color:#991b1b;letter-spacing:.5px">📷 ANTES</div>
+              ${fd.fotoAntes?`<img src="${fd.fotoAntes}" style="width:100%;max-height:180px;object-fit:cover;display:block">`:`<div style="height:80px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">Sin foto</div>`}
+              <div style="padding:8px 10px;font-size:12px;background:#fff;border-top:1px solid #fecaca">${fd.descAntes||'—'}</div>
+            </div>
+            <div style="border:1px solid #bbf7d0;border-radius:8px;overflow:hidden">
+              <div style="background:#f0fdf4;padding:6px 10px;font-size:11px;font-weight:700;color:#166534;letter-spacing:.5px">📷 DESPUÉS</div>
+              ${fd.fotoDespues?`<img src="${fd.fotoDespues}" style="width:100%;max-height:180px;object-fit:cover;display:block">`:`<div style="height:80px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">Sin foto</div>`}
+              <div style="padding:8px 10px;font-size:12px;background:#fff;border-top:1px solid #bbf7d0">${fd.descDespues||'—'}</div>
+            </div>
+          </div>
+          ${fd.beneficios?`<p style="font-weight:600;margin-bottom:4px">Beneficios:</p><p style="background:#f0fdf4;padding:8px;border-radius:6px;border-left:3px solid var(--green);font-size:12px;margin-bottom:10px">${fd.beneficios}</p>`:''}
+          <br><p>Por favor autoriza o rechaza esta solicitud:</p>
+        </div>
+        <div class="ep-btns">
+          <button class="ep-btn-a" onclick="gerenteAproba()">✓ AUTORIZAR Y CERRAR</button>
+          <button class="ep-btn-r" onclick="showRejForm('gerente')">✕ RECHAZAR</button>
+        </div>
+      </div>`;
+    foot.innerHTML=`<button class="btn btn-out" onclick="closeModal()">Cerrar vista previa</button>`;
+  }
+  else if(tipo==='mc'){
+    title.textContent='📧 Notificación a Mejora Continua';
+    body.innerHTML=`
+      <div class="alert al-success" style="margin-bottom:1rem">🎉 El Kaizen fue aprobado por el Gerente. Se envía notificación al equipo de Mejora Continua.</div>
+      <div class="email-preview">
+        <div class="ep-hdr">📧 Notificación — Kaizen Cerrado Exitosamente</div>
+        <div class="ep-meta">
+          <div><strong>Para:</strong> mejora.continua@zubex.com.mx</div>
+          <div><strong>De:</strong> kaizen@zubex.com.mx</div>
+          <div><strong>Asunto:</strong> ✅ Kaizen Cerrado SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
+        </div>
+        <div class="ep-body">
+          <p>Equipo de Mejora Continua,</p><br>
+          <p>El Short Kaizen <strong>SK-${fd.id.slice(-4).toUpperCase()}</strong> ha sido <strong>cerrado y aprobado</strong> por el Gerente de Área.</p><br>
+          <table style="width:100%;font-size:12px;border-collapse:collapse">
+            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600;width:40%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Área:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Aprobado por Líder:</td><td style="padding:4px 8px">✓ ${fd.firmaLiderNombre||'—'}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Aprobado por Gerente:</td><td style="padding:4px 8px">✓ ${fd.firmaGerenteNombre||'—'}</td></tr>
+            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Fecha de cierre:</td><td style="padding:4px 8px">${new Date().toLocaleDateString('es-MX')}</td></tr>
+          </table><br>
+          <p>Este Kaizen ya está disponible en el sistema para su seguimiento y estandarización.</p>
+        </div>
+      </div>`;
+    foot.innerHTML=`<button class="btn btn-green" onclick="closeModal();curSection='done';renderSection()">✓ Entendido — Ver resumen final</button>`;
+  }
+}
+
+function closeModal(){document.getElementById('email-modal').style.display='none';}
+
+/* ═══════════════════════════════════════
+   RECHAZO FORM
+══════════════════════════════════════ */
+function showRejForm(tipo){
+  const body=document.getElementById('em-body');
+  const foot=document.getElementById('em-foot');
+  body.innerHTML=`
+    <div class="alert al-danger">⚠️ Estás a punto de <strong>rechazar</strong> esta solicitud de Kaizen. Esta acción detendrá el proceso.</div>
+    <div class="fg"><label>Motivo del rechazo *</label><textarea id="rej-reason" placeholder="Explica el motivo por el que se rechaza esta solicitud..." style="min-height:100px"></textarea></div>`;
+  foot.innerHTML=`
+    <button class="btn btn-out" onclick="showEmailModal('${tipo}')">← Volver</button>
+    <button class="btn btn-danger" onclick="confirmarRechazo('${tipo}')">Confirmar rechazo</button>`;
+}
+
+function confirmarRechazo(tipo){
+  const reason=gv('rej-reason');
+  if(!reason){toast('Escribe el motivo del rechazo','tr');return;}
+  if(tipo==='lider'){
+    fd.status='rej_l';fd.rechazoLiderRazon=reason;fd.rechazoLiderFecha=new Date().toLocaleDateString('es-MX');
+    saveKaizen();closeModal();curSection='rej_l';renderSection();
+    toast('Solicitud rechazada por el Líder','tr');
+  } else {
+    fd.status='rej_g';fd.rechazoGerenteRazon=reason;fd.rechazoGerenteFecha=new Date().toLocaleDateString('es-MX');
+    saveKaizen();closeModal();curSection='rej_g';renderSection();
+    toast('Solicitud rechazada por el Gerente','tr');
+  }
+}
+
+/* ═══════════════════════════════════════
+   APROBACIÓN LÍDER
+══════════════════════════════════════ */
+function liderAproba(){
+  document.getElementById('em-body').innerHTML=`
+    <div class="alert al-success" style="margin-bottom:1rem">✅ Líder aprobó la solicitud. Registra su nombre y firma.</div>
+    <div class="fg"><label>Nombre del Líder / Coordinador *</label><input type="text" id="fn-lider" placeholder="Nombre completo"></div>
+    <div style="border:2px solid var(--border);border-radius:var(--r);padding:1.25rem;background:var(--surface2)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:600">Firma digital</span>
+        <span class="bp" id="fs-lider">Pendiente</span>
+      </div>
+      <canvas class="sigpad" id="sig-lider" width="500" height="100"></canvas>
+      <div class="sigact"><button class="btn-clr" onclick="clearSig('lider')">Limpiar</button></div>
+    </div>`;
+  document.getElementById('em-foot').innerHTML=`
+    <button class="btn btn-out" onclick="showEmailModal('lider')">← Volver</button>
+    <button class="btn btn-green" onclick="confirmarAprobLider()">✓ Confirmar aprobación</button>`;
+  initSig('lider');
+}
+
+function confirmarAprobLider(){
+  if(!gv('fn-lider')){toast('Ingresa el nombre del Líder','tr');return;}
+  const sig=getSig('lider');
+  fd.firmaLider=sig||null;
+  fd.firmaLiderNombre=gv('fn-lider');
+  fd.firmaLiderFecha=new Date().toLocaleDateString('es-MX');
+  fd.status='s3';
+  saveKaizen();
+  closeModal();
+  curSection=3;
+  renderSection();
+  toast('¡Aprobado por Líder! Continúa con la Sección 2','tg');
+}
+
+/* ═══════════════════════════════════════
+   SECCIÓN 3 (= "Sección 2" para el usuario)
+══════════════════════════════════════ */
+function renderSec3(el){
+  el.innerHTML=`
+  <div class="fcard">
+    <div class="fhdr">
+      <span class="ftitle">Sección 2 · Descripción del DESPUÉS</span>
+      <span style="background:rgba(255,255,255,.15);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.3)">✓ Aprobado por Líder</span>
+    </div>
+    <div class="fbody">
+      <div class="alert al-success">✅ Aprobado por: <strong>${fd.firmaLiderNombre}</strong> el ${fd.firmaLiderFecha}</div>
+      <div class="stitle"><span class="snum">A</span>Estado DESPUÉS y beneficios</div>
+      <div class="alert al-info">📸 Adjunta la foto o dibujo del estado <strong>DESPUÉS</strong></div>
+      <div class="fg"><label>Foto / Dibujo — DESPUÉS</label>
+        <div class="pup" id="pu-d" onclick="document.getElementById('fi-d').click()">
+          <input type="file" id="fi-d" accept="image/*" style="display:none" onchange="prevPhoto('fi-d','pi-d','pu-d','fotoDespues')">
+          <img id="pi-d" class="pimg">
+          <span class="pup-icon" id="pu-d-i">📷</span>
+          <span class="pup-lbl" id="pu-d-l">Subir foto DESPUÉS</span>
+          <span class="pup-sub" id="pu-d-s">Click para seleccionar imagen</span>
+        </div>
+      </div>
+      <div class="fg"><label>Descripción del DESPUÉS y beneficios *</label><textarea id="f-dd" placeholder="Describe el estado mejorado y los beneficios obtenidos...">${fd.descDespues||''}</textarea></div>
+      <div class="fg"><label>Beneficios cuantificables</label><textarea id="f-ben" placeholder="Ej: Reducción de 15 min en tiempo de ciclo..." style="min-height:60px">${fd.beneficios||''}</textarea></div>
+
+      <div class="divider"></div>
+      <div class="stitle"><span class="snum">B</span>Fechas y tiempos</div>
+      <div class="fg3">
+        <div class="fg"><label>Fecha de implementación</label><input type="date" id="f-fimpl" value="${fd.fechaImpl||new Date().toISOString().slice(0,10)}"></div>
+        <div class="fg"><label>Tiempo de implementación</label><input type="number" id="f-timp" min="0" placeholder="Ej: 30" value="${fd.tiempoImpl||''}"></div>
+        <div class="fg"><label>Unidad</label>
+          <select id="f-unt">
+            <option value="minutos" ${fd.unidadTiempo==='minutos'?'selected':''}>Minutos</option>
+            <option value="horas" ${fd.unidadTiempo==='horas'?'selected':''}>Horas</option>
+            <option value="dias" ${fd.unidadTiempo==='dias'?'selected':''}>Días</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="stitle"><span class="snum">C</span>Enfoque de mejoras aplicadas</div>
+      <div class="chkgrp">
+        ${[['5s','🧹 5S'],['seguridad','🦺 Seguridad'],['calidad','✅ Calidad'],['productividad','⚡ Productividad'],['costos','💰 Costos'],['ambiente','🌿 Ambiente']].map(([k,l])=>`
+        <label class="chi ${(fd.enfoquesMejora||[]).includes(k)?'on':''}">
+          <input type="checkbox" id="em-${k}" ${(fd.enfoquesMejora||[]).includes(k)?'checked':''}><span>${l}</span>
+        </label>`).join('')}
+      </div>
+
+      <div class="divider"></div>
+      <div class="stitle"><span class="snum">D</span>Correo del Gerente de Área</div>
+      <div class="fg"><label>Correo del Gerente *</label><input type="email" id="f-email-g" placeholder="gerente@zubex.com.mx" value="${fd.emailGerente||''}"></div>
+    </div>
+    <div class="ffoot">
+      <div></div>
+      <button class="btn btn-blue" onclick="submitSec3()">Enviar para autorización del Gerente →</button>
+    </div>
+  </div>`;
+  if(fd.fotoDespues){const i=document.getElementById('pi-d');i.src=fd.fotoDespues;i.style.display='block';hidePhUI('pu-d');}
+  el.querySelectorAll('.chi input').forEach(cb=>cb.addEventListener('change',function(){this.closest('.chi').classList.toggle('on',this.checked);}));
+}
+
+function submitSec3(){
+  if(!gv('f-dd')){toast('Agrega la descripción del DESPUÉS','tr');return;}
+  if(!gv('f-email-g')){toast('Ingresa el correo del Gerente','tr');return;}
+  fd.descDespues=gv('f-dd');fd.beneficios=gv('f-ben');
+  fd.fechaImpl=gv('f-fimpl');fd.tiempoImpl=gv('f-timp');fd.unidadTiempo=gv('f-unt');
+  fd.emailGerente=gv('f-email-g');
+  fd.enfoquesMejora=['5s','seguridad','calidad','productividad','costos','ambiente'].filter(k=>document.getElementById('em-'+k)?.checked);
+  fd.status='pend_g';
+  saveKaizen();
+  showEmailModal('gerente');
+}
+
+/* ═══════════════════════════════════════
+   APROBACIÓN GERENTE
+══════════════════════════════════════ */
+function gerenteAproba(){
+  document.getElementById('em-body').innerHTML=`
+    <div class="alert al-success" style="margin-bottom:1rem">✅ Gerente aprobó el Kaizen. Registra su nombre y firma.</div>
+    <div class="fg"><label>Nombre del Gerente de Área *</label><input type="text" id="fn-gerente" placeholder="Nombre completo"></div>
+    <div style="border:2px solid var(--border);border-radius:var(--r);padding:1.25rem;background:var(--surface2)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:13px;font-weight:600">Firma digital</span>
+        <span class="bp" id="fs-gerente">Pendiente</span>
+      </div>
+      <canvas class="sigpad" id="sig-gerente" width="500" height="100"></canvas>
+      <div class="sigact"><button class="btn-clr" onclick="clearSig('gerente')">Limpiar</button></div>
+    </div>`;
+  document.getElementById('em-foot').innerHTML=`
+    <button class="btn btn-out" onclick="showEmailModal('gerente')">← Volver</button>
+    <button class="btn btn-green" onclick="confirmarAprobGerente()">✓ Autorizar y cerrar Kaizen</button>`;
+  initSig('gerente');
+}
+
+function confirmarAprobGerente(){
+  if(!gv('fn-gerente')){toast('Ingresa el nombre del Gerente','tr');return;}
+  fd.firmaGerente=getSig('gerente')||null;
+  fd.firmaGerenteNombre=gv('fn-gerente');
+  fd.firmaGerenteFecha=new Date().toLocaleDateString('es-MX');
+  fd.status='done';
+  saveKaizen();
+  closeModal();
+  showEmailModal('mc');
+}
+
+/* ═══════════════════════════════════════
+   ESTADO RECHAZADO
+══════════════════════════════════════ */
+function renderRejected(el,quien,razon){
+  el.innerHTML=`
+  <div class="rejected-card">
+    <div class="rejected-icon">❌</div>
+    <div class="rejected-title">Solicitud rechazada por el ${quien}</div>
+    <p style="color:#7f1d1d;font-size:13px">Esta solicitud de Kaizen ha sido rechazada y no puede continuar.</p>
+    <div class="rejected-reason"><strong>Motivo:</strong> ${razon||'Sin motivo indicado'}</div>
+    <div style="margin-top:1.5rem;display:flex;gap:10px;justify-content:center">
+      <button class="btn btn-out" onclick="goTo('dash')">← Volver al dashboard</button>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════
+   SECCIONES PENDIENTES (esperando correo)
+══════════════════════════════════════ */
+function renderSecPendL(el){
+  el.innerHTML=`
+  <div class="fcard">
+    <div class="fhdr"><span class="ftitle">Esperando autorización del Líder</span></div>
+    <div class="fbody">
+      <div class="alert al-warn">⏳ Se ha enviado un correo de aprobación a <strong>${fd.emailLider}</strong>. Esta sección continuará cuando el Líder apruebe la solicitud.</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Mientras tanto, puedes simular la respuesta del Líder:</p>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-green" onclick="liderAprobaSimul()">✓ Simular: Líder aprueba</button>
+        <button class="btn btn-danger" onclick="showRejSimul('lider')">✕ Simular: Líder rechaza</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderSecPendG(el){
+  el.innerHTML=`
+  <div class="fcard">
+    <div class="fhdr"><span class="ftitle">Esperando autorización del Gerente</span></div>
+    <div class="fbody">
+      <div class="alert al-warn">⏳ Se ha enviado un correo de autorización al Gerente a <strong>${fd.emailGerente}</strong>. Esta sección continuará cuando el Gerente autorice.</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Mientras tanto, puedes simular la respuesta del Gerente:</p>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-green" onclick="gerenteAprobaSimul()">✓ Simular: Gerente autoriza</button>
+        <button class="btn btn-danger" onclick="showRejSimul('gerente')">✕ Simular: Gerente rechaza</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function liderAprobaSimul(){showEmailModal('lider');}
+function gerenteAprobaSimul(){showEmailModal('gerente');}
+
+function showRejSimul(tipo){
+  showEmailModal(tipo);
+  setTimeout(()=>showRejForm(tipo),100);
+}
+
+/* ═══════════════════════════════════════
+   DONE STATE
+══════════════════════════════════════ */
+function renderDone(el){
+  el.innerHTML=`
+  <div class="fcard">
+    <div class="fhdr" style="background:var(--green-d)">
+      <span class="ftitle">✅ Kaizen Cerrado — SK-${fd.id.slice(-4).toUpperCase()}</span>
+    </div>
+    <div class="fbody">
+      <div class="alert al-success">🎉 Este Short Kaizen ha sido completado y aprobado por el Gerente de Área. El equipo de Mejora Continua ha sido notificado.</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
+        <div><div class="dl">Solicitante</div><div class="dv">${fd.nombre}</div></div>
+        <div><div class="dl">Equipo</div><div class="dv">${fd.equipo||'—'}</div></div>
+        <div><div class="dl">Área</div><div class="dv">${fd.donde}</div></div>
+        <div><div class="dl">Fecha ID</div><div class="dv">${fd.fechaId}</div></div>
+        <div><div class="dl">Fecha Impl.</div><div class="dv">${fd.fechaImpl||'—'}</div></div>
+        <div><div class="dl">Tiempo</div><div class="dv">${fd.tiempoImpl?fd.tiempoImpl+' '+fd.unidadTiempo:'—'}</div></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:1rem">
+        <div style="flex:1;text-align:center;padding:.75rem;background:#fef2f2;border-radius:8px;border:1px solid #fecaca">
+          <div style="font-size:11px;color:var(--danger);font-weight:600;margin-bottom:4px">FIRMA LÍDER</div>
+          ${fd.firmaLider?`<img src="${fd.firmaLider}" style="height:40px;object-fit:contain">`:''}<div style="font-size:12px;color:var(--text2)">${fd.firmaLiderNombre||'—'}</div>
+        </div>
+        <div style="flex:1;text-align:center;padding:.75rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
+          <div style="font-size:11px;color:var(--green-d);font-weight:600;margin-bottom:4px">FIRMA GERENTE</div>
+          ${fd.firmaGerente?`<img src="${fd.firmaGerente}" style="height:40px;object-fit:contain">`:''}<div style="font-size:12px;color:var(--text2)">${fd.firmaGerenteNombre||'—'}</div>
+        </div>
+      </div>
+    </div>
+    <div class="ffoot">
+      <button class="btn btn-out" onclick="goTo('dash')">← Dashboard</button>
+      <button class="btn btn-pdf" onclick="exportPDF('${fd.id}')">⬇ Exportar PDF</button>
+    </div>
+  </div>`;
+}
+
+/* ═══════════════════════════════════════
+   DETAIL VIEW
+══════════════════════════════════════ */
+function showDet(id){
+  const k=KZ.find(x=>x.id===id);if(!k)return;
+  fd={...k};
+  const[,lbl]=STATUS[k.status]||['','—'];
+  document.getElementById('det-title').textContent=`SK-${k.id.slice(-4).toUpperCase()} · ${k.nombre||''}`;
+  const enf={rentabilidad:'📈 Rentabilidad',bienestar:'🧑‍💼 Bienestar',sustentabilidad:'🌱 Sustentabilidad',proceso:'⚙️ Proceso'};
+  const em={'5s':'🧹 5S',seguridad:'🦺 Seguridad',calidad:'✅ Calidad',productividad:'⚡ Productividad',costos:'💰 Costos',ambiente:'🌿 Ambiente'};
+  const[cls]=STATUS[k.status]||['b1'];
+
+  document.getElementById('det-body').innerHTML=`
+  <div class="fcard">
+    <div class="fhdr">
+      <span class="ftitle">Short Kaizen · Zubex</span>
+      <span class="kbadge ${cls}" style="border:1px solid rgba(255,255,255,.3)">${lbl}</span>
+    </div>
+    <div class="fbody">
+      <div class="stitle"><span class="snum">1</span>Identificación</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
+        <div><div class="dl">Nómina</div><div class="dv">${k.nomina||'—'}</div></div>
+        <div><div class="dl">Nombre</div><div class="dv">${k.nombre||'—'}</div></div>
+        <div><div class="dl">Equipo Lean</div><div class="dv">${k.equipo||'—'}</div></div>
+        <div><div class="dl">¿Quién identificó?</div><div class="dv">${k.quien||'—'}</div></div>
+        <div><div class="dl">¿Dónde?</div><div class="dv">${k.donde||'—'}</div></div>
+        <div><div class="dl">Fecha ID</div><div class="dv">${k.fechaId||'—'}</div></div>
+      </div>
+      <div style="margin-bottom:1rem"><div class="dl">Enfoques</div><div class="dv">${(k.enfoques||[]).map(e=>enf[e]).join(' · ')||'—'}</div></div>
+      <div class="divider"></div>
+      <div class="stitle"><span class="snum">2</span>ANTES</div>
+      <div style="display:grid;grid-template-columns:${k.fotoAntes?'1fr 1fr':'1fr'};gap:1rem;margin-bottom:1rem;align-items:start">
+        ${k.fotoAntes?`<img src="${k.fotoAntes}" class="det-img" alt="Antes">`:''}
+        <div>
+          <div class="dl">Descripción</div><div class="dv" style="white-space:pre-wrap">${k.descAntes||'—'}</div>
+          ${k.causeRoot?`<br><div class="dl">Causa raíz</div><div class="dv" style="white-space:pre-wrap">${k.causeRoot}</div>`:''}
+        </div>
+      </div>
+      ${k.descDespues?`
+      <div class="divider"></div>
+      <div class="stitle"><span class="snum">3</span>DESPUÉS</div>
+      <div style="display:grid;grid-template-columns:${k.fotoDespues?'1fr 1fr':'1fr'};gap:1rem;margin-bottom:1rem;align-items:start">
+        ${k.fotoDespues?`<img src="${k.fotoDespues}" class="det-img" alt="Después">`:''}
+        <div>
+          <div class="dl">Descripción</div><div class="dv" style="white-space:pre-wrap">${k.descDespues}</div>
+          ${k.beneficios?`<br><div class="dl">Beneficios</div><div class="dv" style="white-space:pre-wrap">${k.beneficios}</div>`:''}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
+        <div><div class="dl">Fecha Impl.</div><div class="dv">${k.fechaImpl||'—'}</div></div>
+        <div><div class="dl">Tiempo</div><div class="dv">${k.tiempoImpl?k.tiempoImpl+' '+k.unidadTiempo:'—'}</div></div>
+      </div>
+      <div><div class="dl">Enfoques de mejora</div><div class="dv">${(k.enfoquesMejora||[]).map(e=>em[e]).join(' · ')||'—'}</div></div>
+      `:''}
+      <div class="divider"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="firmabox">
+          <div class="frmhdr"><span class="frmtitle">Firma Líder</span><span class="${k.firmaLider?'bok':'bp'}">${k.firmaLider?'Firmado ✓':'Pendiente'}</span></div>
+          ${k.firmaLider?`<img src="${k.firmaLider}" style="height:50px;object-fit:contain;display:block;margin:6px 0"><div style="font-size:12px;color:var(--text2)">${k.firmaLiderNombre||''} · ${k.firmaLiderFecha||''}</div>`:`<div style="height:50px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px">Sin firma</div>`}
+        </div>
+        <div class="firmabox">
+          <div class="frmhdr"><span class="frmtitle">Firma Gerente</span><span class="${k.firmaGerente?'bok':'bp'}">${k.firmaGerente?'Firmado ✓':'Pendiente'}</span></div>
+          ${k.firmaGerente?`<img src="${k.firmaGerente}" style="height:50px;object-fit:contain;display:block;margin:6px 0"><div style="font-size:12px;color:var(--text2)">${k.firmaGerenteNombre||''} · ${k.firmaGerenteFecha||''}</div>`:`<div style="height:50px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px">Sin firma</div>`}
+        </div>
+      </div>
+    </div>
+    <div class="ffoot">
+      <button class="btn btn-out" onclick="goTo('dash')">← Volver</button>
+      <div style="display:flex;gap:8px">
+        ${(k.status==='pend_l'||k.status==='s3'||k.status==='pend_g')?`<button class="btn btn-blue" onclick="continueKaizen('${k.id}')">Continuar solicitud →</button>`:''}
+        ${k.status==='done'?`<button class="btn btn-pdf" onclick="exportPDF('${k.id}')">⬇ Exportar PDF</button>`:''}
+      </div>
+    </div>
+  </div>`;
+  goTo('det');
+}
+
+function continueKaizen(id){
+  const k=KZ.find(x=>x.id===id);if(!k)return;
+  fd={...k};
+  document.getElementById('form-title').textContent='Continuar SK-'+k.id.slice(-4).toUpperCase();
+  if(k.status==='pend_l') curSection='pend_l';
+  else if(k.status==='s3') curSection=3;
+  else if(k.status==='pend_g') curSection='pend_g';
+  goTo('form');renderSection();
+}
+
+/* ═══════════════════════════════════════
+   PDF EXPORT — Formato oficial Zubex SK
+══════════════════════════════════════ */
+async function exportPDF(id){
+  try{
+  const k=KZ.find(x=>x.id===id)||fd;
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+  const W=doc.internal.pageSize.getWidth();
+  const H=doc.internal.pageSize.getHeight();
+  const ML=10;
+  const CW=W-ML*2;
+
+  // ── helpers ──────────────────────────
+  function border(x,y,w,h){doc.setDrawColor(180,190,210);doc.setLineWidth(0.3);doc.rect(x,y,w,h,'S');}
+  function blueHdr(x,y,w,h,txt){
+    doc.setFillColor(26,63,168);doc.rect(x,y,w,h,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);
+    doc.text(txt,x+w/2,y+h/2+1.2,{align:'center',baseline:'middle'});
+  }
+  function fRow(x,y,w,lbl,val,lw){
+    lw=lw||40;
+    doc.setFillColor(245,248,255);doc.rect(x,y,lw,6,'F');
+    doc.setFillColor(255,255,255);doc.rect(x+lw,y,w-lw,6,'F');
+    border(x,y,w,6);
+    doc.setDrawColor(180,190,210);doc.setLineWidth(0.2);doc.line(x+lw,y,x+lw,y+6);
+    doc.setTextColor(80,90,120);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+    doc.text(lbl,x+2,y+4.2);
+    doc.setTextColor(15,22,41);doc.setFont('helvetica','bold');doc.setFontSize(8);
+    doc.text(String(val||''),x+lw+2,y+4.2);
+  }
+  function chk(x,y,on,lbl){
+    doc.setDrawColor(26,63,168);doc.setLineWidth(0.4);
+    if(on){doc.setFillColor(26,63,168);doc.rect(x,y,3.5,3.5,'FD');}
+    else{doc.setFillColor(255,255,255);doc.rect(x,y,3.5,3.5,'S');}
+    doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+    doc.text(lbl,x+5,y+3);
+  }
+  function photoCell(x,y,w,h,img){
+    doc.setFillColor(248,250,255);doc.rect(x,y,w,h,'F');
+    border(x,y,w,h);
+    if(img){try{doc.addImage(img,'JPEG',x+1,y+1,w-2,h-2,'','MEDIUM');}catch(e){}}
+    else{doc.setTextColor(180,190,210);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('Sin foto / dibujo',x+w/2,y+h/2,{align:'center',baseline:'middle'});}
+  }
+  function textCell(x,y,w,h,txt){
+    doc.setFillColor(255,255,255);doc.rect(x,y,w,h,'F');
+    border(x,y,w,h);
+    if(!txt)return;
+    doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(8);
+    const lines=doc.splitTextToSize(String(txt),w-4);
+    let ty=y+5;
+    for(const l of lines){if(ty>y+h-2)break;doc.text(l,x+2,ty);ty+=4.5;}
+  }
+
+  // ══ CABECERA ══════════════════════════
+  const LW=42, HDR_Y=10, HDR_H=28;
+  // Logo box
+  doc.setFillColor(255,255,255);doc.rect(ML,HDR_Y,LW,HDR_H,'F');border(ML,HDR_Y,LW,HDR_H);
+  doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(14);
+  doc.text('zubex',ML+3,HDR_Y+7);
+  doc.setDrawColor(26,63,168);doc.setLineWidth(1);doc.circle(ML+LW/2,HDR_Y+18,6,'S');
+  doc.setFillColor(26,63,168);doc.circle(ML+LW/2,HDR_Y+18,4.5,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);
+  doc.text('SK',ML+LW/2,HDR_Y+19.5,{align:'center',baseline:'middle'});
+  doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(6.5);
+  doc.text('Short Kaizen',ML+LW/2,HDR_Y+HDR_H-3,{align:'center'});
+  // Info box
+  const IX=ML+LW+1, IW=CW-LW-1-42;
+  doc.setFillColor(245,248,255);doc.rect(IX,HDR_Y,IW,HDR_H,'F');border(IX,HDR_Y,IW,HDR_H);
+  doc.setTextColor(80,90,120);doc.setFont('helvetica','normal');doc.setFontSize(7);
+  doc.text('Sistema de Gestión de Inocuidad y Calidad',IX+2,HDR_Y+5);
+  doc.setFont('helvetica','bold');doc.text('Formato: Short Kaizen',IX+2,HDR_Y+10);
+  doc.setFont('helvetica','normal');
+  doc.text('Fecha de Revisión: 19 de enero 2026',IX+2,HDR_Y+15);
+  doc.text('Clave: MEJ-F-03',IX+2,HDR_Y+20);
+  doc.text('Revisión: 07',IX+2,HDR_Y+25);
+  // Page + status box
+  const PX=IX+IW+1, PW=42;
+  doc.setFillColor(255,255,255);doc.rect(PX,HDR_Y,PW,HDR_H/2,'F');border(PX,HDR_Y,PW,HDR_H/2);
+  doc.setTextColor(15,22,41);doc.setFont('helvetica','bold');doc.setFontSize(7);
+  doc.text('Página 1 de 1',PX+PW/2,HDR_Y+HDR_H/4,{align:'center',baseline:'middle'});
+  const sc={s1:[253,230,138],pend_l:[253,230,138],rej_l:[254,202,202],s3:[199,210,254],pend_g:[249,168,212],done:[187,247,208],rej_g:[254,202,202]};
+  const[sr,sg,sb]=sc[k.status]||[253,230,138];
+  const[,sLbl]=STATUS[k.status]||['','—'];
+  doc.setFillColor(sr,sg,sb);doc.rect(PX,HDR_Y+HDR_H/2,PW,HDR_H/2,'F');border(PX,HDR_Y+HDR_H/2,PW,HDR_H/2);
+  doc.setTextColor(50,50,80);doc.setFontSize(6);
+  doc.text(sLbl,PX+PW/2,HDR_Y+HDR_H*0.75,{align:'center',baseline:'middle'});
+
+  let y=HDR_Y+HDR_H+2;
+
+  // ══ FILA 1: ¿Quién? + Enfoque ════════
+  const QW=CW*0.65, EW=CW*0.35, EX=ML+QW;
+  blueHdr(ML,y,QW,6,'¿Quién Identificó la mejora?');
+  fRow(ML,y+6,QW,'Nómina:',k.nomina,25);
+  fRow(ML,y+12,QW,'Nombre:',k.nombre,25);
+  fRow(ML,y+18,QW,'Equipo Lean:',k.equipo,25);
+  blueHdr(ML,y+24,QW,6,'¿Dónde se aplicará la mejora?');
+  fRow(ML,y+30,QW,'Departamento:',k.donde,30);
+  fRow(ML,y+36,QW,'Área/Línea/Máquina:',k.quien,35);
+  // Enfoque
+  blueHdr(EX,y,EW,6,'Enfoque de la mejora');
+  doc.setFillColor(255,255,255);doc.rect(EX,y+6,EW,36,'F');border(EX,y+6,EW,36);
+  [['rentabilidad','Rentabilidad'],['bienestar','Bienestar del personal'],['sustentabilidad','Sustentabilidad'],['proceso','Mejora en el proceso']].forEach(([key,lbl],i)=>{
+    chk(EX+4,y+10+i*8,(k.enfoques||[]).includes(key),lbl);
+  });
+  y+=44;
+
+  // ══ FILA 2: FOTOS ═════════════════════
+  const FW=CW/2, FH=60;
+  blueHdr(ML,y,FW,7,'FOTO/DIBUJO ANTES');
+  blueHdr(ML+FW,y,FW,7,'FOTO/DIBUJO DESPUÉS');
+  photoCell(ML,y+7,FW,FH,k.fotoAntes);
+  photoCell(ML+FW,y+7,FW,FH,k.fotoDespues);
+  y+=7+FH;
+
+  // ══ FILA 3: DESCRIPCIONES ═════════════
+  const DH=28;
+  blueHdr(ML,y,FW,7,'DESCRIPCIÓN DEL ANTES');
+  blueHdr(ML+FW,y,FW,7,'DESCRIPCIÓN DEL DESPUÉS Y BENEFICIOS');
+  textCell(ML,y+7,FW,DH,k.descAntes||'');
+  textCell(ML+FW,y+7,FW,DH,(k.descDespues||'')+(k.beneficios?'\n'+k.beneficios:''));
+  y+=7+DH;
+
+  // ══ FILA 4: Enfoque Mejoras | Estand. | Fechas + Firmas ══
+  const BH=50, EM=48, ES=52, ER=CW-EM-ES;
+  const XES=ML+EM, XER=ML+EM+ES;
+  // Enfoque de Mejoras
+  doc.setFillColor(255,255,255);doc.rect(ML,y,EM,BH,'F');border(ML,y,EM,BH);
+  doc.setFillColor(235,240,255);doc.rect(ML,y,EM,6,'F');
+  doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(7);
+  doc.text('Enfoque de Mejoras',ML+EM/2,y+4.5,{align:'center'});
+  const cx=ML+EM/2, cy=y+28, cr=13;
+  doc.setDrawColor(26,63,168);doc.setLineWidth(0.2);
+  doc.line(cx,cy-cr,cx,cy+cr);doc.line(cx-cr,cy,cx+cr,cy);
+  doc.setTextColor(26,63,168);doc.setFont('helvetica','normal');doc.setFontSize(5);
+  doc.text('Rentabilidad',cx,cy-cr-1.5,{align:'center'});
+  doc.text('Bienestar',cx+cr+1,cy+1,{align:'left'});
+  doc.text('Sustentable',cx,cy+cr+3,{align:'center'});
+  doc.text('Mejora',cx-cr-1,cy+1,{align:'right'});
+  const emap={rentabilidad:[cx,cy-cr],bienestar:[cx+cr,cy],sustentabilidad:[cx,cy+cr],proceso:[cx-cr,cy]};
+  const pts=(k.enfoques||[]).filter(e=>emap[e]).map(e=>emap[e]);
+  if(pts.length>=2){
+    doc.setFillColor(173,216,255);doc.setDrawColor(26,63,168);doc.setLineWidth(0.5);
+    doc.lines(pts.slice(1).map((p,i)=>[p[0]-pts[i][0],p[1]-pts[i][1]]),pts[0][0],pts[0][1],null,'FD',true);
+  }
+  // Estandarización
+  doc.setFillColor(235,240,255);doc.rect(XES,y,ES,6,'F');border(XES,y,ES,BH);
+  doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(7);
+  doc.text('Estandarización:',XES+2,y+4.5);
+  if(k.estandarizacion){
+    doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+    doc.splitTextToSize(k.estandarizacion,ES-4).slice(0,7).forEach((l,i)=>doc.text(l,XES+2,y+10+i*5));
+  }
+  // Fechas y Firmas
+  doc.setFillColor(255,255,255);doc.rect(XER,y,ER,BH,'F');border(XER,y,ER,BH);
+  fRow(XER,y,ER,'Fecha de Identificación:',k.fechaId,50);
+  fRow(XER,y+8,ER,'Fecha implementación:',k.fechaImpl,50);
+  fRow(XER,y+16,ER,'Tiempo de Implementación:',k.tiempoImpl?(k.tiempoImpl+' '+k.unidadTiempo):'',50);
+  // Firma Líder
+  const FH2=13, FLW=38, yFl=y+24;
+  doc.setFillColor(235,240,255);doc.rect(XER,yFl,FLW,FH2,'F');border(XER,yFl,FLW,FH2);
+  doc.setFillColor(255,255,255);doc.rect(XER+FLW,yFl,ER-FLW,FH2,'F');border(XER+FLW,yFl,ER-FLW,FH2);
+  doc.setTextColor(60,70,100);doc.setFont('helvetica','normal');doc.setFontSize(7);
+  doc.text('Autorización',XER+FLW/2,yFl+4,{align:'center'});
+  doc.text('Líder/Coordinador',XER+FLW/2,yFl+9,{align:'center'});
+  if(k.firmaLider){try{doc.addImage(k.firmaLider,'PNG',XER+FLW+1,yFl+1,ER-FLW-3,FH2-3,'','FAST');}catch(e){}}
+  doc.setTextColor(80,90,110);doc.setFontSize(6);
+  doc.text(k.firmaLiderNombre||'Pendiente',XER+FLW+2,yFl+FH2-1);
+  // Firma Gerente
+  const yFg=yFl+FH2;
+  doc.setFillColor(235,240,255);doc.rect(XER,yFg,FLW,FH2,'F');border(XER,yFg,FLW,FH2);
+  doc.setFillColor(255,255,255);doc.rect(XER+FLW,yFg,ER-FLW,FH2,'F');border(XER+FLW,yFg,ER-FLW,FH2);
+  doc.setTextColor(60,70,100);doc.setFont('helvetica','normal');doc.setFontSize(7);
+  doc.text('Autorización de',XER+FLW/2,yFg+4,{align:'center'});
+  doc.text('Gerente de Área',XER+FLW/2,yFg+9,{align:'center'});
+  if(k.firmaGerente){try{doc.addImage(k.firmaGerente,'PNG',XER+FLW+1,yFg+1,ER-FLW-3,FH2-3,'','FAST');}catch(e){}}
+  doc.setTextColor(80,90,110);doc.setFontSize(6);
+  doc.text(k.firmaGerenteNombre||'Pendiente',XER+FLW+2,yFg+FH2-1);
+
+  // ══ FOOTER ════════════════════════════
+  doc.setDrawColor(180,190,210);doc.setLineWidth(0.3);doc.line(ML,H-10,W-ML,H-10);
+  doc.setTextColor(150,160,180);doc.setFont('helvetica','normal');doc.setFontSize(7);
+  doc.text('zubex · Short Kaizen · SK-'+k.id.slice(-4).toUpperCase()+' · '+new Date().toLocaleDateString('es-MX'),W/2,H-6,{align:'center'});
+
+  doc.save(`SK-${k.id.slice(-4).toUpperCase()}-${(k.nombre||'kaizen').replace(/\s+/g,'-')}.pdf`);
+  toast('PDF generado correctamente','tg');
+  }catch(err){console.error('PDF error:',err);toast('Error al generar PDF: '+err.message,'tr');}
+}
+
+/* ═══════════════════════════════════════
+   HELPERS
+══════════════════════════════════════ */
+function saveKaizen(){
+  const i=KZ.findIndex(x=>x.id===fd.id);
+  if(i>=0)KZ[i]={...fd};else KZ.push({...fd});
+  save();
+}
+
+function prevPhoto(inputId,imgId,puId,fdKey){
+  const inp=document.getElementById(inputId);if(!inp.files||!inp.files[0])return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=document.getElementById(imgId);img.src=e.target.result;img.style.display='block';
+    hidePhUI(puId);fd[fdKey]=e.target.result;
+  };r.readAsDataURL(inp.files[0]);
+}
+function hidePhUI(id){['i','l','s'].forEach(s=>{const el=document.getElementById(id+'-'+s);if(el)el.style.display='none';});}
+
+/* ═══════════════════════════════════════
+   FIRMA
+══════════════════════════════════════ */
+function initSig(key){
+  const c=document.getElementById('sig-'+key);if(!c)return;
+  const ctx=c.getContext('2d');
+  ctx.strokeStyle='#1a3fa8';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+  sigD[key]={ctx,drawing:false,empty:true};
+  function pos(e){const r=c.getBoundingClientRect();const sx=c.width/r.width,sy=c.height/r.height;const s=e.touches?e.touches[0]:e;return{x:(s.clientX-r.left)*sx,y:(s.clientY-r.top)*sy};}
+  c.addEventListener('mousedown',e=>{const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);sigD[key].drawing=true;sigD[key].empty=false;});
+  c.addEventListener('mousemove',e=>{if(!sigD[key].drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();});
+  c.addEventListener('mouseup',()=>{sigD[key].drawing=false;updSig(key);});
+  c.addEventListener('mouseleave',()=>{sigD[key].drawing=false;});
+  c.addEventListener('touchstart',e=>{e.preventDefault();const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);sigD[key].drawing=true;sigD[key].empty=false;},{passive:false});
+  c.addEventListener('touchmove',e=>{e.preventDefault();if(!sigD[key].drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();},{passive:false});
+  c.addEventListener('touchend',()=>{sigD[key].drawing=false;updSig(key);});
+}
+function updSig(key){const el=document.getElementById('fs-'+key);if(el&&!sigD[key]?.empty){el.textContent='Firmado ✓';el.className='bok';}}
+function clearSig(key){const c=document.getElementById('sig-'+key);if(!c)return;c.getContext('2d').clearRect(0,0,c.width,c.height);if(sigD[key])sigD[key].empty=true;const el=document.getElementById('fs-'+key);if(el){el.textContent='Pendiente';el.className='bp';}}
+function getSig(key){const c=document.getElementById('sig-'+key);if(!c||sigD[key]?.empty)return null;return c.toDataURL('image/png');}
+
+/* INIT */
+document.getElementById('nb-dash').addEventListener('click',()=>goTo('dash'));
+document.getElementById('nb-new').addEventListener('click',startNew);
+document.getElementById('nb-new2').addEventListener('click',startNew);
+renderDash();
+</script>
+</body>
+</html>
