@@ -16,8 +16,6 @@
   --r:10px;--r2:14px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh}
-
-/* HEADER */
 .hdr{background:var(--blue);height:60px;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
 .hdr-brand{display:flex;align-items:center;gap:10px}
 .hdr-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff}
@@ -25,85 +23,68 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);fon
 .hdr-nav{display:flex;gap:4px}
 .nb{background:none;border:none;color:rgba(255,255,255,.7);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 14px;border-radius:8px;cursor:pointer;transition:.2s}
 .nb:hover,.nb.on{background:rgba(255,255,255,.15);color:#fff}
-
-/* BODY */
-.wrap{max-width:960px;margin:0 auto;padding:2rem 1.5rem}
-
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem}
-.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:.9rem 1rem}
-.sc .sl{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
-.sc .sv{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--text)}
-.sc.bl{border-top:3px solid var(--blue2)}
-.sc.or{border-top:3px solid var(--warn)}
-.sc.pu{border-top:3px solid #7c3aed}
-.sc.re{border-top:3px solid var(--danger)}
-.sc.gr{border-top:3px solid var(--green)}
-
-/* LIST */
-.lhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.wrap{max-width:980px;margin:0 auto;padding:2rem 1.5rem}
 .ptitle{font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:4px}
 .psub{color:var(--text2);font-size:13px;margin-bottom:1.5rem}
 
-.kcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1rem 1.25rem;margin-bottom:8px;display:flex;align-items:center;gap:1rem;cursor:pointer;transition:.2s}
-.kcard:hover{border-color:var(--blue-m);box-shadow:0 2px 12px rgba(0,0,0,.08)}
-.knum{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--blue2);background:var(--blue-l);padding:4px 10px;border-radius:6px;white-space:nowrap}
-.kinfo{flex:1;min-width:0}
-.kname{font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
-.kmeta{font-size:11px;color:var(--text3)}
-.kbadge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
-.b1{background:#fff7e6;color:#b45309}
-.b2{background:#e8eeff;color:#1a3fa8}
-.b3{background:#fdf4ff;color:#7e22ce}
-.b4{background:#fdf2f8;color:#9d174d}
-.b5{background:#f0fdf4;color:#166534}
-.b6{background:#fef2f2;color:#991b1b}
+/* STATS */
+.stats5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem}
+.sc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:.9rem 1rem}
+.sc .sl{font-size:10px;font-weight:600;letter-spacing:.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px}
+.sc .sv{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--text)}
+.sc.bl{border-top:3px solid var(--blue2)}.sc.or{border-top:3px solid var(--warn)}
+.sc.pu{border-top:3px solid #7c3aed}.sc.re{border-top:3px solid var(--danger)}.sc.gr{border-top:3px solid var(--green)}
 
-/* FORM CARD */
-.fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05)}
+/* PROGRESS STEPS */
+.flow-bar{display:flex;align-items:center;gap:0;margin-bottom:2rem}
+.flow-step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative}
+.flow-step:not(:last-child)::after{content:'';position:absolute;top:18px;left:50%;width:100%;height:3px;background:var(--border);z-index:0}
+.flow-step.done::after{background:var(--green)}
+.flow-step.active::after{background:var(--blue2)}
+.fs-circle{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;border:3px solid var(--border);background:var(--surface);color:var(--text3);position:relative;z-index:1;transition:.3s}
+.flow-step.done .fs-circle{background:var(--green);border-color:var(--green);color:#fff}
+.flow-step.active .fs-circle{background:var(--blue2);border-color:var(--blue2);color:#fff;box-shadow:0 0 0 4px var(--blue-l)}
+.flow-step.rejected .fs-circle{background:var(--danger);border-color:var(--danger);color:#fff}
+.fs-label{font-size:11px;color:var(--text3);margin-top:6px;text-align:center;font-weight:500}
+.flow-step.active .fs-label{color:var(--blue2);font-weight:700}
+.flow-step.done .fs-label{color:var(--green-d)}
+
+/* CARDS */
+.fcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.07),0 4px 16px rgba(0,0,0,.05);margin-bottom:1.5rem}
 .fhdr{background:var(--blue);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
 .ftitle{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:#fff}
-.fstep{font-size:12px;color:rgba(255,255,255,.7)}
 .fbody{padding:1.5rem}
 .ffoot{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-top:1px solid var(--border);background:var(--surface2)}
 
-/* SECTION PROGRESS */
-.sprg{display:flex;gap:6px;margin-bottom:1.5rem;align-items:center}
-.sps{flex:1;height:5px;border-radius:5px;background:var(--border);position:relative}
-.sps.done{background:var(--green)}
-.sps.active{background:var(--blue2)}
-.sps.locked{background:#fcd34d}
-.sps.rejected{background:var(--danger)}
-.spl{font-size:11px;color:var(--text3);white-space:nowrap}
-
-/* SECTION HEADER */
-.stitle{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1rem;padding-bottom:8px;border-bottom:2px solid var(--blue-l);display:flex;align-items:center;gap:8px}
-.snum{background:var(--blue2);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+/* SECTION TITLES */
+.stitle{font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1rem;padding-bottom:8px;border-bottom:2px solid var(--blue-l);display:flex;align-items:center;gap:8px}
+.snum{background:var(--blue2);color:#fff;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
 .divider{height:1px;background:var(--border);margin:1.25rem 0}
 
-/* FORM ELEMENTS */
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
+/* 2-COL GRID */
+.photo-pair{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1rem}
 .fg2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
 .fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1rem}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
 label{font-size:12px;font-weight:500;color:var(--text2)}
 input[type=text],input[type=date],input[type=number],input[type=email],select,textarea{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);background:var(--bg);transition:.2s}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue2);background:#fff}
 textarea{resize:vertical;min-height:80px;line-height:1.5}
+input[readonly]{background:#f0f3f9;color:var(--text2)}
 
 /* PHOTO */
-.pup{border:2px dashed var(--border);border-radius:var(--r);padding:1rem;text-align:center;cursor:pointer;transition:.2s;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--surface2);position:relative}
+.pup{border:2px dashed var(--border);border-radius:var(--r);padding:1rem;text-align:center;cursor:pointer;transition:.2s;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--surface2)}
 .pup:hover{border-color:var(--blue2);background:var(--blue-l)}
 .pup-icon{font-size:28px;color:var(--text3)}
 .pup-lbl{font-size:12px;font-weight:500;color:var(--text2)}
 .pup-sub{font-size:11px;color:var(--text3)}
-.pimg{width:100%;height:130px;object-fit:cover;border-radius:8px;display:none}
+.pimg{width:100%;height:140px;object-fit:cover;border-radius:8px;display:none}
 
 /* CHECKBOXES */
 .chkgrp{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
 .chi{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:.2s}
 .chi:hover,.chi.on{border-color:var(--blue2);background:var(--blue-l)}
 .chi input{width:16px;height:16px;accent-color:var(--blue2);cursor:pointer;flex-shrink:0}
-.chi span{font-size:13px}
 
 /* BUTTONS */
 .btn{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:9px 20px;border-radius:8px;cursor:pointer;transition:.2s;border:none;display:inline-flex;align-items:center;gap:6px}
@@ -111,7 +92,6 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
 .btn-green{background:var(--green);color:#fff}.btn-green:hover{background:var(--green-d)}
 .btn-out{background:none;border:1px solid var(--border);color:var(--text2)}.btn-out:hover{border-color:var(--text2);color:var(--text)}
 .btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{background:#dc2626}
-.btn-warn{background:var(--warn);color:#fff}.btn-warn:hover{background:#d97706}
 .btn-pdf{background:#7c3aed;color:#fff}.btn-pdf:hover{background:#6d28d9}
 
 /* ALERTS */
@@ -132,28 +112,32 @@ canvas.sigpad{border:1px solid var(--border);border-radius:8px;background:#fff;c
 .btn-clr{background:none;border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer}
 .btn-clr:hover{border-color:var(--danger);color:var(--danger)}
 
-/* EMAIL MODAL */
+/* LIST */
+.kcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1rem 1.25rem;margin-bottom:8px;display:flex;align-items:center;gap:1rem;cursor:pointer;transition:.2s}
+.kcard:hover{border-color:var(--blue-m);box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.knum{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--blue2);background:var(--blue-l);padding:4px 10px;border-radius:6px;white-space:nowrap}
+.kinfo{flex:1;min-width:0}
+.kname{font-weight:500;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.kmeta{font-size:11px;color:var(--text3)}
+.kbadge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.b1{background:#fff7e6;color:#b45309}.b2{background:#e8eeff;color:#1a3fa8}
+.b4{background:#fdf2f8;color:#9d174d}.b5{background:#f0fdf4;color:#166534}.b6{background:#fef2f2;color:#991b1b}
+
+/* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
-.modal{background:#fff;border-radius:var(--r2);width:100%;max-width:600px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal{background:#fff;border-radius:var(--r2);width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .modal-hdr{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .modal-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px}
 .modal-body{padding:1.5rem}
 .modal-foot{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;background:var(--surface2)}
-.email-preview{background:#f8faff;border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:13px}
-.ep-hdr{background:var(--blue);padding:.75rem 1rem;color:#fff;font-size:12px}
-.ep-meta{padding:.75rem 1rem;border-bottom:1px solid var(--border);background:#fff}
-.ep-meta div{font-size:12px;color:var(--text2);margin-bottom:3px}
-.ep-meta strong{color:var(--text)}
-.ep-body{padding:1rem;background:#fff;line-height:1.7;color:var(--text)}
+.ep-hdr{background:var(--blue);padding:.75rem 1rem;color:#fff;font-size:12px;border-radius:8px 8px 0 0}
+.ep-meta{padding:.75rem 1rem;border-bottom:1px solid var(--border);background:#fff;font-size:12px;color:var(--text2)}
+.ep-meta div{margin-bottom:3px}.ep-meta strong{color:var(--text)}
+.ep-body{padding:1rem;background:#fff;line-height:1.7;color:var(--text);font-size:13px}
 .ep-btns{display:flex;gap:10px;padding:1rem;background:#f0f3f9;border-top:1px solid var(--border)}
 .ep-btn-a{flex:1;text-align:center;padding:10px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:none;background:var(--green);color:#fff}
 .ep-btn-r{flex:1;text-align:center;padding:10px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;border:none;background:var(--danger);color:#fff}
-
-/* REJECTED STATE */
-.rejected-card{text-align:center;padding:2.5rem;background:#fef2f2;border:2px solid #fecaca;border-radius:var(--r2);margin-bottom:1rem}
-.rejected-icon{font-size:48px;margin-bottom:12px}
-.rejected-title{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--danger);margin-bottom:8px}
-.rejected-reason{font-size:13px;color:#7f1d1d;background:#fff;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-top:12px;text-align:left}
+.email-preview{border:1px solid var(--border);border-radius:10px;overflow:hidden}
 
 /* DETAIL */
 .dl{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
@@ -167,11 +151,11 @@ canvas.sigpad{border:1px solid var(--border);border-radius:8px;background:#fff;c
 
 .view{display:none}.view.on{display:block}
 .empty{text-align:center;padding:3rem 2rem;color:var(--text3)}
+.lhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="hdr">
   <div class="hdr-brand">
     <span class="hdr-logo">zubex</span>
@@ -186,16 +170,13 @@ canvas.sigpad{border:1px solid var(--border);border-radius:8px;background:#fff;c
 
 <div class="wrap">
 
-  <!-- HISTORIAL (vista inicio) -->
-  <div id="v-dash" class="view on">
+  <!-- ═══ SOLICITUDES (INICIO) ═══ -->
+  <div id="v-hist" class="view on">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:.25rem">
-      <div>
-        <p class="ptitle">Solicitudes Short Kaizen</p>
-        <p class="psub">Equipo Lean · Zubex</p>
-      </div>
-      <button class="btn btn-blue" id="nb-new2">+ Nueva Solicitud</button>
+      <div><p class="ptitle">Solicitudes Short Kaizen</p><p class="psub">Equipo Lean · Zubex</p></div>
+      <button class="btn btn-blue" onclick="startNew()">+ Nueva Solicitud</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem">
+    <div class="stats5">
       <div class="sc bl"><div class="sl">Total</div><div class="sv" id="h-st0">0</div></div>
       <div class="sc or"><div class="sl">Pend. Líder</div><div class="sv" id="h-st1">0</div></div>
       <div class="sc pu"><div class="sl">En proceso</div><div class="sv" id="h-st2">0</div></div>
@@ -203,862 +184,393 @@ canvas.sigpad{border:1px solid var(--border);border-radius:8px;background:#fff;c
       <div class="sc gr"><div class="sl">Cerrados</div><div class="sv" id="h-st4">0</div></div>
     </div>
     <div class="lhdr">
-      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Historial de solicitudes</span>
+      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Historial</span>
       <div style="display:flex;gap:8px">
-        <select id="h-filtro-eq" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderHist()">
-          <option value="">Todos los equipos</option>
-        </select>
-        <select id="h-filtro-st" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderHist()">
+        <select id="h-feq" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderHist()"><option value="">Todos los equipos</option></select>
+        <select id="h-fst" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderHist()">
           <option value="">Todos los estados</option>
           <option value="pend_l">Pend. Líder</option>
-          <option value="s3">En proceso</option>
           <option value="pend_g">Pend. Gerente</option>
           <option value="done">Cerrados</option>
-          <option value="rej_l">Rechazados</option>
+          <option value="rej_l">Rechazados Líder</option>
+          <option value="rej_g">Rechazados Gerente</option>
         </select>
       </div>
     </div>
     <div id="klist"></div>
   </div>
 
-  <!-- DASHBOARD ANALÍTICO -->
-  <div id="v-analytics" class="view">
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="v-dash" class="view">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:.25rem">
-      <div>
-        <p class="ptitle">Dashboard de Mejora Continua</p>
-        <p class="psub">Short Kaizen · Zubex · <span id="dash-periodo">—</span></p>
-      </div>
+      <div><p class="ptitle">Dashboard Mejora Continua</p><p class="psub">Short Kaizen · Zubex · <span id="dash-periodo">—</span></p></div>
       <button class="btn btn-blue" onclick="startNew()">+ Nueva Solicitud</button>
     </div>
-
-    <!-- KPIs principales -->
-    <div class="stats" style="grid-template-columns:repeat(5,1fr);margin-bottom:1rem">
-      <div class="sc bl"><div class="sl">Total Kaizens</div><div class="sv" id="st0">0</div><div style="font-size:10px;color:var(--text3);margin-top:2px">registrados</div></div>
-      <div class="sc gr"><div class="sl">Tasa de cierre</div><div class="sv" id="st-tasa">0%</div><div style="font-size:10px;color:var(--text3);margin-top:2px">completados</div></div>
-      <div class="sc or"><div class="sl">En espera</div><div class="sv" id="st1">0</div><div style="font-size:10px;color:var(--text3);margin-top:2px">pend. firma</div></div>
-      <div class="sc pu"><div class="sl">En proceso</div><div class="sv" id="st2">0</div><div style="font-size:10px;color:var(--text3);margin-top:2px">activos</div></div>
-      <div class="sc re"><div class="sl">Rechazados</div><div class="sv" id="st-rej">0</div><div style="font-size:10px;color:var(--text3);margin-top:2px">tasa rechazo</div></div>
+    <div class="stats5" style="margin-bottom:1rem">
+      <div class="sc bl"><div class="sl">Total</div><div class="sv" id="d-st0">0</div></div>
+      <div class="sc gr"><div class="sl">Tasa cierre</div><div class="sv" id="d-tasa">0%</div></div>
+      <div class="sc or"><div class="sl">Pend. firma</div><div class="sv" id="d-st1">0</div></div>
+      <div class="sc pu"><div class="sl">En proceso</div><div class="sv" id="d-st2">0</div></div>
+      <div class="sc re"><div class="sl">Rechazados</div><div class="sv" id="d-rej">0</div></div>
     </div>
-
-    <!-- Fila 2: Equipo líder + Enfoque más frecuente + Pendiente más antiguo -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem">
-      <!-- Equipo con más kaizens -->
-      <div class="sc" style="border-top:3px solid var(--blue2);padding:1rem">
-        <div class="sl">🏆 Equipo más activo</div>
-        <div class="sv" id="kpi-top-equipo" style="font-size:16px;margin-top:4px">—</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px" id="kpi-top-equipo-n">—</div>
-      </div>
-      <!-- Enfoque más frecuente -->
-      <div class="sc" style="border-top:3px solid #7c3aed;padding:1rem">
-        <div class="sl">⚙️ Tipo de mejora frecuente</div>
-        <div class="sv" id="kpi-top-enfoque" style="font-size:16px;margin-top:4px">—</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px" id="kpi-top-enfoque-n">—</div>
-      </div>
-      <!-- Tiempo promedio cierre -->
-      <div class="sc" style="border-top:3px solid var(--green);padding:1rem">
-        <div class="sl">⏱ Tiempo prom. implementación</div>
-        <div class="sv" id="kpi-tiempo" style="font-size:16px;margin-top:4px">—</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:2px" id="kpi-tiempo-n">—</div>
-      </div>
+      <div class="sc" style="border-top:3px solid var(--blue2);padding:1rem"><div class="sl">🏆 Equipo más activo</div><div class="sv" id="d-teq" style="font-size:16px;margin-top:4px">—</div><div style="font-size:11px;color:var(--text3);margin-top:2px" id="d-teqn">—</div></div>
+      <div class="sc" style="border-top:3px solid #7c3aed;padding:1rem"><div class="sl">⚙️ Mejora frecuente</div><div class="sv" id="d-tenf" style="font-size:16px;margin-top:4px">—</div><div style="font-size:11px;color:var(--text3);margin-top:2px" id="d-tenfn">—</div></div>
+      <div class="sc" style="border-top:3px solid var(--green);padding:1rem"><div class="sl">⏱ T. prom. implementación</div><div class="sv" id="d-ttime" style="font-size:16px;margin-top:4px">—</div><div style="font-size:11px;color:var(--text3);margin-top:2px" id="d-ttimen">—</div></div>
     </div>
-
-    <!-- Fila 3: Gráficas -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem">
-      <!-- Kaizens por equipo -->
-      <div class="sc" style="padding:1rem">
-        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:12px">Kaizens por equipo</div>
-        <div id="chart-equipos"></div>
-      </div>
-      <!-- Enfoques de mejora -->
-      <div class="sc" style="padding:1rem">
-        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:12px">Distribución por enfoque</div>
-        <div id="chart-enfoques"></div>
-      </div>
+      <div class="sc" style="padding:1rem"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">Kaizens por equipo</div><div id="d-chart-eq"></div></div>
+      <div class="sc" style="padding:1rem"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">Distribución por enfoque</div><div id="d-chart-enf"></div></div>
     </div>
-
-    <!-- Fila 4: Tendencia mensual + Semáforo de equipos -->
     <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:12px;margin-bottom:1.5rem">
-      <!-- Tendencia mensual -->
-      <div class="sc" style="padding:1rem">
-        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:12px">Tendencia mensual de Kaizens</div>
-        <div id="chart-tendencia"></div>
-      </div>
-      <!-- Semáforo de equipos -->
-      <div class="sc" style="padding:1rem">
-        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px">Estado por equipo</div>
-        <div id="semaforo-equipos" style="display:flex;flex-direction:column;gap:6px"></div>
-      </div>
+      <div class="sc" style="padding:1rem"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:12px">Tendencia mensual</div><div id="d-chart-mes"></div></div>
+      <div class="sc" style="padding:1rem"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;margin-bottom:10px">Semáforo por equipo</div><div id="d-semaforo" style="display:flex;flex-direction:column;gap:6px"></div></div>
     </div>
+  </div>
 
-    <!-- Historial -->
-    <div class="lhdr">
-      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Historial de solicitudes</span>
-      <div style="display:flex;gap:8px;align-items:center">
-        <select id="a-filtro-equipo" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderDash()">
-          <option value="">Todos los equipos</option>
-        </select>
-        <select id="a-filtro-estado" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderDash()">
-          <option value="">Todos los estados</option>
-          <option value="pend_l">Pend. Líder</option>
-          <option value="s3">En proceso</option>
-          <option value="pend_g">Pend. Gerente</option>
-          <option value="done">Cerrados</option>
-          <option value="rej_l">Rechazados</option>
-        </select>
-      </div>
-    </div>
-    <div id="a-klist"></div>
-  </div><!-- /v-analytics -->
-
-  <!-- FORM VIEW -->
+  <!-- ═══ FORMULARIO ═══ -->
   <div id="v-form" class="view">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem">
-      <button class="btn btn-out" onclick="goTo('dash')">← Volver</button>
+      <button class="btn btn-out" onclick="goTo('hist')">← Volver</button>
       <p class="ptitle" style="margin-bottom:0" id="form-title">Nueva Solicitud</p>
     </div>
-    <!-- progress -->
-    <div class="sprg">
-      <div class="sps" id="pg0"></div>
-      <span class="spl">→</span>
-      <div class="sps" id="pg1"></div>
-      <span class="spl">→</span>
-      <div class="sps" id="pg2"></div>
-      <span class="spl">→</span>
-      <div class="sps" id="pg3"></div>
-    </div>
-    <div style="display:flex;justify-content:space-between;margin-bottom:1.5rem;margin-top:-1rem">
-      <span style="font-size:11px;color:var(--text3)">Sección 1</span>
-      <span style="font-size:11px;color:var(--text3)">Aprobación Líder</span>
-      <span style="font-size:11px;color:var(--text3)">Sección 2</span>
-      <span style="font-size:11px;color:var(--text3)">Aprobación Gerente</span>
+    <!-- Flow bar -->
+    <div class="flow-bar" id="flow-bar">
+      <div class="flow-step" id="fs0"><div class="fs-circle">1</div><div class="fs-label">Formulario</div></div>
+      <div class="flow-step" id="fs1"><div class="fs-circle">2</div><div class="fs-label">Aprobación Líder</div></div>
+      <div class="flow-step" id="fs2"><div class="fs-circle">3</div><div class="fs-label">Aprobación Gerente</div></div>
+      <div class="flow-step" id="fs3"><div class="fs-circle">✓</div><div class="fs-label">Cerrado</div></div>
     </div>
     <div id="form-area"></div>
   </div>
 
-  <!-- DETAIL VIEW -->
+  <!-- ═══ DETALLE ═══ -->
   <div id="v-det" class="view">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem">
-      <button class="btn btn-out" onclick="goTo('dash')">← Volver</button>
+      <button class="btn btn-out" onclick="goTo('hist')">← Volver</button>
       <p class="ptitle" style="margin-bottom:0" id="det-title">Detalle</p>
     </div>
     <div id="det-body"></div>
   </div>
 
-</div><!-- /wrap -->
+</div>
 
-<!-- MODAL EMAIL -->
-<div class="modal-bg" id="email-modal" style="display:none">
+<!-- MODAL -->
+<div class="modal-bg" id="modal" style="display:none">
   <div class="modal">
-    <div class="modal-hdr">
-      <span class="modal-title" id="em-title">Notificación de correo</span>
-      <button class="btn btn-out" style="padding:6px 12px" onclick="closeModal()">✕ Cerrar</button>
-    </div>
-    <div class="modal-body" id="em-body"></div>
-    <div class="modal-foot" id="em-foot"></div>
+    <div class="modal-hdr"><span class="modal-title" id="m-title">—</span><button class="btn btn-out" style="padding:6px 12px" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="m-body"></div>
+    <div class="modal-foot" id="m-foot"></div>
   </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
 <script>
-const SK='zubex_sk_v4';
-let KZ=JSON.parse(localStorage.getItem(SK)||'[]');
-let fd={},curSection=0,editId=null;
+/* ══════════════════════════════════════
+   DATOS
+══════════════════════════════════════ */
+const SKDB='zubex_sk_v5';
+let KZ=JSON.parse(localStorage.getItem(SKDB)||'[]');
+let fd={};
 const sigD={};
-let pendingAction=null; // callback after modal action
+
+const APR2={nombre:'Luis López',email:'l.lopez@zubex.com.mx'};
+
+const EMPLEADOS=[
+  {eq:'AUDI',nom:'2087',name:'PABLO EVERARDO MEJÍA SOTO',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'AUDI',nom:'3352',name:'RUBEN GALICIA CARDENAS',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'AUDI',nom:'3486',name:'ISIDRO PÉREZ BARBOSA',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'AUDI',nom:'2027',name:'JUAN CARLOS CRUZ SANMIGUEL',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'LOS ELECTROS',nom:'2527',name:'LINO FRANCISCO MORENO GONZALEZ',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'LOS ELECTROS',nom:'2722',name:'SERGIO ANTONIO DÍAZ POSADA',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'LOS ELECTROS',nom:'2237',name:'FERNANDO JESÚS CASTILLO RODRIGUEZ',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'LOS ELECTROS',nom:'2654',name:'ERIK ALBERTO TREVIÑO CUELLAR',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'TEAMWORK',nom:'2372',name:'OSCAR NARCISO FUANTOS TENIENTE',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'TEAMWORK',nom:'3073',name:'LUIS FELIPE RUBIO QUIROZ',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'TEAMWORK',nom:'3706',name:'JUAN FLORES',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'TEAMWORK',nom:'2795',name:'JOSE GONZALO MUÑOZ HERNANDEZ',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'TECLEAN',nom:'2394',name:'JUAN CARLOS CASTAÑEDA PEREZ',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'TECLEAN',nom:'2803',name:'SERGIO MEDINA BARBOSA',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'TECLEAN',nom:'3072',name:'JOEL PABLO CASTILLO HERRERA',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'SOLUTION TEAM',nom:'3075',name:'ALAN JAHIR ROMERO MORENO',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'SOLUTION TEAM',nom:'3423',name:'CARLOS CHAVARRIA TAPIA',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'SOLUTION TEAM',nom:'2766',name:'JOSE GERARDO SOLANO CASTRO',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'SOLUTION TEAM',nom:'3525',name:'DANIEL ALEJANDRO FLORES TORRES',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'SOLUTION TEAM',nom:'3519',name:'MOISES ISRAEL CEDILLO ALMANZA',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',a1n:'Ricardo Torres',a1e:'r.torres@zubex.com.mx'},
+  {eq:'SERVILEAN',nom:'3084',name:'EULALIO PEREZ MEDINA',notif:'servicios.generales@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SERVILEAN',nom:'3274',name:'ANTONIO MERCADO MARTINEZ',notif:'servicios.generales@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SERVILEAN',nom:'3590',name:'JAIR ALEJANDRO VILLASANA FLORES',notif:'servicios.generales@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SERVILEAN',nom:'3545',name:'SERGIO ELIZONDO BENITO',notif:'servicios.generales@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SMART TEAM 4.0',nom:'2367',name:'J CARLOS RODRIGUEZ GOVEA',notif:'proyectos@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SMART TEAM 4.0',nom:'3524',name:'PEDRO FRANCISCO MACIAS',notif:'proyectos@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SMART TEAM 4.0',nom:'3577',name:'EVER ESAU SALAZAR AGUIRRE',notif:'proyectos@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SMART TEAM 4.0',nom:'2776',name:'JOSE FELICIANO ORTEGA SANCHEZ',notif:'proyectos@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SMART TEAM 4.0',nom:'2844',name:'LUIS LAURO LOZANO FUENTES',notif:'proyectos@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SMART TEAM 4.0',nom:'3648',name:'JORGE EMMANUEL MONTEMAYOR VAZQUEZ',notif:'proyectos@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SMART TEAM 4.0',nom:'3712',name:'GERMAN RAMIREZ HERNANDEZ',notif:'proyectos@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'SMART TEAM 4.0',nom:'2774',name:'FRANCISCO JAVIER ROMERO DIAZ',notif:'proyectos@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'ILUMINATEAM',nom:'2845',name:'JOSE LEOPOLDO SANMIGUEL MARTINEZ',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'ILUMINATEAM',nom:'3540',name:'MAURICIO ARMANDO SANTILLAN RIVERA',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'LEANPIEZA',nom:'2660',name:'DAVID ANTONIO MARTINEZ PEREZ',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'LEANPIEZA',nom:'3087',name:'AURORA BELEN LIMON OBREGON',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'LEANPIEZA',nom:'3237',name:'REINA ISABEL TORRES RODRIGUEZ',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'LEANPIEZA',nom:'3619',name:'MARÍA CONCEPCIÓN PACHICANO REYNOSA',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'LEANPIEZA',nom:'3662',name:'MARTÍN GUADALUPE MENDOZA',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+];
+const EQUIPOS=[...new Set(EMPLEADOS.map(e=>e.eq))];
 
 const STATUS={
-  s1:    ['b1','📝 Solicitud iniciada'],
-  pend_l:['b1','⏳ Esperando Líder'],
-  rej_l: ['b6','❌ Rechazado por Líder'],
-  s3:    ['b2','🔄 En proceso (Sección 2)'],
-  pend_g:['b4','⏳ Esperando Gerente'],
-  rej_g: ['b6','❌ Rechazado por Gerente'],
-  done:  ['b5','✅ Cerrado y aprobado'],
+  nuevo:  ['b1','📝 Nuevo'],
+  pend_l: ['b1','⏳ Esperando Líder'],
+  rej_l:  ['b6','❌ Rechazado por Líder'],
+  pend_g: ['b4','⏳ Esperando Gerente'],
+  rej_g:  ['b6','❌ Rechazado por Gerente'],
+  done:   ['b5','✅ Cerrado y aprobado'],
 };
 
-function save(){localStorage.setItem(SK,JSON.stringify(KZ));}
+/* ══════════════════════════════════════
+   UTILS
+══════════════════════════════════════ */
+function save(){localStorage.setItem(SKDB,JSON.stringify(KZ));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 function toast(m,t=''){const el=document.getElementById('toast');el.textContent=m;el.className='toast show '+(t||'');setTimeout(()=>el.classList.remove('show'),3200);}
 function gv(id){const e=document.getElementById(id);return e?e.value:'';}
+function saveKaizen(){const i=KZ.findIndex(x=>x.id===fd.id);if(i>=0)KZ[i]={...fd};else KZ.push({...fd});save();}
+function closeModal(){document.getElementById('modal').style.display='none';}
 
 function goTo(v){
-  document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
   document.getElementById('v-'+v).classList.add('on');
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  if(v==='dash'){document.getElementById('nb-hist').classList.add('on');renderHist();}
-  else if(v==='analytics'){document.getElementById('nb-dash').classList.add('on');renderDash();}
+  if(v==='hist'){document.getElementById('nb-hist').classList.add('on');renderHist();}
+  else if(v==='dash'){document.getElementById('nb-dash').classList.add('on');renderDash();}
   else if(v==='form'){document.getElementById('nb-new').classList.add('on');}
 }
 
+/* ══════════════════════════════════════
+   FLOW BAR
+══════════════════════════════════════ */
+function updateFlow(status){
+  const steps=[
+    ['nuevo','pend_l'],   // step 0 active when nuevo
+    ['pend_l'],           // step 1 active when pend_l
+    ['pend_g'],           // step 2 active when pend_g
+    ['done'],             // step 3 active when done
+  ];
+  const doneAt={pend_l:0,rej_l:0,pend_g:1,rej_g:1,done:2};
+  const activeAt={nuevo:0,pend_l:1,rej_l:1,pend_g:2,rej_g:2,done:3};
+  const doneUpTo=doneAt[status]??-1;
+  const activeIdx=activeAt[status]??0;
+  for(let i=0;i<4;i++){
+    const el=document.getElementById('fs'+i);
+    el.className='flow-step';
+    if(i<activeIdx) el.classList.add('done');
+    else if(i===activeIdx){
+      if(status==='rej_l'||status==='rej_g') el.classList.add('rejected');
+      else el.classList.add('active');
+    }
+  }
+}
+
+/* ══════════════════════════════════════
+   HISTORIAL
+══════════════════════════════════════ */
 function renderHist(){
-  const t=KZ.length;
-  document.getElementById('h-st0').textContent=t;
+  document.getElementById('h-st0').textContent=KZ.length;
   document.getElementById('h-st1').textContent=KZ.filter(k=>k.status==='pend_l').length;
-  document.getElementById('h-st2').textContent=KZ.filter(k=>k.status==='s3').length;
+  document.getElementById('h-st2').textContent=KZ.filter(k=>k.status==='pend_g').length;
   document.getElementById('h-st3').textContent=KZ.filter(k=>k.status==='pend_g').length;
   document.getElementById('h-st4').textContent=KZ.filter(k=>k.status==='done').length;
-  // populate equipo filter
-  const selEq=document.getElementById('h-filtro-eq');
+  const selEq=document.getElementById('h-feq');
   const cur=selEq.value;
-  selEq.innerHTML=`<option value="">Todos los equipos</option>`+
+  selEq.innerHTML='<option value="">Todos los equipos</option>'+
     [...new Set(KZ.map(k=>k.equipo).filter(Boolean))].sort().map(eq=>`<option value="${eq}" ${cur===eq?'selected':''}>${eq}</option>`).join('');
-  // filter list
-  const filtEq=selEq.value;
-  const filtSt=document.getElementById('h-filtro-st').value;
   let lista=KZ.slice().reverse();
-  if(filtEq) lista=lista.filter(k=>k.equipo===filtEq);
-  if(filtSt) lista=lista.filter(k=>k.status===filtSt);
+  const fe=selEq.value,fs=gv('h-fst');
+  if(fe)lista=lista.filter(k=>k.equipo===fe);
+  if(fs)lista=lista.filter(k=>k.status===fs);
   const el=document.getElementById('klist');
-  if(!lista.length){
-    el.innerHTML=t?`<div class="empty" style="padding:2rem"><div style="font-size:13px;color:var(--text3)">Sin resultados con los filtros seleccionados.</div></div>`
-      :`<div class="empty"><div style="font-size:48px">📋</div><div style="margin-top:12px">No hay solicitudes. Crea la primera.</div></div>`;
-    return;
-  }
+  if(!lista.length){el.innerHTML=KZ.length?`<div class="empty" style="padding:2rem;font-size:13px">Sin resultados.</div>`:`<div class="empty"><div style="font-size:48px">📋</div><div style="margin-top:12px">No hay solicitudes aún.</div></div>`;return;}
   el.innerHTML=lista.map(k=>{
     const[cls,lbl]=STATUS[k.status]||['b1','—'];
     return`<div class="kcard" onclick="showDet('${k.id}')">
       <span class="knum">SK-${k.id.slice(-4).toUpperCase()}</span>
-      <div class="kinfo"><div class="kname">${k.donde||k.nombre||'Sin descripción'}</div><div class="kmeta">${k.nombre||''} · ${k.equipo||''} · ${k.fechaId||''}</div></div>
+      <div class="kinfo"><div class="kname">${k.donde||k.nombre||'—'}</div><div class="kmeta">${k.nombre||''} · ${k.equipo||''} · ${k.fechaId||''}</div></div>
       <span class="kbadge ${cls}">${lbl}</span>
     </div>`;
   }).join('');
 }
 
-/* ═══════════════════════════════════════
-   DASHBOARD ANALYTICS
+/* ══════════════════════════════════════
+   DASHBOARD
 ══════════════════════════════════════ */
 function renderDash(){
   const t=KZ.length;
   const done=KZ.filter(k=>k.status==='done');
-  const rechazados=KZ.filter(k=>k.status==='rej_l'||k.status==='rej_g');
-  const pendL=KZ.filter(k=>k.status==='pend_l');
-  const enProceso=KZ.filter(k=>k.status==='s3'||k.status==='pend_g');
-  const tasa=t?Math.round(done.length/t*100):0;
-
-  // KPIs básicos
-  document.getElementById('st0').textContent=t;
-  document.getElementById('st-tasa').textContent=tasa+'%';
-  document.getElementById('st1').textContent=pendL.length;
-  document.getElementById('st2').textContent=enProceso.length;
-  document.getElementById('st-rej').textContent=rechazados.length;
-
-  // Periodo
-  if(t){
-    const fechas=KZ.map(k=>k.fechaId).filter(Boolean).sort();
-    document.getElementById('dash-periodo').textContent=fechas[0]+' → '+fechas[fechas.length-1];
-  }
-
-  if(!t){
-    document.getElementById('kpi-top-equipo').textContent='—';
-    document.getElementById('kpi-top-enfoque').textContent='—';
-    document.getElementById('kpi-tiempo').textContent='—';
-    ['chart-equipos','chart-enfoques','chart-tendencia','semaforo-equipos'].forEach(id=>{
-      document.getElementById(id).innerHTML=`<div style="text-align:center;padding:2rem;color:var(--text3);font-size:13px">Sin datos aún</div>`;
-    });
-    document.getElementById('a-klist').innerHTML=`<div class="empty"><div style="font-size:48px">📋</div><div style="margin-top:12px">No hay solicitudes aún.</div></div>`;
-    return;
-  }
-
-  // ── KPI: Equipo más activo ──
-  const porEquipo={};
-  KZ.forEach(k=>{if(k.equipo)porEquipo[k.equipo]=(porEquipo[k.equipo]||0)+1;});
-  const topEq=Object.entries(porEquipo).sort((a,b)=>b[1]-a[1])[0];
-  if(topEq){
-    document.getElementById('kpi-top-equipo').textContent=topEq[0];
-    document.getElementById('kpi-top-equipo-n').textContent=topEq[1]+' kaizen'+(topEq[1]>1?'s':'')+' registrados';
-  }
-
-  // ── KPI: Enfoque más frecuente ──
-  const enfMap={rentabilidad:'Rentabilidad',bienestar:'Bienestar',sustentabilidad:'Sustentabilidad',proceso:'Mejora en proceso',
-    '5s':'5S',seguridad:'Seguridad',calidad:'Calidad',productividad:'Productividad',costos:'Costos',ambiente:'Ambiente'};
-  const porEnfoque={};
-  KZ.forEach(k=>{
-    [...(k.enfoques||[]),...(k.enfoquesMejora||[])].forEach(e=>{porEnfoque[e]=(porEnfoque[e]||0)+1;});
-  });
-  const topEnf=Object.entries(porEnfoque).sort((a,b)=>b[1]-a[1])[0];
-  if(topEnf){
-    document.getElementById('kpi-top-enfoque').textContent=enfMap[topEnf[0]]||topEnf[0];
-    document.getElementById('kpi-top-enfoque-n').textContent=topEnf[1]+' kaizen'+(topEnf[1]>1?'s':'')+' con este enfoque';
-  }
-
-  // ── KPI: Tiempo promedio implementación ──
-  const tiempos=done.filter(k=>k.tiempoImpl&&k.unidadTiempo).map(k=>{
-    const v=parseFloat(k.tiempoImpl);
-    if(k.unidadTiempo==='horas') return v*60;
-    if(k.unidadTiempo==='dias') return v*60*8;
-    return v;
-  });
-  if(tiempos.length){
-    const prom=tiempos.reduce((a,b)=>a+b,0)/tiempos.length;
-    let label=prom<60?Math.round(prom)+' min':prom<480?Math.round(prom/60*10)/10+' hrs':Math.round(prom/480*10)/10+' días';
-    document.getElementById('kpi-tiempo').textContent=label;
-    document.getElementById('kpi-tiempo-n').textContent='promedio en '+tiempos.length+' kaizen cerrado'+(tiempos.length>1?'s':'');
-  } else {
-    document.getElementById('kpi-tiempo').textContent='—';
-    document.getElementById('kpi-tiempo-n').textContent='sin datos de tiempo aún';
-  }
-
-  // ── GRÁFICA: Kaizens por equipo (barras horizontales) ──
-  const eqEntries=Object.entries(porEquipo).sort((a,b)=>b[1]-a[1]);
-  const maxEq=eqEntries[0]?eqEntries[0][1]:1;
-  const eqColors=['#2a57d6','#00c47a','#f59e0b','#7c3aed','#ef4444','#0891b2','#d97706','#059669','#7c3aed','#be185d'];
-  document.getElementById('chart-equipos').innerHTML=eqEntries.map(([eq,n],i)=>`
-    <div style="margin-bottom:7px">
-      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
-        <span style="color:var(--text2);font-weight:500;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${eq}</span>
-        <span style="color:var(--text);font-weight:700">${n}</span>
-      </div>
-      <div style="background:var(--border);border-radius:4px;height:8px;overflow:hidden">
-        <div style="background:${eqColors[i%eqColors.length]};height:8px;border-radius:4px;width:${Math.round(n/maxEq*100)}%;transition:width .5s"></div>
-      </div>
-    </div>`).join('');
-
-  // ── GRÁFICA: Distribución enfoques (donut visual) ──
-  const enfEntries=Object.entries(porEnfoque).sort((a,b)=>b[1]-a[1]).slice(0,6);
-  const totalEnf=enfEntries.reduce((s,[,v])=>s+v,0)||1;
-  const enfColors=['#2a57d6','#00c47a','#f59e0b','#7c3aed','#ef4444','#0891b2'];
-  document.getElementById('chart-enfoques').innerHTML=enfEntries.length?enfEntries.map(([k,n],i)=>`
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <div style="width:10px;height:10px;border-radius:2px;background:${enfColors[i]};flex-shrink:0"></div>
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">
-          <span style="color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${enfMap[k]||k}</span>
-          <span style="color:var(--text);font-weight:700;flex-shrink:0;margin-left:4px">${Math.round(n/totalEnf*100)}%</span>
-        </div>
-        <div style="background:var(--border);border-radius:4px;height:6px">
-          <div style="background:${enfColors[i]};height:6px;border-radius:4px;width:${Math.round(n/totalEnf*100)}%"></div>
-        </div>
-      </div>
-    </div>`).join(''):`<div style="text-align:center;padding:1.5rem;color:var(--text3);font-size:12px">Sin datos de enfoque</div>`;
-
-  // ── GRÁFICA: Tendencia mensual ──
-  const porMes={};
-  KZ.forEach(k=>{
-    if(!k.fechaId)return;
-    const m=k.fechaId.slice(0,7);
-    if(!porMes[m])porMes[m]={total:0,done:0,rej:0};
-    porMes[m].total++;
-    if(k.status==='done')porMes[m].done++;
-    if(k.status==='rej_l'||k.status==='rej_g')porMes[m].rej++;
-  });
-  const meses=Object.keys(porMes).sort().slice(-6);
-  const maxM=Math.max(...meses.map(m=>porMes[m].total),1);
-  const mNombres={'01':'Ene','02':'Feb','03':'Mar','04':'Abr','05':'May','06':'Jun','07':'Jul','08':'Ago','09':'Sep','10':'Oct','11':'Nov','12':'Dic'};
-  document.getElementById('chart-tendencia').innerHTML=`
-    <div style="display:flex;align-items:flex-end;gap:8px;height:90px;border-bottom:1px solid var(--border);border-left:1px solid var(--border);padding:0 4px 0 4px;margin-bottom:6px">
-      ${meses.map(m=>{
-        const d=porMes[m];
-        const hTotal=Math.round(d.total/maxM*80);
-        const hDone=Math.round(d.done/maxM*80);
-        const hRej=Math.round(d.rej/maxM*80);
-        return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-          <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:80px;gap:1px">
-            <div style="background:#2a57d6;border-radius:3px 3px 0 0;height:${hTotal}px;min-height:${d.total?2:0}px;position:relative;cursor:default" title="${d.total} total">
-              ${d.done?`<div style="background:#00c47a;position:absolute;bottom:0;left:0;right:0;height:${hDone}px;border-radius:3px 3px 0 0" title="${d.done} cerrados"></div>`:''}
-            </div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div style="display:flex;gap:8px;padding:0 4px">
-      ${meses.map(m=>`<div style="flex:1;text-align:center;font-size:10px;color:var(--text3)">${mNombres[m.slice(5)]} ${m.slice(2,4)}</div>`).join('')}
-    </div>
-    <div style="display:flex;gap:12px;margin-top:8px;font-size:10px;color:var(--text2)">
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#2a57d6;border-radius:2px;display:inline-block"></span>Total</span>
-      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#00c47a;border-radius:2px;display:inline-block"></span>Cerrados</span>
-    </div>`;
-
-  // ── SEMÁFORO DE EQUIPOS ──
-  const semEl=document.getElementById('semaforo-equipos');
-  const EQUIPOS_ALL=[...new Set(KZ.map(k=>k.equipo).filter(Boolean))].sort();
-  semEl.innerHTML=EQUIPOS_ALL.map(eq=>{
-    const kEq=KZ.filter(k=>k.equipo===eq);
-    const total=kEq.length;
-    const cerrados=kEq.filter(k=>k.status==='done').length;
-    const rechaz=kEq.filter(k=>k.status==='rej_l'||k.status==='rej_g').length;
-    const pend=kEq.filter(k=>k.status==='pend_l'||k.status==='pend_g'||k.status==='s3').length;
-    const pct=total?Math.round(cerrados/total*100):0;
-    let color='#f59e0b',semIcon='🟡';
-    if(pct>=70){color='#00c47a';semIcon='🟢';}
-    else if(rechaz>cerrados){color='#ef4444';semIcon='🔴';}
-    return`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
-      <span style="font-size:14px">${semIcon}</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${eq}</div>
-        <div style="font-size:10px;color:var(--text3)">${total} kaizen · ${cerrados} cerrado · ${pend} activo</div>
-      </div>
-      <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:${color};flex-shrink:0">${pct}%</div>
-    </div>`;
-  }).join('')||`<div style="text-align:center;padding:1rem;color:var(--text3);font-size:12px">Sin datos</div>`;
-
-  // ── FILTRO EQUIPO en select ──
-  const selEq=document.getElementById('a-filtro-equipo');
-  const curEqVal=selEq.value;
-  selEq.innerHTML=`<option value="">Todos los equipos</option>`+
-    [...new Set(KZ.map(k=>k.equipo).filter(Boolean))].sort().map(eq=>`<option value="${eq}" ${curEqVal===eq?'selected':''}>${eq}</option>`).join('');
-
-  // ── HISTORIAL FILTRADO ──
-  const filtEq=document.getElementById('a-filtro-equipo').value;
-  const filtSt=document.getElementById('a-filtro-estado').value;
-  let lista=KZ.slice().reverse();
-  if(filtEq) lista=lista.filter(k=>k.equipo===filtEq);
-  if(filtSt) lista=lista.filter(k=>k.status===filtSt);
-
-  const el=document.getElementById('a-klist');
-  if(!lista.length){el.innerHTML=`<div class="empty" style="padding:2rem"><div style="font-size:13px;color:var(--text3)">Sin resultados con los filtros seleccionados.</div></div>`;return;}
-  el.innerHTML=lista.map(k=>{
-    const[cls,lbl]=STATUS[k.status]||['b1','—'];
-    return`<div class="kcard" onclick="showDet('${k.id}')">
-      <span class="knum">SK-${k.id.slice(-4).toUpperCase()}</span>
-      <div class="kinfo"><div class="kname">${k.donde||k.nombre||'Sin descripción'}</div><div class="kmeta">${k.nombre||''} · ${k.equipo||''} · ${k.fechaId||''}</div></div>
-      <span class="kbadge ${cls}">${lbl}</span>
-    </div>`;
+  const rej=KZ.filter(k=>k.status==='rej_l'||k.status==='rej_g');
+  const pend=KZ.filter(k=>k.status==='pend_l'||k.status==='pend_g');
+  document.getElementById('d-st0').textContent=t;
+  document.getElementById('d-tasa').textContent=(t?Math.round(done.length/t*100):0)+'%';
+  document.getElementById('d-st1').textContent=pend.length;
+  document.getElementById('d-st2').textContent=KZ.filter(k=>k.status==='pend_g').length;
+  document.getElementById('d-rej').textContent=rej.length;
+  if(t){const fs=KZ.map(k=>k.fechaId).filter(Boolean).sort();document.getElementById('dash-periodo').textContent=fs[0]+' → '+fs[fs.length-1];}
+  if(!t){['d-chart-eq','d-chart-enf','d-chart-mes','d-semaforo'].forEach(id=>document.getElementById(id).innerHTML='<div style="text-align:center;padding:2rem;color:var(--text3);font-size:12px">Sin datos aún</div>');return;}
+  // equipo más activo
+  const porEq={};KZ.forEach(k=>{if(k.equipo)porEq[k.equipo]=(porEq[k.equipo]||0)+1;});
+  const topEq=Object.entries(porEq).sort((a,b)=>b[1]-a[1])[0];
+  if(topEq){document.getElementById('d-teq').textContent=topEq[0];document.getElementById('d-teqn').textContent=topEq[1]+' kaizens';}
+  // enfoque
+  const enfMap={rentabilidad:'Rentabilidad',bienestar:'Bienestar',sustentabilidad:'Sustentabilidad',proceso:'Mejora proceso','5s':'5S',seguridad:'Seguridad',calidad:'Calidad',productividad:'Productividad',costos:'Costos',ambiente:'Ambiente'};
+  const porEnf={};KZ.forEach(k=>[...(k.enfoques||[]),...(k.enfoquesMejora||[])].forEach(e=>{porEnf[e]=(porEnf[e]||0)+1;}));
+  const topEnf=Object.entries(porEnf).sort((a,b)=>b[1]-a[1])[0];
+  if(topEnf){document.getElementById('d-tenf').textContent=enfMap[topEnf[0]]||topEnf[0];document.getElementById('d-tenfn').textContent=topEnf[1]+' kaizens';}
+  // tiempo
+  const tiempos=done.filter(k=>k.tiempoImpl).map(k=>{const v=parseFloat(k.tiempoImpl);return k.unidadTiempo==='horas'?v*60:k.unidadTiempo==='dias'?v*480:v;});
+  if(tiempos.length){const p=tiempos.reduce((a,b)=>a+b,0)/tiempos.length;document.getElementById('d-ttime').textContent=p<60?Math.round(p)+' min':Math.round(p/60*10)/10+' hrs';document.getElementById('d-ttimen').textContent=tiempos.length+' cerrados';}
+  // chart equipos
+  const eqArr=Object.entries(porEq).sort((a,b)=>b[1]-a[1]);const mxEq=eqArr[0][1];
+  const eqC=['#2a57d6','#00c47a','#f59e0b','#7c3aed','#ef4444','#0891b2','#d97706','#059669','#be185d'];
+  document.getElementById('d-chart-eq').innerHTML=eqArr.map(([eq,n],i)=>`<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="color:var(--text2);font-weight:500;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${eq}</span><span style="font-weight:700">${n}</span></div><div style="background:var(--border);border-radius:4px;height:8px"><div style="background:${eqC[i%eqC.length]};height:8px;border-radius:4px;width:${Math.round(n/mxEq*100)}%"></div></div></div>`).join('');
+  // chart enfoques
+  const enfArr=Object.entries(porEnf).sort((a,b)=>b[1]-a[1]).slice(0,6);const totEnf=enfArr.reduce((s,[,v])=>s+v,0)||1;
+  document.getElementById('d-chart-enf').innerHTML=enfArr.map(([k,n],i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:10px;height:10px;border-radius:2px;background:${eqC[i]};flex-shrink:0"></div><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px"><span style="color:var(--text2)">${enfMap[k]||k}</span><span style="font-weight:700">${Math.round(n/totEnf*100)}%</span></div><div style="background:var(--border);border-radius:4px;height:6px"><div style="background:${eqC[i]};height:6px;border-radius:4px;width:${Math.round(n/totEnf*100)}%"></div></div></div></div>`).join('');
+  // tendencia mensual
+  const porMes={};KZ.forEach(k=>{if(!k.fechaId)return;const m=k.fechaId.slice(0,7);if(!porMes[m])porMes[m]={t:0,d:0};porMes[m].t++;if(k.status==='done')porMes[m].d++;});
+  const meses=Object.keys(porMes).sort().slice(-6);const mxM=Math.max(...meses.map(m=>porMes[m].t),1);
+  const mN={'01':'Ene','02':'Feb','03':'Mar','04':'Abr','05':'May','06':'Jun','07':'Jul','08':'Ago','09':'Sep','10':'Oct','11':'Nov','12':'Dic'};
+  document.getElementById('d-chart-mes').innerHTML=`<div style="display:flex;align-items:flex-end;gap:8px;height:90px;border-bottom:1px solid var(--border);border-left:1px solid var(--border);padding:0 4px;margin-bottom:6px">${meses.map(m=>{const d=porMes[m];const hT=Math.round(d.t/mxM*80);const hD=Math.round(d.d/mxM*80);return`<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:80px"><div style="background:#2a57d6;border-radius:3px 3px 0 0;height:${hT}px;position:relative">${d.d?`<div style="background:#00c47a;position:absolute;bottom:0;left:0;right:0;height:${hD}px;border-radius:3px 3px 0 0"></div>`:''}</div></div>`;}).join('')}</div><div style="display:flex;gap:8px">${meses.map(m=>`<div style="flex:1;text-align:center;font-size:10px;color:var(--text3)">${mN[m.slice(5)]} ${m.slice(2,4)}</div>`).join('')}</div><div style="display:flex;gap:12px;margin-top:8px;font-size:10px;color:var(--text2)"><span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#2a57d6;border-radius:2px;display:inline-block"></span>Total</span><span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#00c47a;border-radius:2px;display:inline-block"></span>Cerrados</span></div>`;
+  // semaforo
+  const eqAll=[...new Set(KZ.map(k=>k.equipo).filter(Boolean))].sort();
+  document.getElementById('d-semaforo').innerHTML=eqAll.map(eq=>{
+    const ke=KZ.filter(k=>k.equipo===eq);const tot=ke.length;const cer=ke.filter(k=>k.status==='done').length;const re=ke.filter(k=>k.status==='rej_l'||k.status==='rej_g').length;const pct=tot?Math.round(cer/tot*100):0;
+    let col='#f59e0b',ico='🟡';if(pct>=70){col='#00c47a';ico='🟢';}else if(re>cer){col='#ef4444';ico='🔴';}
+    return`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)"><span style="font-size:14px">${ico}</span><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${eq}</div><div style="font-size:10px;color:var(--text3)">${tot} total · ${cer} cerrado</div></div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:${col}">${pct}%</div></div>`;
   }).join('');
 }
 
-/* ═══════════════════════════════════════
-   PROGRESS BAR
-══════════════════════════════════════ */
-function renderProg(k){
-  // 0=s1, 1=pend_l/rej_l, 2=s3, 3=pend_g/rej_g/done
-  const map={s1:0,pend_l:1,rej_l:1,s3:2,pend_g:3,rej_g:3,done:3};
-  const cur=map[k?.status]??0;
-  for(let i=0;i<4;i++){
-    const el=document.getElementById('pg'+i);
-    const st=k?.status;
-    if(i<cur) el.className='sps done';
-    else if(i===cur){
-      if(st==='rej_l'&&i===1) el.className='sps rejected';
-      else if(st==='rej_g'&&i===3) el.className='sps rejected';
-      else if(st==='pend_l'||st==='pend_g') el.className='sps locked';
-      else el.className='sps active';
-    }
-    else el.className='sps';
-  }
-}
-
-/* ═══════════════════════════════════════
-   START NEW
+/* ══════════════════════════════════════
+   NUEVO FORMULARIO — todo en uno
 ══════════════════════════════════════ */
 function startNew(){
-  editId=null;
-  fd={id:uid(),status:'s1'};
-  curSection=1;
+  fd={id:uid(),status:'nuevo'};
   document.getElementById('form-title').textContent='Nueva Solicitud de Kaizen';
   goTo('form');
-  renderSection();
+  renderForm();
 }
 
-function renderSection(){
-  renderProg(fd);
+function renderForm(){
+  updateFlow(fd.status);
   const el=document.getElementById('form-area');
-  if(curSection===1) renderSec1(el);
-  else if(curSection==='pend_l') renderSecPendL(el);
-  else if(curSection==='rej_l') renderRejected(el,'líder',fd.rechazoLiderRazon);
-  else if(curSection===3) renderSec3(el);
-  else if(curSection==='pend_g') renderSecPendG(el);
-  else if(curSection==='rej_g') renderRejected(el,'gerente',fd.rechazoGerenteRazon);
-  else if(curSection==='done') renderDone(el);
+  if(fd.status==='nuevo') renderFormulario(el);
+  else if(fd.status==='pend_l') renderPendLider(el);
+  else if(fd.status==='rej_l') renderRejected(el,'Líder',fd.rechazoLiderRazon);
+  else if(fd.status==='pend_g') renderPendGerente(el);
+  else if(fd.status==='rej_g') renderRejected(el,'Gerente',fd.rechazoGerenteRazon);
+  else if(fd.status==='done') renderDone(el);
 }
 
-/* ═══════════════════════════════════════
-   CATÁLOGO DE EMPLEADOS
-══════════════════════════════════════ */
-const EMPLEADOS=[
-  {equipo:'AUDI',         nomina:'2087',nombre:'PABLO EVERARDO MEJÍA SOTO',       notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'AUDI',         nomina:'3352',nombre:'RUBEN GALICIA CARDENAS',           notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'AUDI',         nomina:'3486',nombre:'ISIDRO PÉREZ BARBOSA',             notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'AUDI',         nomina:'2027',nombre:'JUAN CARLOS CRUZ SANMIGUEL',       notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'LOS ELECTROS', nomina:'2527',nombre:'LINO FRANCISCO MORENO GONZALEZ',  notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'LOS ELECTROS', nomina:'2722',nombre:'SERGIO ANTONIO DÍAZ POSADA',      notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'LOS ELECTROS', nomina:'2237',nombre:'FERNANDO JESÚS CASTILLO RODRIGUEZ',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx', apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'LOS ELECTROS', nomina:'2654',nombre:'ERIK ALBERTO TREVIÑO CUELLAR',    notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'TEAMWORK',     nomina:'2372',nombre:'OSCAR NARCISO FUANTOS TENIENTE',   notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'TEAMWORK',     nomina:'3073',nombre:'LUIS FELIPE RUBIO QUIROZ',         notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'TEAMWORK',     nomina:'3706',nombre:'JUAN FLORES',                      notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'TEAMWORK',     nomina:'2795',nombre:'JOSE GONZALO MUÑOZ HERNANDEZ',     notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'TECLEAN',      nomina:'2394',nombre:'JUAN CARLOS CASTAÑEDA PEREZ',      notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'TECLEAN',      nomina:'2803',nombre:'SERGIO MEDINA BARBOSA',            notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'TECLEAN',      nomina:'3072',nombre:'JOEL PABLO CASTILLO HERRERA',      notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'SOLUTION TEAM',nomina:'3075',nombre:'ALAN JAHIR ROMERO MORENO',         notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'SOLUTION TEAM',nomina:'3423',nombre:'CARLOS CHAVARRIA TAPIA',           notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'SOLUTION TEAM',nomina:'2766',nombre:'JOSE GERARDO SOLANO CASTRO',       notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'SOLUTION TEAM',nomina:'3525',nombre:'DANIEL ALEJANDRO FLORES TORRES',   notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'SOLUTION TEAM',nomina:'3519',nombre:'MOISES ISRAEL CEDILLO ALMANZA',    notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
-  {equipo:'SERVILEAN',    nomina:'3084',nombre:'EULALIO PEREZ MEDINA',             notif:'servicios.generales@zubex.com.mx',                    apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SERVILEAN',    nomina:'3274',nombre:'ANTONIO MERCADO MARTINEZ',         notif:'servicios.generales@zubex.com.mx',                    apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SERVILEAN',    nomina:'3590',nombre:'JAIR ALEJANDRO VILLASANA FLORES',  notif:'servicios.generales@zubex.com.mx',                    apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SERVILEAN',    nomina:'3545',nombre:'SERGIO ELIZONDO BENITO',           notif:'servicios.generales@zubex.com.mx',                    apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SMART TEAM 4.0',nomina:'2367',nombre:'J CARLOS RODRIGUEZ GOVEA',       notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SMART TEAM 4.0',nomina:'3524',nombre:'PEDRO FRANCISCO MACIAS',         notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SMART TEAM 4.0',nomina:'3577',nombre:'EVER ESAU SALAZAR AGUIRRE',      notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SMART TEAM 4.0',nomina:'2776',nombre:'JOSE FELICIANO ORTEGA SANCHEZ',  notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SMART TEAM 4.0',nomina:'2844',nombre:'LUIS LAURO LOZANO FUENTES',      notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SMART TEAM 4.0',nomina:'3648',nombre:'JORGE EMMANUEL MONTEMAYOR VAZQUEZ',notif:'proyectos@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SMART TEAM 4.0',nomina:'3712',nombre:'GERMAN RAMIREZ HERNANDEZ',       notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'SMART TEAM 4.0',nomina:'2774',nombre:'FRANCISCO JAVIER ROMERO DIAZ',   notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'ILUMINATEAM',  nomina:'2845',nombre:'JOSE LEOPOLDO SANMIGUEL MARTINEZ', notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'ILUMINATEAM',  nomina:'3540',nombre:'MAURICIO ARMANDO SANTILLAN RIVERA',notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'LEANPIEZA',    nomina:'2660',nombre:'DAVID ANTONIO MARTINEZ PEREZ',     notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'LEANPIEZA',    nomina:'3087',nombre:'AURORA BELEN LIMON OBREGON',       notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'LEANPIEZA',    nomina:'3237',nombre:'REINA ISABEL TORRES RODRIGUEZ',    notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'LEANPIEZA',    nomina:'3619',nombre:'MARÍA CONCEPCIÓN PACHICANO REYNOSA',notif:'l.sanmiguel@zubex.com.mx',                           apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-  {equipo:'LEANPIEZA',    nomina:'3662',nombre:'MARTÍN GUADALUPE MENDOZA',         notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
-];
-const EQUIPOS=[...new Set(EMPLEADOS.map(e=>e.equipo))];
-const APR2={nombre:'Luis López',email:'l.lopez@zubex.com.mx'};
-
-/* ═══════════════════════════════════════
-   SECCIÓN 1 – Identificación + ANTES
-══════════════════════════════════════ */
-function renderSec1(el){
-  const equiposSel=fd.equipo||'';
-  const miembros=equiposSel?EMPLEADOS.filter(e=>e.equipo===equiposSel):[];
+function renderFormulario(el){
+  const eqSel=fd.equipo||'';
+  const miembros=eqSel?EMPLEADOS.filter(e=>e.eq===eqSel):[];
   el.innerHTML=`
   <div class="fcard">
-    <div class="fhdr">
-      <span class="ftitle">Sección 1 · Solicitud e Identificación</span>
-      <span class="fstep" style="background:rgba(255,255,255,.15);padding:3px 10px;border-radius:6px;font-weight:600">SK</span>
-    </div>
+    <div class="fhdr"><span class="ftitle">Short Kaizen — Solicitud Completa</span><span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:#fff">SK</span></div>
     <div class="fbody">
-      <div class="stitle"><span class="snum">A</span>Datos del solicitante</div>
 
+      <!-- A: SOLICITANTE -->
+      <div class="stitle"><span class="snum">A</span>Datos del solicitante</div>
       <div class="fg2">
-        <div class="fg">
-          <label>Equipo Lean *</label>
-          <select id="f-eq" onchange="onEquipoChange()">
+        <div class="fg"><label>Equipo Lean *</label>
+          <select id="f-eq" onchange="onEqChange()">
             <option value="">— Selecciona equipo —</option>
-            ${EQUIPOS.map(eq=>`<option value="${eq}" ${equiposSel===eq?'selected':''}>${eq}</option>`).join('')}
+            ${EQUIPOS.map(eq=>`<option value="${eq}" ${eqSel===eq?'selected':''}>${eq}</option>`).join('')}
           </select>
         </div>
-        <div class="fg">
-          <label>Fecha de identificación</label>
-          <input type="date" id="f-fi" value="${fd.fechaId||new Date().toISOString().slice(0,10)}">
-        </div>
+        <div class="fg"><label>Fecha de identificación</label><input type="date" id="f-fi" value="${fd.fechaId||new Date().toISOString().slice(0,10)}"></div>
       </div>
-
-      <div class="fg">
-        <label>Nombre *</label>
+      <div class="fg"><label>Nombre *</label>
         <select id="f-miembro" onchange="onMiembroChange()">
           <option value="">— Selecciona nombre —</option>
-          ${miembros.map(m=>`<option value="${m.nomina}" ${fd.nomina===m.nomina?'selected':''}>${m.nombre} (${m.nomina})</option>`).join('')}
+          ${miembros.map(m=>`<option value="${m.nom}" ${fd.nomina===m.nom?'selected':''}>${m.name} (${m.nom})</option>`).join('')}
         </select>
       </div>
-
       <div class="fg2">
-        <div class="fg"><label>Nómina</label><input type="text" id="f-nom" value="${fd.nomina||''}" readonly style="background:#f0f3f9;color:var(--text2)"></div>
-        <div class="fg"><label>Nombre completo</label><input type="text" id="f-nom2" value="${fd.nombre||''}" readonly style="background:#f0f3f9;color:var(--text2)"></div>
+        <div class="fg"><label>Nómina</label><input type="text" id="f-nom" value="${fd.nomina||''}" readonly></div>
+        <div class="fg"><label>Nombre completo</label><input type="text" id="f-nom2" value="${fd.nombre||''}" readonly></div>
       </div>
+      <div class="fg"><label>¿Quién identificó la mejora? *</label><input type="text" id="f-quien" value="${fd.quien||''}" placeholder="Nombre(s)"></div>
+      <div class="fg"><label>¿Dónde se aplicará? *</label><input type="text" id="f-donde" value="${fd.donde||''}" placeholder="Área, línea, proceso..."></div>
 
-      <div class="fg"><label>¿Quién identificó la mejora? *</label><input type="text" id="f-quien" placeholder="Nombre(s) — puede ser el mismo u otro colaborador" value="${fd.quien||''}"></div>
-      <div class="fg"><label>¿Dónde se aplicará? *</label><input type="text" id="f-donde" placeholder="Área, línea, proceso..." value="${fd.donde||''}"></div>
-
-      <!-- Info auto-configurada -->
-      <div id="info-aprobadores" style="display:${fd.nomina?'block':'none'}">
-        <div class="divider"></div>
-        <div class="stitle"><span class="snum" style="background:#00c47a">✓</span>Aprobadores asignados automáticamente</div>
+      <!-- Info aprobadores -->
+      <div id="info-apr" style="display:${fd.nomina?'block':'none'}">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
-          <div style="background:#e8eeff;border:1px solid #b8c8f8;border-radius:8px;padding:10px 14px">
-            <div style="font-size:10px;font-weight:700;color:#1a3fa8;letter-spacing:.5px;margin-bottom:4px">APROBACIÓN 1 — LÍDER</div>
-            <div style="font-size:13px;font-weight:600;color:#0f1629" id="info-apr1n">${fd.apr1n||''}</div>
-            <div style="font-size:11px;color:#4a5470" id="info-apr1e">${fd.emailLider||''}</div>
+          <div style="background:var(--blue-l);border:1px solid var(--blue-m);border-radius:8px;padding:10px 14px">
+            <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.5px;margin-bottom:4px">APROBACIÓN 1 — LÍDER</div>
+            <div style="font-size:13px;font-weight:600" id="apr-1n">${fd.apr1n||''}</div>
+            <div style="font-size:11px;color:var(--text2)" id="apr-1e">${fd.emailLider||''}</div>
           </div>
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px">
             <div style="font-size:10px;font-weight:700;color:#166534;letter-spacing:.5px;margin-bottom:4px">APROBACIÓN 2 — GERENTE</div>
-            <div style="font-size:13px;font-weight:600;color:#0f1629">${APR2.nombre}</div>
-            <div style="font-size:11px;color:#4a5470">${APR2.email}</div>
+            <div style="font-size:13px;font-weight:600">${APR2.nombre}</div>
+            <div style="font-size:11px;color:var(--text2)">${APR2.email}</div>
           </div>
-        </div>
-        <div style="background:#fff7e6;border:1px solid #fcd34d;border-radius:8px;padding:8px 12px;font-size:12px;color:#92400e;margin-bottom:1rem">
-          📧 <strong>Notificación</strong> se enviará a: <span id="info-notif" style="font-weight:600">${fd.emailNotif||''}</span>
         </div>
       </div>
 
       <div class="divider"></div>
+      <!-- B: ENFOQUE -->
       <div class="stitle"><span class="snum">B</span>Enfoque de la mejora</div>
       <div class="chkgrp">
         ${[['rentabilidad','📈 Rentabilidad'],['bienestar','🧑‍💼 Bienestar del personal'],['sustentabilidad','🌱 Sustentabilidad'],['proceso','⚙️ Mejora en el proceso']].map(([k,l])=>`
-        <label class="chi ${(fd.enfoques||[]).includes(k)?'on':''}">
-          <input type="checkbox" id="cb-${k}" ${(fd.enfoques||[]).includes(k)?'checked':''}><span>${l}</span>
-        </label>`).join('')}
+        <label class="chi ${(fd.enfoques||[]).includes(k)?'on':''}"><input type="checkbox" id="cb-${k}" ${(fd.enfoques||[]).includes(k)?'checked':''}><span>${l}</span></label>`).join('')}
       </div>
 
       <div class="divider"></div>
-      <div class="stitle"><span class="snum">C</span>Situación actual — ANTES</div>
-      <div class="alert al-info">📸 Adjunta la foto o dibujo del estado <strong>ANTES</strong> de la mejora</div>
-      <div class="fg"><label>Foto / Dibujo — ANTES</label>
-        <div class="pup" id="pu-a" onclick="document.getElementById('fi-a').click()">
-          <input type="file" id="fi-a" accept="image/*" style="display:none" onchange="prevPhoto('fi-a','pi-a','pu-a','fotoAntes')">
-          <img id="pi-a" class="pimg">
-          <span class="pup-icon" id="pu-a-i">📷</span>
-          <span class="pup-lbl" id="pu-a-l">Subir foto ANTES</span>
-          <span class="pup-sub" id="pu-a-s">Click para seleccionar imagen</span>
-        </div>
-      </div>
-      <div class="fg"><label>Descripción del ANTES *</label><textarea id="f-da" placeholder="Describe la situación actual y el problema identificado...">${fd.descAntes||''}</textarea></div>
-      <div class="fg"><label>Causa raíz (5 Porqués)</label><textarea id="f-cr" placeholder="¿Por qué ocurre este problema?" style="min-height:60px">${fd.causeRoot||''}</textarea></div>
-    </div>
-    <div class="ffoot">
-      <div></div>
-      <button class="btn btn-blue" onclick="submitSec1()">Enviar para autorización de Líder →</button>
-    </div>
-  </div>`;
-  if(fd.fotoAntes){const i=document.getElementById('pi-a');i.src=fd.fotoAntes;i.style.display='block';hidePhUI('pu-a');}
-  el.querySelectorAll('.chi input').forEach(cb=>cb.addEventListener('change',function(){this.closest('.chi').classList.toggle('on',this.checked);}));
-}
-
-function onEquipoChange(){
-  const eq=gv('f-eq');
-  const sel=document.getElementById('f-miembro');
-  const miembros=EMPLEADOS.filter(e=>e.equipo===eq);
-  sel.innerHTML=`<option value="">— Selecciona nombre —</option>`+miembros.map(m=>`<option value="${m.nomina}">${m.nombre} (${m.nomina})</option>`).join('');
-  document.getElementById('f-nom').value='';
-  document.getElementById('f-nom2').value='';
-  document.getElementById('info-aprobadores').style.display='none';
-}
-
-function onMiembroChange(){
-  const nomina=gv('f-miembro');
-  const emp=EMPLEADOS.find(e=>e.nomina===nomina);
-  if(!emp)return;
-  document.getElementById('f-nom').value=emp.nomina;
-  document.getElementById('f-nom2').value=emp.nombre;
-  document.getElementById('info-apr1n').textContent=emp.apr1n;
-  document.getElementById('info-apr1e').textContent=emp.apr1e;
-  document.getElementById('info-notif').textContent=emp.notif.replace(/,/g,' — ');
-  document.getElementById('info-aprobadores').style.display='block';
-}
-
-function submitSec1(){
-  const nomina=gv('f-miembro');
-  if(!gv('f-eq')){toast('Selecciona el Equipo Lean','tr');return;}
-  if(!nomina){toast('Selecciona el nombre del solicitante','tr');return;}
-  if(!gv('f-quien')||!gv('f-donde')||!gv('f-da')){toast('Completa los campos obligatorios (*)','tr');return;}
-  const emp=EMPLEADOS.find(e=>e.nomina===nomina);
-  fd.nomina=emp.nomina;fd.nombre=emp.nombre;fd.equipo=emp.equipo;
-  fd.fechaId=gv('f-fi');fd.quien=gv('f-quien');fd.donde=gv('f-donde');
-  fd.descAntes=gv('f-da');fd.causeRoot=gv('f-cr');
-  fd.emailLider=emp.apr1e;fd.apr1n=emp.apr1n;
-  fd.emailGerente=APR2.email;fd.apr2n=APR2.nombre;
-  fd.emailNotif=emp.notif;
-  fd.enfoques=['rentabilidad','bienestar','sustentabilidad','proceso'].filter(k=>document.getElementById('cb-'+k)?.checked);
-  fd.status='pend_l';
-  saveKaizen();
-  showEmailModal('lider');
-}
-
-/* ═══════════════════════════════════════
-   EMAIL MODAL
-══════════════════════════════════════ */
-function showEmailModal(tipo){
-  const modal=document.getElementById('email-modal');
-  const title=document.getElementById('em-title');
-  const body=document.getElementById('em-body');
-  const foot=document.getElementById('em-foot');
-  modal.style.display='flex';
-
-  if(tipo==='lider'){
-    title.textContent='📧 Correo enviado al Líder / Coordinador';
-    body.innerHTML=`
-      <div class="alert al-info" style="margin-bottom:1rem">✅ Simulación de envío de correo activada. En producción esto se enviaría vía EmailJS u otro servicio.</div>
-      <div class="email-preview">
-        <div class="ep-hdr">📧 Vista previa del correo — Notificación de Aprobación</div>
-        <div class="ep-meta">
-          <div><strong>Para:</strong> ${fd.emailLider}</div>
-          <div><strong>De:</strong> kaizen@zubex.com.mx</div>
-          <div><strong>Asunto:</strong> [Aprobación requerida] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
-        </div>
-        <div class="ep-body">
-          <p>Estimado Líder / Coordinador,</p><br>
-          <p>Se ha generado una solicitud de <strong>Short Kaizen</strong> que requiere su autorización para continuar.</p><br>
-          <table style="width:100%;font-size:12px;border-collapse:collapse">
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600;width:40%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre} (${fd.nomina})</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Equipo Lean:</td><td style="padding:4px 8px">${fd.equipo||'—'}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Área de mejora:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha:</td><td style="padding:4px 8px">${fd.fechaId}</td></tr>
-          </table><br>
-          <p style="font-weight:600">Descripción de la situación actual (ANTES):</p>
-          <p style="background:#f8faff;padding:10px;border-radius:6px;border-left:3px solid var(--blue2);margin-top:6px">${fd.descAntes}</p>
-          ${fd.causeRoot?`<br><p style="font-weight:600">Causa raíz:</p><p style="background:#f8faff;padding:10px;border-radius:6px;border-left:3px solid var(--blue2);margin-top:6px">${fd.causeRoot}</p>`:''}
-          ${fd.fotoAntes?`<br><p style="font-weight:600">Foto ANTES:</p><img src="${fd.fotoAntes}" style="max-width:100%;border-radius:8px;margin-top:6px;max-height:180px;object-fit:cover">`:''}
-          <br><br><p>Por favor haz clic en uno de los botones de abajo para <strong>Aprobar</strong> o <strong>Rechazar</strong> esta solicitud.</p>
-        </div>
-        <div class="ep-btns">
-          <button class="ep-btn-a" onclick="liderAproba()">✓ APROBAR</button>
-          <button class="ep-btn-r" onclick="showRejForm('lider')">✕ RECHAZAR</button>
-        </div>
-      </div>`;
-    foot.innerHTML=`<button class="btn btn-out" onclick="closeModal()">Cerrar vista previa</button>`;
-  }
-  else if(tipo==='gerente'){
-    title.textContent='📧 Correo enviado al Gerente de Área';
-    body.innerHTML=`
-      <div class="alert al-info" style="margin-bottom:1rem">✅ Simulación de envío de correo activada.</div>
-      <div class="email-preview">
-        <div class="ep-hdr">📧 Vista previa del correo — Autorización Final</div>
-        <div class="ep-meta">
-          <div><strong>Para:</strong> ${fd.emailGerente}</div>
-          <div><strong>De:</strong> kaizen@zubex.com.mx</div>
-          <div><strong>Asunto:</strong> [Autorización Final] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
-        </div>
-        <div class="ep-body">
-          <p>Estimado Gerente de Área,</p><br>
-          <p>El siguiente Short Kaizen ha sido completado y requiere su autorización final.</p><br>
-          <table style="width:100%;font-size:12px;border-collapse:collapse">
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600;width:40%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre} (${fd.nomina})</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Área:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha ID:</td><td style="padding:4px 8px">${fd.fechaId}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha Impl.:</td><td style="padding:4px 8px">${fd.fechaImpl||'—'}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Tiempo:</td><td style="padding:4px 8px">${fd.tiempoImpl?fd.tiempoImpl+' '+fd.unidadTiempo:'—'}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Aprobado por Líder:</td><td style="padding:4px 8px">✓ ${fd.firmaLiderNombre||'Líder'} — ${fd.firmaLiderFecha||''}</td></tr>
-          </table><br>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div style="border:1px solid #fecaca;border-radius:8px;overflow:hidden">
-              <div style="background:#fef2f2;padding:6px 10px;font-size:11px;font-weight:700;color:#991b1b;letter-spacing:.5px">📷 ANTES</div>
-              ${fd.fotoAntes?`<img src="${fd.fotoAntes}" style="width:100%;max-height:180px;object-fit:cover;display:block">`:`<div style="height:80px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">Sin foto</div>`}
-              <div style="padding:8px 10px;font-size:12px;background:#fff;border-top:1px solid #fecaca">${fd.descAntes||'—'}</div>
-            </div>
-            <div style="border:1px solid #bbf7d0;border-radius:8px;overflow:hidden">
-              <div style="background:#f0fdf4;padding:6px 10px;font-size:11px;font-weight:700;color:#166534;letter-spacing:.5px">📷 DESPUÉS</div>
-              ${fd.fotoDespues?`<img src="${fd.fotoDespues}" style="width:100%;max-height:180px;object-fit:cover;display:block">`:`<div style="height:80px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">Sin foto</div>`}
-              <div style="padding:8px 10px;font-size:12px;background:#fff;border-top:1px solid #bbf7d0">${fd.descDespues||'—'}</div>
-            </div>
+      <!-- C: ANTES Y DESPUÉS -->
+      <div class="stitle"><span class="snum">C</span>Foto / Dibujo ANTES y DESPUÉS</div>
+      <div class="photo-pair">
+        <div>
+          <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px 8px 0 0;padding:6px 12px;font-size:11px;font-weight:700;color:#991b1b;letter-spacing:.5px">📷 ANTES</div>
+          <div class="pup" id="pu-a" onclick="document.getElementById('fi-a').click()" style="border-radius:0 0 8px 8px;border-top:none">
+            <input type="file" id="fi-a" accept="image/*" style="display:none" onchange="prevPhoto('fi-a','pi-a','pu-a','fotoAntes')">
+            <img id="pi-a" class="pimg">
+            <span class="pup-icon" id="pu-a-i">📷</span>
+            <span class="pup-lbl" id="pu-a-l">Subir foto ANTES</span>
+            <span class="pup-sub" id="pu-a-s">Click para seleccionar</span>
           </div>
-          ${fd.beneficios?`<p style="font-weight:600;margin-bottom:4px">Beneficios:</p><p style="background:#f0fdf4;padding:8px;border-radius:6px;border-left:3px solid var(--green);font-size:12px;margin-bottom:10px">${fd.beneficios}</p>`:''}
-          <br><p>Por favor autoriza o rechaza esta solicitud:</p>
         </div>
-        <div class="ep-btns">
-          <button class="ep-btn-a" onclick="gerenteAproba()">✓ AUTORIZAR Y CERRAR</button>
-          <button class="ep-btn-r" onclick="showRejForm('gerente')">✕ RECHAZAR</button>
-        </div>
-      </div>`;
-    foot.innerHTML=`<button class="btn btn-out" onclick="closeModal()">Cerrar vista previa</button>`;
-  }
-  else if(tipo==='mc'){
-    title.textContent='📧 Notificación a Mejora Continua';
-    body.innerHTML=`
-      <div class="alert al-success" style="margin-bottom:1rem">🎉 El Kaizen fue aprobado por el Gerente. Se envía notificación al equipo de Mejora Continua.</div>
-      <div class="email-preview">
-        <div class="ep-hdr">📧 Notificación — Kaizen Cerrado Exitosamente</div>
-        <div class="ep-meta">
-          <div><strong>Para:</strong> mejora.continua@zubex.com.mx</div>
-          <div><strong>De:</strong> kaizen@zubex.com.mx</div>
-          <div><strong>Asunto:</strong> ✅ Kaizen Cerrado SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
-        </div>
-        <div class="ep-body">
-          <p>Equipo de Mejora Continua,</p><br>
-          <p>El Short Kaizen <strong>SK-${fd.id.slice(-4).toUpperCase()}</strong> ha sido <strong>cerrado y aprobado</strong> por el Gerente de Área.</p><br>
-          <table style="width:100%;font-size:12px;border-collapse:collapse">
-            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600;width:40%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Área:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Aprobado por Líder:</td><td style="padding:4px 8px">✓ ${fd.firmaLiderNombre||'—'}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Aprobado por Gerente:</td><td style="padding:4px 8px">✓ ${fd.firmaGerenteNombre||'—'}</td></tr>
-            <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Fecha de cierre:</td><td style="padding:4px 8px">${new Date().toLocaleDateString('es-MX')}</td></tr>
-          </table><br>
-          <p>Este Kaizen ya está disponible en el sistema para su seguimiento y estandarización.</p>
-        </div>
-      </div>`;
-    foot.innerHTML=`<button class="btn btn-green" onclick="closeModal();curSection='done';renderSection()">✓ Entendido — Ver resumen final</button>`;
-  }
-}
-
-function closeModal(){document.getElementById('email-modal').style.display='none';}
-
-/* ═══════════════════════════════════════
-   RECHAZO FORM
-══════════════════════════════════════ */
-function showRejForm(tipo){
-  const body=document.getElementById('em-body');
-  const foot=document.getElementById('em-foot');
-  body.innerHTML=`
-    <div class="alert al-danger">⚠️ Estás a punto de <strong>rechazar</strong> esta solicitud de Kaizen. Esta acción detendrá el proceso.</div>
-    <div class="fg"><label>Motivo del rechazo *</label><textarea id="rej-reason" placeholder="Explica el motivo por el que se rechaza esta solicitud..." style="min-height:100px"></textarea></div>`;
-  foot.innerHTML=`
-    <button class="btn btn-out" onclick="showEmailModal('${tipo}')">← Volver</button>
-    <button class="btn btn-danger" onclick="confirmarRechazo('${tipo}')">Confirmar rechazo</button>`;
-}
-
-function confirmarRechazo(tipo){
-  const reason=gv('rej-reason');
-  if(!reason){toast('Escribe el motivo del rechazo','tr');return;}
-  if(tipo==='lider'){
-    fd.status='rej_l';fd.rechazoLiderRazon=reason;fd.rechazoLiderFecha=new Date().toLocaleDateString('es-MX');
-    saveKaizen();closeModal();curSection='rej_l';renderSection();
-    toast('Solicitud rechazada por el Líder','tr');
-  } else {
-    fd.status='rej_g';fd.rechazoGerenteRazon=reason;fd.rechazoGerenteFecha=new Date().toLocaleDateString('es-MX');
-    saveKaizen();closeModal();curSection='rej_g';renderSection();
-    toast('Solicitud rechazada por el Gerente','tr');
-  }
-}
-
-/* ═══════════════════════════════════════
-   APROBACIÓN LÍDER
-══════════════════════════════════════ */
-function liderAproba(){
-  document.getElementById('em-body').innerHTML=`
-    <div class="alert al-success" style="margin-bottom:1rem">✅ Líder aprobó la solicitud. Registra su nombre y firma.</div>
-    <div class="fg"><label>Nombre del Líder / Coordinador *</label><input type="text" id="fn-lider" placeholder="Nombre completo"></div>
-    <div style="border:2px solid var(--border);border-radius:var(--r);padding:1.25rem;background:var(--surface2)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-size:13px;font-weight:600">Firma digital</span>
-        <span class="bp" id="fs-lider">Pendiente</span>
-      </div>
-      <canvas class="sigpad" id="sig-lider" width="500" height="100"></canvas>
-      <div class="sigact"><button class="btn-clr" onclick="clearSig('lider')">Limpiar</button></div>
-    </div>`;
-  document.getElementById('em-foot').innerHTML=`
-    <button class="btn btn-out" onclick="showEmailModal('lider')">← Volver</button>
-    <button class="btn btn-green" onclick="confirmarAprobLider()">✓ Confirmar aprobación</button>`;
-  initSig('lider');
-}
-
-function confirmarAprobLider(){
-  if(!gv('fn-lider')){toast('Ingresa el nombre del Líder','tr');return;}
-  const sig=getSig('lider');
-  fd.firmaLider=sig||null;
-  fd.firmaLiderNombre=gv('fn-lider');
-  fd.firmaLiderFecha=new Date().toLocaleDateString('es-MX');
-  fd.status='s3';
-  saveKaizen();
-  closeModal();
-  curSection=3;
-  renderSection();
-  toast('¡Aprobado por Líder! Continúa con la Sección 2','tg');
-}
-
-/* ═══════════════════════════════════════
-   SECCIÓN 3 (= "Sección 2" para el usuario)
-══════════════════════════════════════ */
-function renderSec3(el){
-  el.innerHTML=`
-  <div class="fcard">
-    <div class="fhdr">
-      <span class="ftitle">Sección 2 · Descripción del DESPUÉS</span>
-      <span style="background:rgba(255,255,255,.15);padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.3)">✓ Aprobado por Líder</span>
-    </div>
-    <div class="fbody">
-      <div class="alert al-success">✅ Aprobado por: <strong>${fd.firmaLiderNombre}</strong> el ${fd.firmaLiderFecha}</div>
-      <div class="stitle"><span class="snum">A</span>Estado DESPUÉS y beneficios</div>
-      <div class="alert al-info">📸 Adjunta la foto o dibujo del estado <strong>DESPUÉS</strong></div>
-      <div class="fg"><label>Foto / Dibujo — DESPUÉS</label>
-        <div class="pup" id="pu-d" onclick="document.getElementById('fi-d').click()">
-          <input type="file" id="fi-d" accept="image/*" style="display:none" onchange="prevPhoto('fi-d','pi-d','pu-d','fotoDespues')">
-          <img id="pi-d" class="pimg">
-          <span class="pup-icon" id="pu-d-i">📷</span>
-          <span class="pup-lbl" id="pu-d-l">Subir foto DESPUÉS</span>
-          <span class="pup-sub" id="pu-d-s">Click para seleccionar imagen</span>
+        <div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px 8px 0 0;padding:6px 12px;font-size:11px;font-weight:700;color:#166534;letter-spacing:.5px">📷 DESPUÉS</div>
+          <div class="pup" id="pu-d" onclick="document.getElementById('fi-d').click()" style="border-radius:0 0 8px 8px;border-top:none">
+            <input type="file" id="fi-d" accept="image/*" style="display:none" onchange="prevPhoto('fi-d','pi-d','pu-d','fotoDespues')">
+            <img id="pi-d" class="pimg">
+            <span class="pup-icon" id="pu-d-i">📷</span>
+            <span class="pup-lbl" id="pu-d-l">Subir foto DESPUÉS</span>
+            <span class="pup-sub" id="pu-d-s">Click para seleccionar</span>
+          </div>
         </div>
       </div>
-      <div class="fg"><label>Descripción del DESPUÉS y beneficios *</label><textarea id="f-dd" placeholder="Describe el estado mejorado y los beneficios obtenidos...">${fd.descDespues||''}</textarea></div>
-      <div class="fg"><label>Beneficios cuantificables</label><textarea id="f-ben" placeholder="Ej: Reducción de 15 min en tiempo de ciclo..." style="min-height:60px">${fd.beneficios||''}</textarea></div>
 
       <div class="divider"></div>
-      <div class="stitle"><span class="snum">B</span>Fechas y tiempos</div>
+      <!-- D: DESCRIPCIONES -->
+      <div class="stitle"><span class="snum">D</span>Descripción ANTES y DESPUÉS</div>
+      <div class="fg2">
+        <div class="fg"><label>Descripción del ANTES *</label><textarea id="f-da" placeholder="Situación actual y problema identificado...">${fd.descAntes||''}</textarea></div>
+        <div class="fg"><label>Descripción del DESPUÉS y beneficios *</label><textarea id="f-dd" placeholder="Estado mejorado y beneficios obtenidos...">${fd.descDespues||''}</textarea></div>
+      </div>
+      <div class="fg2">
+        <div class="fg"><label>Causa raíz (5 Porqués)</label><textarea id="f-cr" placeholder="¿Por qué ocurre este problema?" style="min-height:60px">${fd.causeRoot||''}</textarea></div>
+        <div class="fg"><label>Beneficios cuantificables</label><textarea id="f-ben" placeholder="Ej: Reducción de 15 min en tiempo de ciclo..." style="min-height:60px">${fd.beneficios||''}</textarea></div>
+      </div>
+
+      <div class="divider"></div>
+      <!-- E: IMPLEMENTACIÓN -->
+      <div class="stitle"><span class="snum">E</span>Datos de implementación</div>
       <div class="fg3">
-        <div class="fg"><label>Fecha de implementación</label><input type="date" id="f-fimpl" value="${fd.fechaImpl||new Date().toISOString().slice(0,10)}"></div>
-        <div class="fg"><label>Tiempo de implementación</label><input type="number" id="f-timp" min="0" placeholder="Ej: 30" value="${fd.tiempoImpl||''}"></div>
+        <div class="fg"><label>Fecha de implementación</label><input type="date" id="f-fi2" value="${fd.fechaImpl||new Date().toISOString().slice(0,10)}"></div>
+        <div class="fg"><label>Tiempo de implementación</label><input type="number" id="f-timp" min="0" value="${fd.tiempoImpl||''}" placeholder="Ej: 30"></div>
         <div class="fg"><label>Unidad</label>
           <select id="f-unt">
             <option value="minutos" ${fd.unidadTiempo==='minutos'?'selected':''}>Minutos</option>
@@ -1069,191 +581,360 @@ function renderSec3(el){
       </div>
 
       <div class="divider"></div>
-      <div class="stitle"><span class="snum">C</span>Enfoque de mejoras aplicadas</div>
+      <!-- F: ENFOQUES MEJORA -->
+      <div class="stitle"><span class="snum">F</span>Tipo de mejora aplicada</div>
       <div class="chkgrp">
         ${[['5s','🧹 5S'],['seguridad','🦺 Seguridad'],['calidad','✅ Calidad'],['productividad','⚡ Productividad'],['costos','💰 Costos'],['ambiente','🌿 Ambiente']].map(([k,l])=>`
-        <label class="chi ${(fd.enfoquesMejora||[]).includes(k)?'on':''}">
-          <input type="checkbox" id="em-${k}" ${(fd.enfoquesMejora||[]).includes(k)?'checked':''}><span>${l}</span>
-        </label>`).join('')}
+        <label class="chi ${(fd.enfoquesMejora||[]).includes(k)?'on':''}"><input type="checkbox" id="em-${k}" ${(fd.enfoquesMejora||[]).includes(k)?'checked':''}><span>${l}</span></label>`).join('')}
       </div>
 
-      <div class="divider"></div>
-      <div class="stitle"><span class="snum">D</span>Aprobador asignado</div>
-      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:1rem;display:flex;align-items:center;gap:12px">
-        <span style="font-size:20px">✅</span>
-        <div>
-          <div style="font-size:10px;font-weight:700;color:#166534;letter-spacing:.5px">APROBACIÓN 2 — GERENTE DE ÁREA</div>
-          <div style="font-size:13px;font-weight:600;color:#0f1629">${APR2.nombre}</div>
-          <div style="font-size:11px;color:#4a5470">${APR2.email}</div>
-        </div>
-      </div>
     </div>
     <div class="ffoot">
       <div></div>
-      <button class="btn btn-blue" onclick="submitSec3()">Enviar para autorización del Gerente →</button>
+      <button class="btn btn-blue" onclick="submitFormulario()">Enviar para aprobación →</button>
     </div>
   </div>`;
+  if(fd.fotoAntes){const i=document.getElementById('pi-a');i.src=fd.fotoAntes;i.style.display='block';hidePhUI('pu-a');}
   if(fd.fotoDespues){const i=document.getElementById('pi-d');i.src=fd.fotoDespues;i.style.display='block';hidePhUI('pu-d');}
   el.querySelectorAll('.chi input').forEach(cb=>cb.addEventListener('change',function(){this.closest('.chi').classList.toggle('on',this.checked);}));
 }
 
-function submitSec3(){
-  if(!gv('f-dd')){toast('Agrega la descripción del DESPUÉS','tr');return;}
-  fd.descDespues=gv('f-dd');fd.beneficios=gv('f-ben');
-  fd.fechaImpl=gv('f-fimpl');fd.tiempoImpl=gv('f-timp');fd.unidadTiempo=gv('f-unt');
-  fd.emailGerente=APR2.email;
-  fd.enfoquesMejora=['5s','seguridad','calidad','productividad','costos','ambiente'].filter(k=>document.getElementById('em-'+k)?.checked);
-  fd.status='pend_g';
-  saveKaizen();
-  showEmailModal('gerente');
+function onEqChange(){
+  const eq=gv('f-eq');
+  const sel=document.getElementById('f-miembro');
+  sel.innerHTML='<option value="">— Selecciona nombre —</option>'+EMPLEADOS.filter(e=>e.eq===eq).map(m=>`<option value="${m.nom}">${m.name} (${m.nom})</option>`).join('');
+  document.getElementById('f-nom').value='';
+  document.getElementById('f-nom2').value='';
+  document.getElementById('info-apr').style.display='none';
 }
 
-/* ═══════════════════════════════════════
+function onMiembroChange(){
+  const emp=EMPLEADOS.find(e=>e.nom===gv('f-miembro'));
+  if(!emp)return;
+  document.getElementById('f-nom').value=emp.nom;
+  document.getElementById('f-nom2').value=emp.name;
+  document.getElementById('apr-1n').textContent=emp.a1n;
+  document.getElementById('apr-1e').textContent=emp.a1e;
+  document.getElementById('info-apr').style.display='block';
+}
+
+function submitFormulario(){
+  if(!gv('f-eq'))return toast('Selecciona el Equipo Lean','tr');
+  if(!gv('f-miembro'))return toast('Selecciona el solicitante','tr');
+  if(!gv('f-quien')||!gv('f-donde'))return toast('Completa ¿Quién? y ¿Dónde?','tr');
+  if(!gv('f-da')||!gv('f-dd'))return toast('Completa las descripciones ANTES y DESPUÉS','tr');
+  const emp=EMPLEADOS.find(e=>e.nom===gv('f-miembro'));
+  fd.nomina=emp.nom; fd.nombre=emp.name; fd.equipo=emp.eq;
+  fd.fechaId=gv('f-fi'); fd.quien=gv('f-quien'); fd.donde=gv('f-donde');
+  fd.descAntes=gv('f-da'); fd.descDespues=gv('f-dd');
+  fd.causeRoot=gv('f-cr'); fd.beneficios=gv('f-ben');
+  fd.fechaImpl=gv('f-fi2'); fd.tiempoImpl=gv('f-timp'); fd.unidadTiempo=gv('f-unt');
+  fd.emailLider=emp.a1e; fd.apr1n=emp.a1n;
+  fd.emailGerente=APR2.email; fd.apr2n=APR2.nombre;
+  fd.emailNotif=emp.notif;
+  fd.enfoques=['rentabilidad','bienestar','sustentabilidad','proceso'].filter(k=>document.getElementById('cb-'+k)?.checked);
+  fd.enfoquesMejora=['5s','seguridad','calidad','productividad','costos','ambiente'].filter(k=>document.getElementById('em-'+k)?.checked);
+  fd.status='pend_l';
+  saveKaizen();
+  showModalLider();
+}
+
+/* ══════════════════════════════════════
+   APROBACIÓN LÍDER
+══════════════════════════════════════ */
+function renderPendLider(el){
+  el.innerHTML=`<div class="fcard"><div class="fhdr"><span class="ftitle">⏳ Esperando aprobación del Líder</span></div><div class="fbody">
+    <div class="alert al-warn">Correo enviado a <strong>${fd.apr1n}</strong> (${fd.emailLider}). Simula su respuesta:</div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-green" onclick="showModalLider()">✓ Simular: Líder aprueba</button>
+      <button class="btn btn-danger" onclick="showModalRejForm('lider')">✕ Simular: Líder rechaza</button>
+    </div>
+  </div></div>`;
+}
+
+function showModalLider(){
+  updateFlow('pend_l');
+  document.getElementById('m-title').textContent='📧 Correo al Líder / Coordinador';
+  document.getElementById('m-body').innerHTML=`
+    <div class="alert al-info" style="margin-bottom:1rem">Simulación de envío. En producción se enviará vía EmailJS.</div>
+    <div class="email-preview">
+      <div class="ep-hdr">📧 Aprobación requerida — SK-${fd.id.slice(-4).toUpperCase()}</div>
+      <div class="ep-meta">
+        <div><strong>Para:</strong> ${fd.emailLider} (${fd.apr1n})</div>
+        <div><strong>De:</strong> kaizen@zubex.com.mx</div>
+        <div><strong>Asunto:</strong> [Aprobación] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
+      </div>
+      <div class="ep-body">
+        <p>Estimado <strong>${fd.apr1n}</strong>,</p><br>
+        <p>Se ha registrado un Short Kaizen que requiere su aprobación.</p><br>
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600;width:38%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre} · ${fd.nomina}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Equipo Lean:</td><td style="padding:4px 8px">${fd.equipo}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Área de mejora:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha:</td><td style="padding:4px 8px">${fd.fechaId}</td></tr>
+        </table><br>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div style="border:1px solid #fecaca;border-radius:8px;overflow:hidden">
+            <div style="background:#fef2f2;padding:5px 10px;font-size:11px;font-weight:700;color:#991b1b">📷 ANTES</div>
+            ${fd.fotoAntes?`<img src="${fd.fotoAntes}" style="width:100%;max-height:160px;object-fit:cover">`:'<div style="height:60px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">Sin foto</div>'}
+            <div style="padding:8px;font-size:12px">${fd.descAntes||'—'}</div>
+          </div>
+          <div style="border:1px solid #bbf7d0;border-radius:8px;overflow:hidden">
+            <div style="background:#f0fdf4;padding:5px 10px;font-size:11px;font-weight:700;color:#166534">📷 DESPUÉS</div>
+            ${fd.fotoDespues?`<img src="${fd.fotoDespues}" style="width:100%;max-height:160px;object-fit:cover">`:'<div style="height:60px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">Sin foto</div>'}
+            <div style="padding:8px;font-size:12px">${fd.descDespues||'—'}</div>
+          </div>
+        </div>
+        ${fd.causeRoot?`<p style="font-size:12px"><strong>Causa raíz:</strong> ${fd.causeRoot}</p><br>`:''}
+        <p>Por favor responde con Aprobar o Rechazar:</p>
+      </div>
+      <div class="ep-btns">
+        <button class="ep-btn-a" onclick="liderAprueba()">✓ APROBAR</button>
+        <button class="ep-btn-r" onclick="showModalRejForm('lider')">✕ RECHAZAR</button>
+      </div>
+    </div>`;
+  document.getElementById('m-foot').innerHTML=`<button class="btn btn-out" onclick="closeModal()">Cerrar vista previa</button>`;
+  document.getElementById('modal').style.display='flex';
+}
+
+function liderAprueba(){
+  document.getElementById('m-body').innerHTML=`
+    <div class="alert al-success" style="margin-bottom:1rem">✅ Líder aprobó. Registra nombre y firma.</div>
+    <div class="fg"><label>Nombre del Líder / Coordinador *</label><input type="text" id="fn-lider" placeholder="Nombre completo"></div>
+    <div class="firmabox">
+      <div class="frmhdr"><span class="frmtitle">Firma digital</span><span class="bp" id="fs-lider">Pendiente</span></div>
+      <canvas class="sigpad" id="sig-lider" width="500" height="100"></canvas>
+      <div class="sigact"><button class="btn-clr" onclick="clearSig('lider')">Limpiar</button></div>
+      <p style="font-size:11px;color:var(--text3);margin-top:6px">Dibuja la firma con mouse o dedo</p>
+    </div>`;
+  document.getElementById('m-foot').innerHTML=`
+    <button class="btn btn-out" onclick="showModalLider()">← Volver</button>
+    <button class="btn btn-green" onclick="confirmarLider()">✓ Confirmar aprobación</button>`;
+  initSig('lider');
+}
+
+function confirmarLider(){
+  if(!gv('fn-lider'))return toast('Ingresa el nombre del Líder','tr');
+  fd.firmaLider=getSig('lider')||null;
+  fd.firmaLiderNombre=gv('fn-lider');
+  fd.firmaLiderFecha=new Date().toLocaleDateString('es-MX');
+  fd.status='pend_g';
+  saveKaizen(); closeModal();
+  updateFlow('pend_g');
+  renderForm();
+  toast('¡Aprobado por Líder! Enviando al Gerente...','tg');
+  setTimeout(()=>showModalGerente(),800);
+}
+
+/* ══════════════════════════════════════
    APROBACIÓN GERENTE
 ══════════════════════════════════════ */
-function gerenteAproba(){
-  document.getElementById('em-body').innerHTML=`
-    <div class="alert al-success" style="margin-bottom:1rem">✅ Gerente aprobó el Kaizen. Registra su nombre y firma.</div>
-    <div class="fg"><label>Nombre del Gerente de Área *</label><input type="text" id="fn-gerente" placeholder="Nombre completo"></div>
-    <div style="border:2px solid var(--border);border-radius:var(--r);padding:1.25rem;background:var(--surface2)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-size:13px;font-weight:600">Firma digital</span>
-        <span class="bp" id="fs-gerente">Pendiente</span>
+function renderPendGerente(el){
+  el.innerHTML=`<div class="fcard"><div class="fhdr"><span class="ftitle">⏳ Esperando aprobación del Gerente</span></div><div class="fbody">
+    <div class="alert al-success" style="margin-bottom:1rem">✅ Aprobado por Líder: <strong>${fd.firmaLiderNombre}</strong> · ${fd.firmaLiderFecha}</div>
+    <div class="alert al-warn">Correo enviado a <strong>${APR2.nombre}</strong> (${APR2.email}). Simula su respuesta:</div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-green" onclick="showModalGerente()">✓ Simular: Gerente autoriza</button>
+      <button class="btn btn-danger" onclick="showModalRejForm('gerente')">✕ Simular: Gerente rechaza</button>
+    </div>
+  </div></div>`;
+}
+
+function showModalGerente(){
+  updateFlow('pend_g');
+  document.getElementById('m-title').textContent='📧 Correo al Gerente de Área';
+  document.getElementById('m-body').innerHTML=`
+    <div class="alert al-info" style="margin-bottom:1rem">Simulación de envío. En producción se enviará vía EmailJS.</div>
+    <div class="email-preview">
+      <div class="ep-hdr">📧 Autorización Final — SK-${fd.id.slice(-4).toUpperCase()}</div>
+      <div class="ep-meta">
+        <div><strong>Para:</strong> ${APR2.email} (${APR2.nombre})</div>
+        <div><strong>De:</strong> kaizen@zubex.com.mx</div>
+        <div><strong>Asunto:</strong> [Autorización Final] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
       </div>
+      <div class="ep-body">
+        <p>Estimado <strong>${APR2.nombre}</strong>,</p><br>
+        <p>El siguiente Short Kaizen fue aprobado por el Líder y requiere su autorización final.</p><br>
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600;width:38%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre} · ${fd.nomina}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Equipo Lean:</td><td style="padding:4px 8px">${fd.equipo}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Área:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha ID:</td><td style="padding:4px 8px">${fd.fechaId}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Fecha Impl.:</td><td style="padding:4px 8px">${fd.fechaImpl||'—'}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Tiempo:</td><td style="padding:4px 8px">${fd.tiempoImpl?fd.tiempoImpl+' '+fd.unidadTiempo:'—'}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0f3f9;font-weight:600">Aprobado Líder:</td><td style="padding:4px 8px">✓ ${fd.firmaLiderNombre} · ${fd.firmaLiderFecha}</td></tr>
+        </table><br>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div style="border:1px solid #fecaca;border-radius:8px;overflow:hidden">
+            <div style="background:#fef2f2;padding:5px 10px;font-size:11px;font-weight:700;color:#991b1b">📷 ANTES</div>
+            ${fd.fotoAntes?`<img src="${fd.fotoAntes}" style="width:100%;max-height:160px;object-fit:cover">`:'<div style="height:60px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">Sin foto</div>'}
+            <div style="padding:8px;font-size:12px">${fd.descAntes||'—'}</div>
+          </div>
+          <div style="border:1px solid #bbf7d0;border-radius:8px;overflow:hidden">
+            <div style="background:#f0fdf4;padding:5px 10px;font-size:11px;font-weight:700;color:#166534">📷 DESPUÉS</div>
+            ${fd.fotoDespues?`<img src="${fd.fotoDespues}" style="width:100%;max-height:160px;object-fit:cover">`:'<div style="height:60px;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:12px">Sin foto</div>'}
+            <div style="padding:8px;font-size:12px">${fd.descDespues||'—'}</div>
+          </div>
+        </div>
+        ${fd.beneficios?`<p style="font-size:12px"><strong>Beneficios:</strong> ${fd.beneficios}</p><br>`:''}
+      </div>
+      <div class="ep-btns">
+        <button class="ep-btn-a" onclick="gerenteAprueba()">✓ AUTORIZAR Y CERRAR</button>
+        <button class="ep-btn-r" onclick="showModalRejForm('gerente')">✕ RECHAZAR</button>
+      </div>
+    </div>`;
+  document.getElementById('m-foot').innerHTML=`<button class="btn btn-out" onclick="closeModal()">Cerrar vista previa</button>`;
+  document.getElementById('modal').style.display='flex';
+}
+
+function gerenteAprueba(){
+  document.getElementById('m-body').innerHTML=`
+    <div class="alert al-success" style="margin-bottom:1rem">✅ Gerente autorizó. Registra nombre y firma.</div>
+    <div class="fg"><label>Nombre del Gerente de Área *</label><input type="text" id="fn-gerente" placeholder="Nombre completo"></div>
+    <div class="firmabox">
+      <div class="frmhdr"><span class="frmtitle">Firma digital</span><span class="bp" id="fs-gerente">Pendiente</span></div>
       <canvas class="sigpad" id="sig-gerente" width="500" height="100"></canvas>
       <div class="sigact"><button class="btn-clr" onclick="clearSig('gerente')">Limpiar</button></div>
+      <p style="font-size:11px;color:var(--text3);margin-top:6px">Dibuja la firma con mouse o dedo</p>
     </div>`;
-  document.getElementById('em-foot').innerHTML=`
-    <button class="btn btn-out" onclick="showEmailModal('gerente')">← Volver</button>
-    <button class="btn btn-green" onclick="confirmarAprobGerente()">✓ Autorizar y cerrar Kaizen</button>`;
+  document.getElementById('m-foot').innerHTML=`
+    <button class="btn btn-out" onclick="showModalGerente()">← Volver</button>
+    <button class="btn btn-green" onclick="confirmarGerente()">✓ Autorizar y cerrar Kaizen</button>`;
   initSig('gerente');
 }
 
-function confirmarAprobGerente(){
-  if(!gv('fn-gerente')){toast('Ingresa el nombre del Gerente','tr');return;}
+function confirmarGerente(){
+  if(!gv('fn-gerente'))return toast('Ingresa el nombre del Gerente','tr');
   fd.firmaGerente=getSig('gerente')||null;
   fd.firmaGerenteNombre=gv('fn-gerente');
   fd.firmaGerenteFecha=new Date().toLocaleDateString('es-MX');
   fd.status='done';
-  saveKaizen();
-  closeModal();
-  showEmailModal('mc');
+  saveKaizen(); closeModal();
+  showModalMC();
 }
 
-/* ═══════════════════════════════════════
-   ESTADO RECHAZADO
+function showModalMC(){
+  document.getElementById('m-title').textContent='📧 Notificación a Mejora Continua';
+  document.getElementById('m-body').innerHTML=`
+    <div class="alert al-success" style="margin-bottom:1rem">🎉 Kaizen cerrado. Notificando al equipo de Mejora Continua.</div>
+    <div class="email-preview">
+      <div class="ep-hdr">📧 Kaizen Cerrado — SK-${fd.id.slice(-4).toUpperCase()}</div>
+      <div class="ep-meta">
+        <div><strong>Para:</strong> mejora.continua@zubex.com.mx</div>
+        <div><strong>Asunto:</strong> ✅ Cerrado SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}</div>
+      </div>
+      <div class="ep-body">
+        <p>El Short Kaizen <strong>SK-${fd.id.slice(-4).toUpperCase()}</strong> fue cerrado y aprobado.</p><br>
+        <table style="width:100%;font-size:12px;border-collapse:collapse">
+          <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600;width:38%">Solicitante:</td><td style="padding:4px 8px">${fd.nombre}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Área:</td><td style="padding:4px 8px">${fd.donde}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Aprobó Líder:</td><td style="padding:4px 8px">✓ ${fd.firmaLiderNombre}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Autorizó Gerente:</td><td style="padding:4px 8px">✓ ${fd.firmaGerenteNombre}</td></tr>
+          <tr><td style="padding:4px 8px;background:#f0fdf4;font-weight:600">Fecha cierre:</td><td style="padding:4px 8px">${new Date().toLocaleDateString('es-MX')}</td></tr>
+        </table>
+      </div>
+    </div>`;
+  document.getElementById('m-foot').innerHTML=`<button class="btn btn-green" onclick="closeModal();updateFlow('done');renderForm()">✓ Ver resumen final</button>`;
+  document.getElementById('modal').style.display='flex';
+}
+
+/* ══════════════════════════════════════
+   RECHAZO
 ══════════════════════════════════════ */
+function showModalRejForm(tipo){
+  document.getElementById('m-body').innerHTML=`
+    <div class="alert al-danger">⚠️ Esta acción rechazará y detendrá el Kaizen.</div>
+    <div class="fg" style="margin-top:1rem"><label>Motivo del rechazo *</label><textarea id="rej-reason" placeholder="Explica el motivo..." style="min-height:100px"></textarea></div>`;
+  document.getElementById('m-foot').innerHTML=`
+    <button class="btn btn-out" onclick="${tipo==='lider'?'showModalLider()':'showModalGerente()'}">← Volver</button>
+    <button class="btn btn-danger" onclick="confirmarRechazo('${tipo}')">Confirmar rechazo</button>`;
+}
+
+function confirmarRechazo(tipo){
+  const reason=gv('rej-reason');
+  if(!reason)return toast('Escribe el motivo','tr');
+  if(tipo==='lider'){
+    fd.status='rej_l'; fd.rechazoLiderRazon=reason; fd.rechazoLiderFecha=new Date().toLocaleDateString('es-MX');
+  } else {
+    fd.status='rej_g'; fd.rechazoGerenteRazon=reason; fd.rechazoGerenteFecha=new Date().toLocaleDateString('es-MX');
+  }
+  saveKaizen(); closeModal(); updateFlow(fd.status); renderForm();
+  toast('Solicitud rechazada','tr');
+}
+
 function renderRejected(el,quien,razon){
-  el.innerHTML=`
-  <div class="rejected-card">
-    <div class="rejected-icon">❌</div>
-    <div class="rejected-title">Solicitud rechazada por el ${quien}</div>
-    <p style="color:#7f1d1d;font-size:13px">Esta solicitud de Kaizen ha sido rechazada y no puede continuar.</p>
-    <div class="rejected-reason"><strong>Motivo:</strong> ${razon||'Sin motivo indicado'}</div>
-    <div style="margin-top:1.5rem;display:flex;gap:10px;justify-content:center">
-      <button class="btn btn-out" onclick="goTo('dash')">← Volver al dashboard</button>
-    </div>
+  el.innerHTML=`<div style="text-align:center;padding:2.5rem;background:#fef2f2;border:2px solid #fecaca;border-radius:var(--r2)">
+    <div style="font-size:48px;margin-bottom:12px">❌</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--danger);margin-bottom:8px">Rechazado por el ${quien}</div>
+    <p style="font-size:13px;color:#7f1d1d">Esta solicitud fue rechazada y no puede continuar.</p>
+    <div style="background:#fff;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-top:12px;text-align:left;font-size:13px"><strong>Motivo:</strong> ${razon||'Sin motivo'}</div>
+    <div style="margin-top:1.5rem"><button class="btn btn-out" onclick="goTo('hist')">← Volver a solicitudes</button></div>
   </div>`;
 }
 
-/* ═══════════════════════════════════════
-   SECCIONES PENDIENTES (esperando correo)
-══════════════════════════════════════ */
-function renderSecPendL(el){
-  el.innerHTML=`
-  <div class="fcard">
-    <div class="fhdr"><span class="ftitle">Esperando autorización del Líder</span></div>
-    <div class="fbody">
-      <div class="alert al-warn">⏳ Se ha enviado un correo de aprobación a <strong>${fd.emailLider}</strong>. Esta sección continuará cuando el Líder apruebe la solicitud.</div>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Mientras tanto, puedes simular la respuesta del Líder:</p>
-      <div style="display:flex;gap:10px">
-        <button class="btn btn-green" onclick="liderAprobaSimul()">✓ Simular: Líder aprueba</button>
-        <button class="btn btn-danger" onclick="showRejSimul('lider')">✕ Simular: Líder rechaza</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderSecPendG(el){
-  el.innerHTML=`
-  <div class="fcard">
-    <div class="fhdr"><span class="ftitle">Esperando autorización del Gerente</span></div>
-    <div class="fbody">
-      <div class="alert al-warn">⏳ Se ha enviado un correo de autorización al Gerente a <strong>${fd.emailGerente}</strong>. Esta sección continuará cuando el Gerente autorice.</div>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Mientras tanto, puedes simular la respuesta del Gerente:</p>
-      <div style="display:flex;gap:10px">
-        <button class="btn btn-green" onclick="gerenteAprobaSimul()">✓ Simular: Gerente autoriza</button>
-        <button class="btn btn-danger" onclick="showRejSimul('gerente')">✕ Simular: Gerente rechaza</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function liderAprobaSimul(){showEmailModal('lider');}
-function gerenteAprobaSimul(){showEmailModal('gerente');}
-
-function showRejSimul(tipo){
-  showEmailModal(tipo);
-  setTimeout(()=>showRejForm(tipo),100);
-}
-
-/* ═══════════════════════════════════════
-   DONE STATE
+/* ══════════════════════════════════════
+   DONE
 ══════════════════════════════════════ */
 function renderDone(el){
-  el.innerHTML=`
-  <div class="fcard">
-    <div class="fhdr" style="background:var(--green-d)">
-      <span class="ftitle">✅ Kaizen Cerrado — SK-${fd.id.slice(-4).toUpperCase()}</span>
-    </div>
+  el.innerHTML=`<div class="fcard">
+    <div class="fhdr" style="background:var(--green-d)"><span class="ftitle">✅ Kaizen Cerrado — SK-${fd.id.slice(-4).toUpperCase()}</span></div>
     <div class="fbody">
-      <div class="alert al-success">🎉 Este Short Kaizen ha sido completado y aprobado por el Gerente de Área. El equipo de Mejora Continua ha sido notificado.</div>
+      <div class="alert al-success">🎉 Aprobado por Líder y Gerente. El equipo de Mejora Continua fue notificado.</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
         <div><div class="dl">Solicitante</div><div class="dv">${fd.nombre}</div></div>
-        <div><div class="dl">Equipo</div><div class="dv">${fd.equipo||'—'}</div></div>
+        <div><div class="dl">Equipo</div><div class="dv">${fd.equipo}</div></div>
         <div><div class="dl">Área</div><div class="dv">${fd.donde}</div></div>
         <div><div class="dl">Fecha ID</div><div class="dv">${fd.fechaId}</div></div>
         <div><div class="dl">Fecha Impl.</div><div class="dv">${fd.fechaImpl||'—'}</div></div>
         <div><div class="dl">Tiempo</div><div class="dv">${fd.tiempoImpl?fd.tiempoImpl+' '+fd.unidadTiempo:'—'}</div></div>
       </div>
-      <div style="display:flex;gap:10px;margin-bottom:1rem">
-        <div style="flex:1;text-align:center;padding:.75rem;background:#fef2f2;border-radius:8px;border:1px solid #fecaca">
-          <div style="font-size:11px;color:var(--danger);font-weight:600;margin-bottom:4px">FIRMA LÍDER</div>
-          ${fd.firmaLider?`<img src="${fd.firmaLider}" style="height:40px;object-fit:contain">`:''}<div style="font-size:12px;color:var(--text2)">${fd.firmaLiderNombre||'—'}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="border:1px solid #fecaca;border-radius:8px;overflow:hidden">
+          <div style="background:#fef2f2;padding:5px 10px;font-size:11px;font-weight:700;color:#991b1b">📷 ANTES</div>
+          ${fd.fotoAntes?`<img src="${fd.fotoAntes}" style="width:100%;max-height:150px;object-fit:cover">`:''}
+          <div style="padding:8px;font-size:12px">${fd.descAntes||'—'}</div>
         </div>
-        <div style="flex:1;text-align:center;padding:.75rem;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0">
-          <div style="font-size:11px;color:var(--green-d);font-weight:600;margin-bottom:4px">FIRMA GERENTE</div>
-          ${fd.firmaGerente?`<img src="${fd.firmaGerente}" style="height:40px;object-fit:contain">`:''}<div style="font-size:12px;color:var(--text2)">${fd.firmaGerenteNombre||'—'}</div>
+        <div style="border:1px solid #bbf7d0;border-radius:8px;overflow:hidden">
+          <div style="background:#f0fdf4;padding:5px 10px;font-size:11px;font-weight:700;color:#166534">📷 DESPUÉS</div>
+          ${fd.fotoDespues?`<img src="${fd.fotoDespues}" style="width:100%;max-height:150px;object-fit:cover">`:''}
+          <div style="padding:8px;font-size:12px">${fd.descDespues||'—'}</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem">
+        <div class="firmabox">
+          <div class="frmhdr"><span class="frmtitle">Firma Líder</span><span class="bok">Firmado ✓</span></div>
+          ${fd.firmaLider?`<img src="${fd.firmaLider}" style="height:45px;object-fit:contain;display:block;margin:6px 0">`:''}
+          <div style="font-size:12px;color:var(--text2)">${fd.firmaLiderNombre||'—'} · ${fd.firmaLiderFecha||''}</div>
+        </div>
+        <div class="firmabox">
+          <div class="frmhdr"><span class="frmtitle">Firma Gerente</span><span class="bok">Firmado ✓</span></div>
+          ${fd.firmaGerente?`<img src="${fd.firmaGerente}" style="height:45px;object-fit:contain;display:block;margin:6px 0">`:''}
+          <div style="font-size:12px;color:var(--text2)">${fd.firmaGerenteNombre||'—'} · ${fd.firmaGerenteFecha||''}</div>
         </div>
       </div>
     </div>
     <div class="ffoot">
-      <button class="btn btn-out" onclick="goTo('dash')">← Dashboard</button>
+      <button class="btn btn-out" onclick="goTo('hist')">← Solicitudes</button>
       <button class="btn btn-pdf" onclick="exportPDF('${fd.id}')">⬇ Exportar PDF</button>
     </div>
   </div>`;
 }
 
-/* ═══════════════════════════════════════
-   DETAIL VIEW
+/* ══════════════════════════════════════
+   DETALLE
 ══════════════════════════════════════ */
 function showDet(id){
   const k=KZ.find(x=>x.id===id);if(!k)return;
   fd={...k};
-  const[,lbl]=STATUS[k.status]||['','—'];
+  const[cls,lbl]=STATUS[k.status]||['b1','—'];
   document.getElementById('det-title').textContent=`SK-${k.id.slice(-4).toUpperCase()} · ${k.nombre||''}`;
-  const enf={rentabilidad:'📈 Rentabilidad',bienestar:'🧑‍💼 Bienestar',sustentabilidad:'🌱 Sustentabilidad',proceso:'⚙️ Proceso'};
+  const enf={rentabilidad:'📈 Rentabilidad',bienestar:'🧑 Bienestar',sustentabilidad:'🌱 Sustentabilidad',proceso:'⚙️ Proceso'};
   const em={'5s':'🧹 5S',seguridad:'🦺 Seguridad',calidad:'✅ Calidad',productividad:'⚡ Productividad',costos:'💰 Costos',ambiente:'🌿 Ambiente'};
-  const[cls]=STATUS[k.status]||['b1'];
-
   document.getElementById('det-body').innerHTML=`
   <div class="fcard">
-    <div class="fhdr">
-      <span class="ftitle">Short Kaizen · Zubex</span>
-      <span class="kbadge ${cls}" style="border:1px solid rgba(255,255,255,.3)">${lbl}</span>
-    </div>
+    <div class="fhdr"><span class="ftitle">Short Kaizen · Zubex · SK-${k.id.slice(-4).toUpperCase()}</span><span class="kbadge ${cls}" style="border:1px solid rgba(255,255,255,.3)">${lbl}</span></div>
     <div class="fbody">
-      <div class="stitle"><span class="snum">1</span>Identificación</div>
+      <div class="stitle"><span class="snum">A</span>Identificación</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
         <div><div class="dl">Nómina</div><div class="dv">${k.nomina||'—'}</div></div>
         <div><div class="dl">Nombre</div><div class="dv">${k.nombre||'—'}</div></div>
@@ -1262,49 +943,45 @@ function showDet(id){
         <div><div class="dl">¿Dónde?</div><div class="dv">${k.donde||'—'}</div></div>
         <div><div class="dl">Fecha ID</div><div class="dv">${k.fechaId||'—'}</div></div>
       </div>
-      <div style="margin-bottom:1rem"><div class="dl">Enfoques</div><div class="dv">${(k.enfoques||[]).map(e=>enf[e]).join(' · ')||'—'}</div></div>
+      <div style="margin-bottom:1rem"><div class="dl">Enfoques</div><div class="dv">${(k.enfoques||[]).map(e=>enf[e]||e).join(' · ')||'—'}</div></div>
       <div class="divider"></div>
-      <div class="stitle"><span class="snum">2</span>ANTES</div>
-      <div style="display:grid;grid-template-columns:${k.fotoAntes?'1fr 1fr':'1fr'};gap:1rem;margin-bottom:1rem;align-items:start">
-        ${k.fotoAntes?`<img src="${k.fotoAntes}" class="det-img" alt="Antes">`:''}
+      <div class="stitle"><span class="snum">B</span>ANTES y DESPUÉS</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
         <div>
-          <div class="dl">Descripción</div><div class="dv" style="white-space:pre-wrap">${k.descAntes||'—'}</div>
-          ${k.causeRoot?`<br><div class="dl">Causa raíz</div><div class="dv" style="white-space:pre-wrap">${k.causeRoot}</div>`:''}
+          ${k.fotoAntes?`<img src="${k.fotoAntes}" class="det-img" style="margin-bottom:8px" alt="Antes">`:''}
+          <div class="dl">Descripción ANTES</div><div class="dv" style="white-space:pre-wrap">${k.descAntes||'—'}</div>
+          ${k.causeRoot?`<br><div class="dl">Causa raíz</div><div class="dv">${k.causeRoot}</div>`:''}
         </div>
-      </div>
-      ${k.descDespues?`
-      <div class="divider"></div>
-      <div class="stitle"><span class="snum">3</span>DESPUÉS</div>
-      <div style="display:grid;grid-template-columns:${k.fotoDespues?'1fr 1fr':'1fr'};gap:1rem;margin-bottom:1rem;align-items:start">
-        ${k.fotoDespues?`<img src="${k.fotoDespues}" class="det-img" alt="Después">`:''}
         <div>
-          <div class="dl">Descripción</div><div class="dv" style="white-space:pre-wrap">${k.descDespues}</div>
-          ${k.beneficios?`<br><div class="dl">Beneficios</div><div class="dv" style="white-space:pre-wrap">${k.beneficios}</div>`:''}
+          ${k.fotoDespues?`<img src="${k.fotoDespues}" class="det-img" style="margin-bottom:8px" alt="Después">`:''}
+          <div class="dl">Descripción DESPUÉS</div><div class="dv" style="white-space:pre-wrap">${k.descDespues||'—'}</div>
+          ${k.beneficios?`<br><div class="dl">Beneficios</div><div class="dv">${k.beneficios}</div>`:''}
         </div>
       </div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
         <div><div class="dl">Fecha Impl.</div><div class="dv">${k.fechaImpl||'—'}</div></div>
         <div><div class="dl">Tiempo</div><div class="dv">${k.tiempoImpl?k.tiempoImpl+' '+k.unidadTiempo:'—'}</div></div>
+        <div><div class="dl">Tipo de mejora</div><div class="dv">${(k.enfoquesMejora||[]).map(e=>em[e]||e).join(', ')||'—'}</div></div>
       </div>
-      <div><div class="dl">Enfoques de mejora</div><div class="dv">${(k.enfoquesMejora||[]).map(e=>em[e]).join(' · ')||'—'}</div></div>
-      `:''}
       <div class="divider"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
         <div class="firmabox">
           <div class="frmhdr"><span class="frmtitle">Firma Líder</span><span class="${k.firmaLider?'bok':'bp'}">${k.firmaLider?'Firmado ✓':'Pendiente'}</span></div>
-          ${k.firmaLider?`<img src="${k.firmaLider}" style="height:50px;object-fit:contain;display:block;margin:6px 0"><div style="font-size:12px;color:var(--text2)">${k.firmaLiderNombre||''} · ${k.firmaLiderFecha||''}</div>`:`<div style="height:50px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px">Sin firma</div>`}
+          ${k.firmaLider?`<img src="${k.firmaLider}" style="height:45px;object-fit:contain;display:block;margin:6px 0">`:''}
+          <div style="font-size:12px;color:var(--text2)">${k.firmaLiderNombre||''} ${k.firmaLiderFecha?'· '+k.firmaLiderFecha:''}</div>
         </div>
         <div class="firmabox">
           <div class="frmhdr"><span class="frmtitle">Firma Gerente</span><span class="${k.firmaGerente?'bok':'bp'}">${k.firmaGerente?'Firmado ✓':'Pendiente'}</span></div>
-          ${k.firmaGerente?`<img src="${k.firmaGerente}" style="height:50px;object-fit:contain;display:block;margin:6px 0"><div style="font-size:12px;color:var(--text2)">${k.firmaGerenteNombre||''} · ${k.firmaGerenteFecha||''}</div>`:`<div style="height:50px;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:12px">Sin firma</div>`}
+          ${k.firmaGerente?`<img src="${k.firmaGerente}" style="height:45px;object-fit:contain;display:block;margin:6px 0">`:''}
+          <div style="font-size:12px;color:var(--text2)">${k.firmaGerenteNombre||''} ${k.firmaGerenteFecha?'· '+k.firmaGerenteFecha:''}</div>
         </div>
       </div>
     </div>
     <div class="ffoot">
-      <button class="btn btn-out" onclick="goTo('dash')">← Volver</button>
+      <button class="btn btn-out" onclick="goTo('hist')">← Volver</button>
       <div style="display:flex;gap:8px">
-        ${(k.status==='pend_l'||k.status==='s3'||k.status==='pend_g')?`<button class="btn btn-blue" onclick="continueKaizen('${k.id}')">Continuar solicitud →</button>`:''}
-        ${k.status==='done'?`<button class="btn btn-pdf" onclick="exportPDF('${k.id}')">⬇ Exportar PDF</button>`:''}
+        ${(k.status==='pend_l'||k.status==='pend_g')?`<button class="btn btn-blue" onclick="continueKaizen('${k.id}')">Continuar →</button>`:''}
+        ${k.status==='done'?`<button class="btn btn-pdf" onclick="exportPDF('${k.id}')">⬇ PDF</button>`:''}
       </div>
     </div>
   </div>`;
@@ -1315,227 +992,115 @@ function continueKaizen(id){
   const k=KZ.find(x=>x.id===id);if(!k)return;
   fd={...k};
   document.getElementById('form-title').textContent='Continuar SK-'+k.id.slice(-4).toUpperCase();
-  if(k.status==='pend_l') curSection='pend_l';
-  else if(k.status==='s3') curSection=3;
-  else if(k.status==='pend_g') curSection='pend_g';
-  goTo('form');renderSection();
+  goTo('form');renderForm();
 }
 
-/* ═══════════════════════════════════════
-   PDF EXPORT — Formato oficial Zubex SK
+/* ══════════════════════════════════════
+   PDF
 ══════════════════════════════════════ */
 async function exportPDF(id){
   try{
-  const k=KZ.find(x=>x.id===id)||fd;
-  const{jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
-  const W=doc.internal.pageSize.getWidth();
-  const H=doc.internal.pageSize.getHeight();
-  const ML=10;
-  const CW=W-ML*2;
-
-  // ── helpers ──────────────────────────
-  function border(x,y,w,h){doc.setDrawColor(180,190,210);doc.setLineWidth(0.3);doc.rect(x,y,w,h,'S');}
-  function blueHdr(x,y,w,h,txt){
-    doc.setFillColor(26,63,168);doc.rect(x,y,w,h,'F');
-    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);
-    doc.text(txt,x+w/2,y+h/2+1.2,{align:'center',baseline:'middle'});
-  }
-  function fRow(x,y,w,lbl,val,lw){
-    lw=lw||40;
-    doc.setFillColor(245,248,255);doc.rect(x,y,lw,6,'F');
-    doc.setFillColor(255,255,255);doc.rect(x+lw,y,w-lw,6,'F');
-    border(x,y,w,6);
-    doc.setDrawColor(180,190,210);doc.setLineWidth(0.2);doc.line(x+lw,y,x+lw,y+6);
-    doc.setTextColor(80,90,120);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-    doc.text(lbl,x+2,y+4.2);
-    doc.setTextColor(15,22,41);doc.setFont('helvetica','bold');doc.setFontSize(8);
-    doc.text(String(val||''),x+lw+2,y+4.2);
-  }
-  function chk(x,y,on,lbl){
-    doc.setDrawColor(26,63,168);doc.setLineWidth(0.4);
-    if(on){doc.setFillColor(26,63,168);doc.rect(x,y,3.5,3.5,'FD');}
-    else{doc.setFillColor(255,255,255);doc.rect(x,y,3.5,3.5,'S');}
-    doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-    doc.text(lbl,x+5,y+3);
-  }
-  function photoCell(x,y,w,h,img){
-    doc.setFillColor(248,250,255);doc.rect(x,y,w,h,'F');
-    border(x,y,w,h);
-    if(img){try{doc.addImage(img,'JPEG',x+1,y+1,w-2,h-2,'','MEDIUM');}catch(e){}}
-    else{doc.setTextColor(180,190,210);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('Sin foto / dibujo',x+w/2,y+h/2,{align:'center',baseline:'middle'});}
-  }
-  function textCell(x,y,w,h,txt){
-    doc.setFillColor(255,255,255);doc.rect(x,y,w,h,'F');
-    border(x,y,w,h);
-    if(!txt)return;
-    doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(8);
-    const lines=doc.splitTextToSize(String(txt),w-4);
-    let ty=y+5;
-    for(const l of lines){if(ty>y+h-2)break;doc.text(l,x+2,ty);ty+=4.5;}
-  }
-
-  // ══ CABECERA ══════════════════════════
-  const LW=42, HDR_Y=10, HDR_H=28;
-  // Logo box
-  doc.setFillColor(255,255,255);doc.rect(ML,HDR_Y,LW,HDR_H,'F');border(ML,HDR_Y,LW,HDR_H);
-  doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(14);
-  doc.text('zubex',ML+3,HDR_Y+7);
-  doc.setDrawColor(26,63,168);doc.setLineWidth(1);doc.circle(ML+LW/2,HDR_Y+18,6,'S');
-  doc.setFillColor(26,63,168);doc.circle(ML+LW/2,HDR_Y+18,4.5,'F');
-  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);
-  doc.text('SK',ML+LW/2,HDR_Y+19.5,{align:'center',baseline:'middle'});
-  doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(6.5);
-  doc.text('Short Kaizen',ML+LW/2,HDR_Y+HDR_H-3,{align:'center'});
-  // Info box
-  const IX=ML+LW+1, IW=CW-LW-1-42;
-  doc.setFillColor(245,248,255);doc.rect(IX,HDR_Y,IW,HDR_H,'F');border(IX,HDR_Y,IW,HDR_H);
-  doc.setTextColor(80,90,120);doc.setFont('helvetica','normal');doc.setFontSize(7);
-  doc.text('Sistema de Gestión de Inocuidad y Calidad',IX+2,HDR_Y+5);
-  doc.setFont('helvetica','bold');doc.text('Formato: Short Kaizen',IX+2,HDR_Y+10);
-  doc.setFont('helvetica','normal');
-  doc.text('Fecha de Revisión: 19 de enero 2026',IX+2,HDR_Y+15);
-  doc.text('Clave: MEJ-F-03',IX+2,HDR_Y+20);
-  doc.text('Revisión: 07',IX+2,HDR_Y+25);
-  // Page + status box
-  const PX=IX+IW+1, PW=42;
-  doc.setFillColor(255,255,255);doc.rect(PX,HDR_Y,PW,HDR_H/2,'F');border(PX,HDR_Y,PW,HDR_H/2);
-  doc.setTextColor(15,22,41);doc.setFont('helvetica','bold');doc.setFontSize(7);
-  doc.text('Página 1 de 1',PX+PW/2,HDR_Y+HDR_H/4,{align:'center',baseline:'middle'});
-  const sc={s1:[253,230,138],pend_l:[253,230,138],rej_l:[254,202,202],s3:[199,210,254],pend_g:[249,168,212],done:[187,247,208],rej_g:[254,202,202]};
-  const[sr,sg,sb]=sc[k.status]||[253,230,138];
-  const[,sLbl]=STATUS[k.status]||['','—'];
-  doc.setFillColor(sr,sg,sb);doc.rect(PX,HDR_Y+HDR_H/2,PW,HDR_H/2,'F');border(PX,HDR_Y+HDR_H/2,PW,HDR_H/2);
-  doc.setTextColor(50,50,80);doc.setFontSize(6);
-  doc.text(sLbl,PX+PW/2,HDR_Y+HDR_H*0.75,{align:'center',baseline:'middle'});
-
-  let y=HDR_Y+HDR_H+2;
-
-  // ══ FILA 1: ¿Quién? + Enfoque ════════
-  const QW=CW*0.65, EW=CW*0.35, EX=ML+QW;
-  blueHdr(ML,y,QW,6,'¿Quién Identificó la mejora?');
-  fRow(ML,y+6,QW,'Nómina:',k.nomina,25);
-  fRow(ML,y+12,QW,'Nombre:',k.nombre,25);
-  fRow(ML,y+18,QW,'Equipo Lean:',k.equipo,25);
-  blueHdr(ML,y+24,QW,6,'¿Dónde se aplicará la mejora?');
-  fRow(ML,y+30,QW,'Departamento:',k.donde,30);
-  fRow(ML,y+36,QW,'Área/Línea/Máquina:',k.quien,35);
-  // Enfoque
-  blueHdr(EX,y,EW,6,'Enfoque de la mejora');
-  doc.setFillColor(255,255,255);doc.rect(EX,y+6,EW,36,'F');border(EX,y+6,EW,36);
-  [['rentabilidad','Rentabilidad'],['bienestar','Bienestar del personal'],['sustentabilidad','Sustentabilidad'],['proceso','Mejora en el proceso']].forEach(([key,lbl],i)=>{
-    chk(EX+4,y+10+i*8,(k.enfoques||[]).includes(key),lbl);
-  });
-  y+=44;
-
-  // ══ FILA 2: FOTOS ═════════════════════
-  const FW=CW/2, FH=60;
-  blueHdr(ML,y,FW,7,'FOTO/DIBUJO ANTES');
-  blueHdr(ML+FW,y,FW,7,'FOTO/DIBUJO DESPUÉS');
-  photoCell(ML,y+7,FW,FH,k.fotoAntes);
-  photoCell(ML+FW,y+7,FW,FH,k.fotoDespues);
-  y+=7+FH;
-
-  // ══ FILA 3: DESCRIPCIONES ═════════════
-  const DH=28;
-  blueHdr(ML,y,FW,7,'DESCRIPCIÓN DEL ANTES');
-  blueHdr(ML+FW,y,FW,7,'DESCRIPCIÓN DEL DESPUÉS Y BENEFICIOS');
-  textCell(ML,y+7,FW,DH,k.descAntes||'');
-  textCell(ML+FW,y+7,FW,DH,(k.descDespues||'')+(k.beneficios?'\n'+k.beneficios:''));
-  y+=7+DH;
-
-  // ══ FILA 4: Enfoque Mejoras | Estand. | Fechas + Firmas ══
-  const BH=50, EM=48, ES=52, ER=CW-EM-ES;
-  const XES=ML+EM, XER=ML+EM+ES;
-  // Enfoque de Mejoras
-  doc.setFillColor(255,255,255);doc.rect(ML,y,EM,BH,'F');border(ML,y,EM,BH);
-  doc.setFillColor(235,240,255);doc.rect(ML,y,EM,6,'F');
-  doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(7);
-  doc.text('Enfoque de Mejoras',ML+EM/2,y+4.5,{align:'center'});
-  const cx=ML+EM/2, cy=y+28, cr=13;
-  doc.setDrawColor(26,63,168);doc.setLineWidth(0.2);
-  doc.line(cx,cy-cr,cx,cy+cr);doc.line(cx-cr,cy,cx+cr,cy);
-  doc.setTextColor(26,63,168);doc.setFont('helvetica','normal');doc.setFontSize(5);
-  doc.text('Rentabilidad',cx,cy-cr-1.5,{align:'center'});
-  doc.text('Bienestar',cx+cr+1,cy+1,{align:'left'});
-  doc.text('Sustentable',cx,cy+cr+3,{align:'center'});
-  doc.text('Mejora',cx-cr-1,cy+1,{align:'right'});
-  const emap={rentabilidad:[cx,cy-cr],bienestar:[cx+cr,cy],sustentabilidad:[cx,cy+cr],proceso:[cx-cr,cy]};
-  const pts=(k.enfoques||[]).filter(e=>emap[e]).map(e=>emap[e]);
-  if(pts.length>=2){
-    doc.setFillColor(173,216,255);doc.setDrawColor(26,63,168);doc.setLineWidth(0.5);
-    doc.lines(pts.slice(1).map((p,i)=>[p[0]-pts[i][0],p[1]-pts[i][1]]),pts[0][0],pts[0][1],null,'FD',true);
-  }
-  // Estandarización
-  doc.setFillColor(235,240,255);doc.rect(XES,y,ES,6,'F');border(XES,y,ES,BH);
-  doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(7);
-  doc.text('Estandarización:',XES+2,y+4.5);
-  if(k.estandarizacion){
-    doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-    doc.splitTextToSize(k.estandarizacion,ES-4).slice(0,7).forEach((l,i)=>doc.text(l,XES+2,y+10+i*5));
-  }
-  // Fechas y Firmas
-  doc.setFillColor(255,255,255);doc.rect(XER,y,ER,BH,'F');border(XER,y,ER,BH);
-  fRow(XER,y,ER,'Fecha de Identificación:',k.fechaId,50);
-  fRow(XER,y+8,ER,'Fecha implementación:',k.fechaImpl,50);
-  fRow(XER,y+16,ER,'Tiempo de Implementación:',k.tiempoImpl?(k.tiempoImpl+' '+k.unidadTiempo):'',50);
-  // Firma Líder
-  const FH2=13, FLW=38, yFl=y+24;
-  doc.setFillColor(235,240,255);doc.rect(XER,yFl,FLW,FH2,'F');border(XER,yFl,FLW,FH2);
-  doc.setFillColor(255,255,255);doc.rect(XER+FLW,yFl,ER-FLW,FH2,'F');border(XER+FLW,yFl,ER-FLW,FH2);
-  doc.setTextColor(60,70,100);doc.setFont('helvetica','normal');doc.setFontSize(7);
-  doc.text('Autorización',XER+FLW/2,yFl+4,{align:'center'});
-  doc.text('Líder/Coordinador',XER+FLW/2,yFl+9,{align:'center'});
-  if(k.firmaLider){try{doc.addImage(k.firmaLider,'PNG',XER+FLW+1,yFl+1,ER-FLW-3,FH2-3,'','FAST');}catch(e){}}
-  doc.setTextColor(80,90,110);doc.setFontSize(6);
-  doc.text(k.firmaLiderNombre||'Pendiente',XER+FLW+2,yFl+FH2-1);
-  // Firma Gerente
-  const yFg=yFl+FH2;
-  doc.setFillColor(235,240,255);doc.rect(XER,yFg,FLW,FH2,'F');border(XER,yFg,FLW,FH2);
-  doc.setFillColor(255,255,255);doc.rect(XER+FLW,yFg,ER-FLW,FH2,'F');border(XER+FLW,yFg,ER-FLW,FH2);
-  doc.setTextColor(60,70,100);doc.setFont('helvetica','normal');doc.setFontSize(7);
-  doc.text('Autorización de',XER+FLW/2,yFg+4,{align:'center'});
-  doc.text('Gerente de Área',XER+FLW/2,yFg+9,{align:'center'});
-  if(k.firmaGerente){try{doc.addImage(k.firmaGerente,'PNG',XER+FLW+1,yFg+1,ER-FLW-3,FH2-3,'','FAST');}catch(e){}}
-  doc.setTextColor(80,90,110);doc.setFontSize(6);
-  doc.text(k.firmaGerenteNombre||'Pendiente',XER+FLW+2,yFg+FH2-1);
-
-  // ══ FOOTER ════════════════════════════
-  doc.setDrawColor(180,190,210);doc.setLineWidth(0.3);doc.line(ML,H-10,W-ML,H-10);
-  doc.setTextColor(150,160,180);doc.setFont('helvetica','normal');doc.setFontSize(7);
-  doc.text('zubex · Short Kaizen · SK-'+k.id.slice(-4).toUpperCase()+' · '+new Date().toLocaleDateString('es-MX'),W/2,H-6,{align:'center'});
-
-  doc.save(`SK-${k.id.slice(-4).toUpperCase()}-${(k.nombre||'kaizen').replace(/\s+/g,'-')}.pdf`);
-  toast('PDF generado correctamente','tg');
-  }catch(err){console.error('PDF error:',err);toast('Error al generar PDF: '+err.message,'tr');}
+    const k=KZ.find(x=>x.id===id)||fd;
+    const{jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+    const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),ML=10,CW=W-20;
+    function border(x,y,w,h){doc.setDrawColor(180,190,210);doc.setLineWidth(0.3);doc.rect(x,y,w,h,'S');}
+    function blueHdr(x,y,w,h,txt){doc.setFillColor(26,63,168);doc.rect(x,y,w,h,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(txt,x+w/2,y+h/2+1.2,{align:'center',baseline:'middle'});}
+    function fRow(x,y,w,lbl,val,lw){lw=lw||40;doc.setFillColor(245,248,255);doc.rect(x,y,lw,6,'F');doc.setFillColor(255,255,255);doc.rect(x+lw,y,w-lw,6,'F');border(x,y,w,6);doc.setDrawColor(180,190,210);doc.setLineWidth(0.2);doc.line(x+lw,y,x+lw,y+6);doc.setTextColor(80,90,120);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.text(lbl,x+2,y+4.2);doc.setTextColor(15,22,41);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(String(val||''),x+lw+2,y+4.2);}
+    function chk(x,y,on,lbl){doc.setDrawColor(26,63,168);doc.setLineWidth(0.4);if(on){doc.setFillColor(26,63,168);doc.rect(x,y,3.5,3.5,'FD');}else{doc.setFillColor(255,255,255);doc.rect(x,y,3.5,3.5,'S');}doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.text(lbl,x+5,y+3);}
+    function photoCell(x,y,w,h,img){doc.setFillColor(248,250,255);doc.rect(x,y,w,h,'F');border(x,y,w,h);if(img){try{doc.addImage(img,'JPEG',x+1,y+1,w-2,h-2,'','MEDIUM');}catch(e){}}else{doc.setTextColor(180,190,210);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('Sin foto',x+w/2,y+h/2,{align:'center',baseline:'middle'});}}
+    function textCell(x,y,w,h,txt){doc.setFillColor(255,255,255);doc.rect(x,y,w,h,'F');border(x,y,w,h);if(!txt)return;doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(8);const lines=doc.splitTextToSize(String(txt),w-4);let ty=y+5;for(const l of lines){if(ty>y+h-2)break;doc.text(l,x+2,ty);ty+=4.5;}}
+    // Cabecera
+    const LW=42,HDR_Y=10,HDR_H=28;
+    doc.setFillColor(255,255,255);doc.rect(ML,HDR_Y,LW,HDR_H,'F');border(ML,HDR_Y,LW,HDR_H);
+    doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(14);doc.text('zubex',ML+3,HDR_Y+7);
+    doc.setDrawColor(26,63,168);doc.setLineWidth(1);doc.circle(ML+LW/2,HDR_Y+18,6,'S');doc.setFillColor(26,63,168);doc.circle(ML+LW/2,HDR_Y+18,4.5,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('SK',ML+LW/2,HDR_Y+19.5,{align:'center',baseline:'middle'});
+    doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.text('Short Kaizen',ML+LW/2,HDR_Y+HDR_H-3,{align:'center'});
+    const IX=ML+LW+1,IW=CW-LW-1-42;
+    doc.setFillColor(245,248,255);doc.rect(IX,HDR_Y,IW,HDR_H,'F');border(IX,HDR_Y,IW,HDR_H);
+    doc.setTextColor(80,90,120);doc.setFont('helvetica','normal');doc.setFontSize(7);
+    doc.text('Sistema de Gestión de Inocuidad y Calidad',IX+2,HDR_Y+5);doc.setFont('helvetica','bold');doc.text('Formato: Short Kaizen',IX+2,HDR_Y+10);doc.setFont('helvetica','normal');
+    doc.text('Fecha de Revisión: 19 de enero 2026',IX+2,HDR_Y+15);doc.text('Clave: MEJ-F-03',IX+2,HDR_Y+20);doc.text('Revisión: 07',IX+2,HDR_Y+25);
+    const PX=IX+IW+1,PW=42;
+    doc.setFillColor(255,255,255);doc.rect(PX,HDR_Y,PW,HDR_H/2,'F');border(PX,HDR_Y,PW,HDR_H/2);
+    doc.setTextColor(15,22,41);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text('Página 1 de 1',PX+PW/2,HDR_Y+HDR_H/4,{align:'center',baseline:'middle'});
+    const sc={nuevo:[253,230,138],pend_l:[253,230,138],rej_l:[254,202,202],pend_g:[249,168,212],done:[187,247,208],rej_g:[254,202,202]};
+    const[sr,sg,sb]=sc[k.status]||[253,230,138];const[,sLbl]=STATUS[k.status]||['','—'];
+    doc.setFillColor(sr,sg,sb);doc.rect(PX,HDR_Y+HDR_H/2,PW,HDR_H/2,'F');border(PX,HDR_Y+HDR_H/2,PW,HDR_H/2);
+    doc.setTextColor(50,50,80);doc.setFontSize(6);doc.text(sLbl,PX+PW/2,HDR_Y+HDR_H*0.75,{align:'center',baseline:'middle'});
+    let y=HDR_Y+HDR_H+2;
+    // Fila 1
+    const QW=CW*0.65,EW=CW*0.35,EX=ML+QW;
+    blueHdr(ML,y,QW,6,'¿Quién Identificó la mejora?');
+    fRow(ML,y+6,QW,'Nómina:',k.nomina,25);fRow(ML,y+12,QW,'Nombre:',k.nombre,25);fRow(ML,y+18,QW,'Equipo Lean:',k.equipo,25);
+    blueHdr(ML,y+24,QW,6,'¿Dónde se aplicará la mejora?');
+    fRow(ML,y+30,QW,'Departamento:',k.donde,30);fRow(ML,y+36,QW,'Área/Línea/Máquina:',k.quien,35);
+    blueHdr(EX,y,EW,6,'Enfoque de la mejora');
+    doc.setFillColor(255,255,255);doc.rect(EX,y+6,EW,36,'F');border(EX,y+6,EW,36);
+    [['rentabilidad','Rentabilidad'],['bienestar','Bienestar del personal'],['sustentabilidad','Sustentabilidad'],['proceso','Mejora en el proceso']].forEach(([key,lbl],i)=>chk(EX+4,y+10+i*8,(k.enfoques||[]).includes(key),lbl));
+    y+=44;
+    // Fila 2: Fotos
+    const FW=CW/2,FH=58;
+    blueHdr(ML,y,FW,7,'FOTO/DIBUJO ANTES');blueHdr(ML+FW,y,FW,7,'FOTO/DIBUJO DESPUÉS');
+    photoCell(ML,y+7,FW,FH,k.fotoAntes);photoCell(ML+FW,y+7,FW,FH,k.fotoDespues);
+    y+=7+FH;
+    // Fila 3: Descripciones
+    const DH=28;
+    blueHdr(ML,y,FW,7,'DESCRIPCIÓN DEL ANTES');blueHdr(ML+FW,y,FW,7,'DESCRIPCIÓN DEL DESPUÉS Y BENEFICIOS');
+    textCell(ML,y+7,FW,DH,k.descAntes||'');textCell(ML+FW,y+7,FW,DH,(k.descDespues||'')+(k.beneficios?'\n'+k.beneficios:''));
+    y+=7+DH;
+    // Fila 4: Enfoque mejoras | Estandarización | Fechas + Firmas
+    const BH=50,EM=48,ES=52,ER=CW-EM-ES,XES=ML+EM,XER=ML+EM+ES;
+    doc.setFillColor(255,255,255);doc.rect(ML,y,EM,BH,'F');border(ML,y,EM,BH);
+    doc.setFillColor(235,240,255);doc.rect(ML,y,EM,6,'F');
+    doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text('Enfoque de Mejoras',ML+EM/2,y+4.5,{align:'center'});
+    const cx=ML+EM/2,cy=y+28,cr=13;
+    doc.setDrawColor(26,63,168);doc.setLineWidth(0.2);doc.line(cx,cy-cr,cx,cy+cr);doc.line(cx-cr,cy,cx+cr,cy);
+    doc.setTextColor(26,63,168);doc.setFont('helvetica','normal');doc.setFontSize(5);
+    doc.text('Rentabilidad',cx,cy-cr-1.5,{align:'center'});doc.text('Bienestar',cx+cr+1,cy+1,{align:'left'});doc.text('Sustentable',cx,cy+cr+3,{align:'center'});doc.text('Mejora',cx-cr-1,cy+1,{align:'right'});
+    const emap={rentabilidad:[cx,cy-cr],bienestar:[cx+cr,cy],sustentabilidad:[cx,cy+cr],proceso:[cx-cr,cy]};
+    const pts=(k.enfoques||[]).filter(e=>emap[e]).map(e=>emap[e]);
+    if(pts.length>=2){doc.setFillColor(173,216,255);doc.setDrawColor(26,63,168);doc.setLineWidth(0.5);doc.lines(pts.slice(1).map((p,i)=>[p[0]-pts[i][0],p[1]-pts[i][1]]),pts[0][0],pts[0][1],null,'FD',true);}
+    doc.setFillColor(235,240,255);doc.rect(XES,y,ES,6,'F');border(XES,y,ES,BH);
+    doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text('Estandarización:',XES+2,y+4.5);
+    doc.setFillColor(255,255,255);doc.rect(XER,y,ER,BH,'F');border(XER,y,ER,BH);
+    fRow(XER,y,ER,'Fecha de Identificación:',k.fechaId,50);
+    fRow(XER,y+8,ER,'Fecha implementación:',k.fechaImpl,50);
+    fRow(XER,y+16,ER,'Tiempo de Implementación:',k.tiempoImpl?(k.tiempoImpl+' '+k.unidadTiempo):'',50);
+    const FH2=13,FLW=38,yFl=y+24;
+    doc.setFillColor(235,240,255);doc.rect(XER,yFl,FLW,FH2,'F');border(XER,yFl,FLW,FH2);doc.setFillColor(255,255,255);doc.rect(XER+FLW,yFl,ER-FLW,FH2,'F');border(XER+FLW,yFl,ER-FLW,FH2);
+    doc.setTextColor(60,70,100);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.text('Autorización',XER+FLW/2,yFl+4,{align:'center'});doc.text('Líder/Coordinador',XER+FLW/2,yFl+9,{align:'center'});
+    if(k.firmaLider){try{doc.addImage(k.firmaLider,'PNG',XER+FLW+1,yFl+1,ER-FLW-3,FH2-3,'','FAST');}catch(e){}}
+    doc.setTextColor(80,90,110);doc.setFontSize(6);doc.text(k.firmaLiderNombre||'Pendiente',XER+FLW+2,yFl+FH2-1);
+    const yFg=yFl+FH2;
+    doc.setFillColor(235,240,255);doc.rect(XER,yFg,FLW,FH2,'F');border(XER,yFg,FLW,FH2);doc.setFillColor(255,255,255);doc.rect(XER+FLW,yFg,ER-FLW,FH2,'F');border(XER+FLW,yFg,ER-FLW,FH2);
+    doc.setTextColor(60,70,100);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.text('Autorización de',XER+FLW/2,yFg+4,{align:'center'});doc.text('Gerente de Área',XER+FLW/2,yFg+9,{align:'center'});
+    if(k.firmaGerente){try{doc.addImage(k.firmaGerente,'PNG',XER+FLW+1,yFg+1,ER-FLW-3,FH2-3,'','FAST');}catch(e){}}
+    doc.setTextColor(80,90,110);doc.setFontSize(6);doc.text(k.firmaGerenteNombre||'Pendiente',XER+FLW+2,yFg+FH2-1);
+    // Footer
+    doc.setDrawColor(180,190,210);doc.setLineWidth(0.3);doc.line(ML,H-10,W-ML,H-10);
+    doc.setTextColor(150,160,180);doc.setFont('helvetica','normal');doc.setFontSize(7);
+    doc.text('zubex · Short Kaizen · SK-'+k.id.slice(-4).toUpperCase()+' · '+new Date().toLocaleDateString('es-MX'),W/2,H-6,{align:'center'});
+    doc.save(`SK-${k.id.slice(-4).toUpperCase()}-${(k.nombre||'kaizen').replace(/\s+/g,'-')}.pdf`);
+    toast('PDF generado correctamente','tg');
+  }catch(err){console.error('PDF error:',err);toast('Error: '+err.message,'tr');}
 }
 
-/* ═══════════════════════════════════════
+/* ══════════════════════════════════════
    HELPERS
 ══════════════════════════════════════ */
-function saveKaizen(){
-  const i=KZ.findIndex(x=>x.id===fd.id);
-  if(i>=0)KZ[i]={...fd};else KZ.push({...fd});
-  save();
-}
-
 function prevPhoto(inputId,imgId,puId,fdKey){
   const inp=document.getElementById(inputId);if(!inp.files||!inp.files[0])return;
   const r=new FileReader();
-  r.onload=e=>{
-    const img=document.getElementById(imgId);img.src=e.target.result;img.style.display='block';
-    hidePhUI(puId);fd[fdKey]=e.target.result;
-  };r.readAsDataURL(inp.files[0]);
+  r.onload=e=>{const img=document.getElementById(imgId);img.src=e.target.result;img.style.display='block';hidePhUI(puId);fd[fdKey]=e.target.result;};
+  r.readAsDataURL(inp.files[0]);
 }
 function hidePhUI(id){['i','l','s'].forEach(s=>{const el=document.getElementById(id+'-'+s);if(el)el.style.display='none';});}
 
-/* ═══════════════════════════════════════
-   FIRMA
-══════════════════════════════════════ */
 function initSig(key){
   const c=document.getElementById('sig-'+key);if(!c)return;
-  const ctx=c.getContext('2d');
-  ctx.strokeStyle='#1a3fa8';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
+  const ctx=c.getContext('2d');ctx.strokeStyle='#1a3fa8';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';
   sigD[key]={ctx,drawing:false,empty:true};
   function pos(e){const r=c.getBoundingClientRect();const sx=c.width/r.width,sy=c.height/r.height;const s=e.touches?e.touches[0]:e;return{x:(s.clientX-r.left)*sx,y:(s.clientY-r.top)*sy};}
   c.addEventListener('mousedown',e=>{const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);sigD[key].drawing=true;sigD[key].empty=false;});
@@ -1551,10 +1116,9 @@ function clearSig(key){const c=document.getElementById('sig-'+key);if(!c)return;
 function getSig(key){const c=document.getElementById('sig-'+key);if(!c||sigD[key]?.empty)return null;return c.toDataURL('image/png');}
 
 /* INIT */
-document.getElementById('nb-dash').addEventListener('click',()=>goTo('analytics'));
-document.getElementById('nb-hist').addEventListener('click',()=>goTo('dash'));
+document.getElementById('nb-dash').addEventListener('click',()=>goTo('dash'));
+document.getElementById('nb-hist').addEventListener('click',()=>goTo('hist'));
 document.getElementById('nb-new').addEventListener('click',startNew);
-document.getElementById('nb-new2').addEventListener('click',startNew);
 renderHist();
 </script>
 </body>
