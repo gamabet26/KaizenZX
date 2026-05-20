@@ -178,30 +178,137 @@ canvas.sigpad{border:1px solid var(--border);border-radius:8px;background:#fff;c
     <span class="hdr-tag">SK · SHORT KAIZEN</span>
   </div>
   <nav class="hdr-nav">
-    <button class="nb on" id="nb-dash">Dashboard</button>
+    <button class="nb" id="nb-dash">📊 Dashboard</button>
+    <button class="nb on" id="nb-hist">Solicitudes</button>
     <button class="nb" id="nb-new">+ Nueva Solicitud</button>
   </nav>
 </header>
 
 <div class="wrap">
 
-  <!-- DASHBOARD -->
+  <!-- HISTORIAL (vista inicio) -->
   <div id="v-dash" class="view on">
-    <p class="ptitle">Gestión de Short Kaizens</p>
-    <p class="psub">Equipo Lean · Zubex</p>
-    <div class="stats">
-      <div class="sc bl"><div class="sl">Total</div><div class="sv" id="st0">0</div></div>
-      <div class="sc or"><div class="sl">Pend. Líder</div><div class="sv" id="st1">0</div></div>
-      <div class="sc pu"><div class="sl">En proceso</div><div class="sv" id="st2">0</div></div>
-      <div class="sc re"><div class="sl">Pend. Gerente</div><div class="sv" id="st3">0</div></div>
-      <div class="sc gr"><div class="sl">Cerrados</div><div class="sv" id="st4">0</div></div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:.25rem">
+      <div>
+        <p class="ptitle">Solicitudes Short Kaizen</p>
+        <p class="psub">Equipo Lean · Zubex</p>
+      </div>
+      <button class="btn btn-blue" id="nb-new2">+ Nueva Solicitud</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem">
+      <div class="sc bl"><div class="sl">Total</div><div class="sv" id="h-st0">0</div></div>
+      <div class="sc or"><div class="sl">Pend. Líder</div><div class="sv" id="h-st1">0</div></div>
+      <div class="sc pu"><div class="sl">En proceso</div><div class="sv" id="h-st2">0</div></div>
+      <div class="sc re"><div class="sl">Pend. Gerente</div><div class="sv" id="h-st3">0</div></div>
+      <div class="sc gr"><div class="sl">Cerrados</div><div class="sv" id="h-st4">0</div></div>
     </div>
     <div class="lhdr">
       <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Historial de solicitudes</span>
-      <button class="btn btn-blue" id="nb-new2">+ Nueva Solicitud</button>
+      <div style="display:flex;gap:8px">
+        <select id="h-filtro-eq" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderHist()">
+          <option value="">Todos los equipos</option>
+        </select>
+        <select id="h-filtro-st" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderHist()">
+          <option value="">Todos los estados</option>
+          <option value="pend_l">Pend. Líder</option>
+          <option value="s3">En proceso</option>
+          <option value="pend_g">Pend. Gerente</option>
+          <option value="done">Cerrados</option>
+          <option value="rej_l">Rechazados</option>
+        </select>
+      </div>
     </div>
     <div id="klist"></div>
   </div>
+
+  <!-- DASHBOARD ANALÍTICO -->
+  <div id="v-analytics" class="view">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:.25rem">
+      <div>
+        <p class="ptitle">Dashboard de Mejora Continua</p>
+        <p class="psub">Short Kaizen · Zubex · <span id="dash-periodo">—</span></p>
+      </div>
+      <button class="btn btn-blue" onclick="startNew()">+ Nueva Solicitud</button>
+    </div>
+
+    <!-- KPIs principales -->
+    <div class="stats" style="grid-template-columns:repeat(5,1fr);margin-bottom:1rem">
+      <div class="sc bl"><div class="sl">Total Kaizens</div><div class="sv" id="st0">0</div><div style="font-size:10px;color:var(--text3);margin-top:2px">registrados</div></div>
+      <div class="sc gr"><div class="sl">Tasa de cierre</div><div class="sv" id="st-tasa">0%</div><div style="font-size:10px;color:var(--text3);margin-top:2px">completados</div></div>
+      <div class="sc or"><div class="sl">En espera</div><div class="sv" id="st1">0</div><div style="font-size:10px;color:var(--text3);margin-top:2px">pend. firma</div></div>
+      <div class="sc pu"><div class="sl">En proceso</div><div class="sv" id="st2">0</div><div style="font-size:10px;color:var(--text3);margin-top:2px">activos</div></div>
+      <div class="sc re"><div class="sl">Rechazados</div><div class="sv" id="st-rej">0</div><div style="font-size:10px;color:var(--text3);margin-top:2px">tasa rechazo</div></div>
+    </div>
+
+    <!-- Fila 2: Equipo líder + Enfoque más frecuente + Pendiente más antiguo -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:1rem">
+      <!-- Equipo con más kaizens -->
+      <div class="sc" style="border-top:3px solid var(--blue2);padding:1rem">
+        <div class="sl">🏆 Equipo más activo</div>
+        <div class="sv" id="kpi-top-equipo" style="font-size:16px;margin-top:4px">—</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px" id="kpi-top-equipo-n">—</div>
+      </div>
+      <!-- Enfoque más frecuente -->
+      <div class="sc" style="border-top:3px solid #7c3aed;padding:1rem">
+        <div class="sl">⚙️ Tipo de mejora frecuente</div>
+        <div class="sv" id="kpi-top-enfoque" style="font-size:16px;margin-top:4px">—</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px" id="kpi-top-enfoque-n">—</div>
+      </div>
+      <!-- Tiempo promedio cierre -->
+      <div class="sc" style="border-top:3px solid var(--green);padding:1rem">
+        <div class="sl">⏱ Tiempo prom. implementación</div>
+        <div class="sv" id="kpi-tiempo" style="font-size:16px;margin-top:4px">—</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px" id="kpi-tiempo-n">—</div>
+      </div>
+    </div>
+
+    <!-- Fila 3: Gráficas -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1rem">
+      <!-- Kaizens por equipo -->
+      <div class="sc" style="padding:1rem">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:12px">Kaizens por equipo</div>
+        <div id="chart-equipos"></div>
+      </div>
+      <!-- Enfoques de mejora -->
+      <div class="sc" style="padding:1rem">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:12px">Distribución por enfoque</div>
+        <div id="chart-enfoques"></div>
+      </div>
+    </div>
+
+    <!-- Fila 4: Tendencia mensual + Semáforo de equipos -->
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:12px;margin-bottom:1.5rem">
+      <!-- Tendencia mensual -->
+      <div class="sc" style="padding:1rem">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:12px">Tendencia mensual de Kaizens</div>
+        <div id="chart-tendencia"></div>
+      </div>
+      <!-- Semáforo de equipos -->
+      <div class="sc" style="padding:1rem">
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);margin-bottom:10px">Estado por equipo</div>
+        <div id="semaforo-equipos" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+    </div>
+
+    <!-- Historial -->
+    <div class="lhdr">
+      <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Historial de solicitudes</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select id="a-filtro-equipo" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderDash()">
+          <option value="">Todos los equipos</option>
+        </select>
+        <select id="a-filtro-estado" class="btn btn-out" style="padding:7px 12px;font-size:12px" onchange="renderDash()">
+          <option value="">Todos los estados</option>
+          <option value="pend_l">Pend. Líder</option>
+          <option value="s3">En proceso</option>
+          <option value="pend_g">Pend. Gerente</option>
+          <option value="done">Cerrados</option>
+          <option value="rej_l">Rechazados</option>
+        </select>
+      </div>
+    </div>
+    <div id="a-klist"></div>
+  </div><!-- /v-analytics -->
 
   <!-- FORM VIEW -->
   <div id="v-form" class="view">
@@ -279,23 +386,228 @@ function goTo(v){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('on'));
   document.getElementById('v-'+v).classList.add('on');
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  if(v==='dash'){document.getElementById('nb-dash').classList.add('on');renderDash();}
+  if(v==='dash'){document.getElementById('nb-hist').classList.add('on');renderHist();}
+  else if(v==='analytics'){document.getElementById('nb-dash').classList.add('on');renderDash();}
   else if(v==='form'){document.getElementById('nb-new').classList.add('on');}
 }
 
+function renderHist(){
+  const t=KZ.length;
+  document.getElementById('h-st0').textContent=t;
+  document.getElementById('h-st1').textContent=KZ.filter(k=>k.status==='pend_l').length;
+  document.getElementById('h-st2').textContent=KZ.filter(k=>k.status==='s3').length;
+  document.getElementById('h-st3').textContent=KZ.filter(k=>k.status==='pend_g').length;
+  document.getElementById('h-st4').textContent=KZ.filter(k=>k.status==='done').length;
+  // populate equipo filter
+  const selEq=document.getElementById('h-filtro-eq');
+  const cur=selEq.value;
+  selEq.innerHTML=`<option value="">Todos los equipos</option>`+
+    [...new Set(KZ.map(k=>k.equipo).filter(Boolean))].sort().map(eq=>`<option value="${eq}" ${cur===eq?'selected':''}>${eq}</option>`).join('');
+  // filter list
+  const filtEq=selEq.value;
+  const filtSt=document.getElementById('h-filtro-st').value;
+  let lista=KZ.slice().reverse();
+  if(filtEq) lista=lista.filter(k=>k.equipo===filtEq);
+  if(filtSt) lista=lista.filter(k=>k.status===filtSt);
+  const el=document.getElementById('klist');
+  if(!lista.length){
+    el.innerHTML=t?`<div class="empty" style="padding:2rem"><div style="font-size:13px;color:var(--text3)">Sin resultados con los filtros seleccionados.</div></div>`
+      :`<div class="empty"><div style="font-size:48px">📋</div><div style="margin-top:12px">No hay solicitudes. Crea la primera.</div></div>`;
+    return;
+  }
+  el.innerHTML=lista.map(k=>{
+    const[cls,lbl]=STATUS[k.status]||['b1','—'];
+    return`<div class="kcard" onclick="showDet('${k.id}')">
+      <span class="knum">SK-${k.id.slice(-4).toUpperCase()}</span>
+      <div class="kinfo"><div class="kname">${k.donde||k.nombre||'Sin descripción'}</div><div class="kmeta">${k.nombre||''} · ${k.equipo||''} · ${k.fechaId||''}</div></div>
+      <span class="kbadge ${cls}">${lbl}</span>
+    </div>`;
+  }).join('');
+}
+
 /* ═══════════════════════════════════════
-   DASHBOARD
+   DASHBOARD ANALYTICS
 ══════════════════════════════════════ */
 function renderDash(){
   const t=KZ.length;
+  const done=KZ.filter(k=>k.status==='done');
+  const rechazados=KZ.filter(k=>k.status==='rej_l'||k.status==='rej_g');
+  const pendL=KZ.filter(k=>k.status==='pend_l');
+  const enProceso=KZ.filter(k=>k.status==='s3'||k.status==='pend_g');
+  const tasa=t?Math.round(done.length/t*100):0;
+
+  // KPIs básicos
   document.getElementById('st0').textContent=t;
-  document.getElementById('st1').textContent=KZ.filter(k=>k.status==='pend_l').length;
-  document.getElementById('st2').textContent=KZ.filter(k=>k.status==='s3').length;
-  document.getElementById('st3').textContent=KZ.filter(k=>k.status==='pend_g').length;
-  document.getElementById('st4').textContent=KZ.filter(k=>k.status==='done').length;
-  const el=document.getElementById('klist');
-  if(!t){el.innerHTML=`<div class="empty"><div style="font-size:48px">📋</div><div style="margin-top:12px">No hay solicitudes. Crea la primera.</div></div>`;return;}
-  el.innerHTML=KZ.slice().reverse().map(k=>{
+  document.getElementById('st-tasa').textContent=tasa+'%';
+  document.getElementById('st1').textContent=pendL.length;
+  document.getElementById('st2').textContent=enProceso.length;
+  document.getElementById('st-rej').textContent=rechazados.length;
+
+  // Periodo
+  if(t){
+    const fechas=KZ.map(k=>k.fechaId).filter(Boolean).sort();
+    document.getElementById('dash-periodo').textContent=fechas[0]+' → '+fechas[fechas.length-1];
+  }
+
+  if(!t){
+    document.getElementById('kpi-top-equipo').textContent='—';
+    document.getElementById('kpi-top-enfoque').textContent='—';
+    document.getElementById('kpi-tiempo').textContent='—';
+    ['chart-equipos','chart-enfoques','chart-tendencia','semaforo-equipos'].forEach(id=>{
+      document.getElementById(id).innerHTML=`<div style="text-align:center;padding:2rem;color:var(--text3);font-size:13px">Sin datos aún</div>`;
+    });
+    document.getElementById('a-klist').innerHTML=`<div class="empty"><div style="font-size:48px">📋</div><div style="margin-top:12px">No hay solicitudes aún.</div></div>`;
+    return;
+  }
+
+  // ── KPI: Equipo más activo ──
+  const porEquipo={};
+  KZ.forEach(k=>{if(k.equipo)porEquipo[k.equipo]=(porEquipo[k.equipo]||0)+1;});
+  const topEq=Object.entries(porEquipo).sort((a,b)=>b[1]-a[1])[0];
+  if(topEq){
+    document.getElementById('kpi-top-equipo').textContent=topEq[0];
+    document.getElementById('kpi-top-equipo-n').textContent=topEq[1]+' kaizen'+(topEq[1]>1?'s':'')+' registrados';
+  }
+
+  // ── KPI: Enfoque más frecuente ──
+  const enfMap={rentabilidad:'Rentabilidad',bienestar:'Bienestar',sustentabilidad:'Sustentabilidad',proceso:'Mejora en proceso',
+    '5s':'5S',seguridad:'Seguridad',calidad:'Calidad',productividad:'Productividad',costos:'Costos',ambiente:'Ambiente'};
+  const porEnfoque={};
+  KZ.forEach(k=>{
+    [...(k.enfoques||[]),...(k.enfoquesMejora||[])].forEach(e=>{porEnfoque[e]=(porEnfoque[e]||0)+1;});
+  });
+  const topEnf=Object.entries(porEnfoque).sort((a,b)=>b[1]-a[1])[0];
+  if(topEnf){
+    document.getElementById('kpi-top-enfoque').textContent=enfMap[topEnf[0]]||topEnf[0];
+    document.getElementById('kpi-top-enfoque-n').textContent=topEnf[1]+' kaizen'+(topEnf[1]>1?'s':'')+' con este enfoque';
+  }
+
+  // ── KPI: Tiempo promedio implementación ──
+  const tiempos=done.filter(k=>k.tiempoImpl&&k.unidadTiempo).map(k=>{
+    const v=parseFloat(k.tiempoImpl);
+    if(k.unidadTiempo==='horas') return v*60;
+    if(k.unidadTiempo==='dias') return v*60*8;
+    return v;
+  });
+  if(tiempos.length){
+    const prom=tiempos.reduce((a,b)=>a+b,0)/tiempos.length;
+    let label=prom<60?Math.round(prom)+' min':prom<480?Math.round(prom/60*10)/10+' hrs':Math.round(prom/480*10)/10+' días';
+    document.getElementById('kpi-tiempo').textContent=label;
+    document.getElementById('kpi-tiempo-n').textContent='promedio en '+tiempos.length+' kaizen cerrado'+(tiempos.length>1?'s':'');
+  } else {
+    document.getElementById('kpi-tiempo').textContent='—';
+    document.getElementById('kpi-tiempo-n').textContent='sin datos de tiempo aún';
+  }
+
+  // ── GRÁFICA: Kaizens por equipo (barras horizontales) ──
+  const eqEntries=Object.entries(porEquipo).sort((a,b)=>b[1]-a[1]);
+  const maxEq=eqEntries[0]?eqEntries[0][1]:1;
+  const eqColors=['#2a57d6','#00c47a','#f59e0b','#7c3aed','#ef4444','#0891b2','#d97706','#059669','#7c3aed','#be185d'];
+  document.getElementById('chart-equipos').innerHTML=eqEntries.map(([eq,n],i)=>`
+    <div style="margin-bottom:7px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+        <span style="color:var(--text2);font-weight:500;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${eq}</span>
+        <span style="color:var(--text);font-weight:700">${n}</span>
+      </div>
+      <div style="background:var(--border);border-radius:4px;height:8px;overflow:hidden">
+        <div style="background:${eqColors[i%eqColors.length]};height:8px;border-radius:4px;width:${Math.round(n/maxEq*100)}%;transition:width .5s"></div>
+      </div>
+    </div>`).join('');
+
+  // ── GRÁFICA: Distribución enfoques (donut visual) ──
+  const enfEntries=Object.entries(porEnfoque).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const totalEnf=enfEntries.reduce((s,[,v])=>s+v,0)||1;
+  const enfColors=['#2a57d6','#00c47a','#f59e0b','#7c3aed','#ef4444','#0891b2'];
+  document.getElementById('chart-enfoques').innerHTML=enfEntries.length?enfEntries.map(([k,n],i)=>`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <div style="width:10px;height:10px;border-radius:2px;background:${enfColors[i]};flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">
+          <span style="color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${enfMap[k]||k}</span>
+          <span style="color:var(--text);font-weight:700;flex-shrink:0;margin-left:4px">${Math.round(n/totalEnf*100)}%</span>
+        </div>
+        <div style="background:var(--border);border-radius:4px;height:6px">
+          <div style="background:${enfColors[i]};height:6px;border-radius:4px;width:${Math.round(n/totalEnf*100)}%"></div>
+        </div>
+      </div>
+    </div>`).join(''):`<div style="text-align:center;padding:1.5rem;color:var(--text3);font-size:12px">Sin datos de enfoque</div>`;
+
+  // ── GRÁFICA: Tendencia mensual ──
+  const porMes={};
+  KZ.forEach(k=>{
+    if(!k.fechaId)return;
+    const m=k.fechaId.slice(0,7);
+    if(!porMes[m])porMes[m]={total:0,done:0,rej:0};
+    porMes[m].total++;
+    if(k.status==='done')porMes[m].done++;
+    if(k.status==='rej_l'||k.status==='rej_g')porMes[m].rej++;
+  });
+  const meses=Object.keys(porMes).sort().slice(-6);
+  const maxM=Math.max(...meses.map(m=>porMes[m].total),1);
+  const mNombres={'01':'Ene','02':'Feb','03':'Mar','04':'Abr','05':'May','06':'Jun','07':'Jul','08':'Ago','09':'Sep','10':'Oct','11':'Nov','12':'Dic'};
+  document.getElementById('chart-tendencia').innerHTML=`
+    <div style="display:flex;align-items:flex-end;gap:8px;height:90px;border-bottom:1px solid var(--border);border-left:1px solid var(--border);padding:0 4px 0 4px;margin-bottom:6px">
+      ${meses.map(m=>{
+        const d=porMes[m];
+        const hTotal=Math.round(d.total/maxM*80);
+        const hDone=Math.round(d.done/maxM*80);
+        const hRej=Math.round(d.rej/maxM*80);
+        return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+          <div style="width:100%;display:flex;flex-direction:column;justify-content:flex-end;height:80px;gap:1px">
+            <div style="background:#2a57d6;border-radius:3px 3px 0 0;height:${hTotal}px;min-height:${d.total?2:0}px;position:relative;cursor:default" title="${d.total} total">
+              ${d.done?`<div style="background:#00c47a;position:absolute;bottom:0;left:0;right:0;height:${hDone}px;border-radius:3px 3px 0 0" title="${d.done} cerrados"></div>`:''}
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="display:flex;gap:8px;padding:0 4px">
+      ${meses.map(m=>`<div style="flex:1;text-align:center;font-size:10px;color:var(--text3)">${mNombres[m.slice(5)]} ${m.slice(2,4)}</div>`).join('')}
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;font-size:10px;color:var(--text2)">
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#2a57d6;border-radius:2px;display:inline-block"></span>Total</span>
+      <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:#00c47a;border-radius:2px;display:inline-block"></span>Cerrados</span>
+    </div>`;
+
+  // ── SEMÁFORO DE EQUIPOS ──
+  const semEl=document.getElementById('semaforo-equipos');
+  const EQUIPOS_ALL=[...new Set(KZ.map(k=>k.equipo).filter(Boolean))].sort();
+  semEl.innerHTML=EQUIPOS_ALL.map(eq=>{
+    const kEq=KZ.filter(k=>k.equipo===eq);
+    const total=kEq.length;
+    const cerrados=kEq.filter(k=>k.status==='done').length;
+    const rechaz=kEq.filter(k=>k.status==='rej_l'||k.status==='rej_g').length;
+    const pend=kEq.filter(k=>k.status==='pend_l'||k.status==='pend_g'||k.status==='s3').length;
+    const pct=total?Math.round(cerrados/total*100):0;
+    let color='#f59e0b',semIcon='🟡';
+    if(pct>=70){color='#00c47a';semIcon='🟢';}
+    else if(rechaz>cerrados){color='#ef4444';semIcon='🔴';}
+    return`<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
+      <span style="font-size:14px">${semIcon}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${eq}</div>
+        <div style="font-size:10px;color:var(--text3)">${total} kaizen · ${cerrados} cerrado · ${pend} activo</div>
+      </div>
+      <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:${color};flex-shrink:0">${pct}%</div>
+    </div>`;
+  }).join('')||`<div style="text-align:center;padding:1rem;color:var(--text3);font-size:12px">Sin datos</div>`;
+
+  // ── FILTRO EQUIPO en select ──
+  const selEq=document.getElementById('a-filtro-equipo');
+  const curEqVal=selEq.value;
+  selEq.innerHTML=`<option value="">Todos los equipos</option>`+
+    [...new Set(KZ.map(k=>k.equipo).filter(Boolean))].sort().map(eq=>`<option value="${eq}" ${curEqVal===eq?'selected':''}>${eq}</option>`).join('');
+
+  // ── HISTORIAL FILTRADO ──
+  const filtEq=document.getElementById('a-filtro-equipo').value;
+  const filtSt=document.getElementById('a-filtro-estado').value;
+  let lista=KZ.slice().reverse();
+  if(filtEq) lista=lista.filter(k=>k.equipo===filtEq);
+  if(filtSt) lista=lista.filter(k=>k.status===filtSt);
+
+  const el=document.getElementById('a-klist');
+  if(!lista.length){el.innerHTML=`<div class="empty" style="padding:2rem"><div style="font-size:13px;color:var(--text3)">Sin resultados con los filtros seleccionados.</div></div>`;return;}
+  el.innerHTML=lista.map(k=>{
     const[cls,lbl]=STATUS[k.status]||['b1','—'];
     return`<div class="kcard" onclick="showDet('${k.id}')">
       <span class="knum">SK-${k.id.slice(-4).toUpperCase()}</span>
@@ -351,9 +663,58 @@ function renderSection(){
 }
 
 /* ═══════════════════════════════════════
+   CATÁLOGO DE EMPLEADOS
+══════════════════════════════════════ */
+const EMPLEADOS=[
+  {equipo:'AUDI',         nomina:'2087',nombre:'PABLO EVERARDO MEJÍA SOTO',       notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'AUDI',         nomina:'3352',nombre:'RUBEN GALICIA CARDENAS',           notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'AUDI',         nomina:'3486',nombre:'ISIDRO PÉREZ BARBOSA',             notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'AUDI',         nomina:'2027',nombre:'JUAN CARLOS CRUZ SANMIGUEL',       notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'LOS ELECTROS', nomina:'2527',nombre:'LINO FRANCISCO MORENO GONZALEZ',  notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'LOS ELECTROS', nomina:'2722',nombre:'SERGIO ANTONIO DÍAZ POSADA',      notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'LOS ELECTROS', nomina:'2237',nombre:'FERNANDO JESÚS CASTILLO RODRIGUEZ',notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx', apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'LOS ELECTROS', nomina:'2654',nombre:'ERIK ALBERTO TREVIÑO CUELLAR',    notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'TEAMWORK',     nomina:'2372',nombre:'OSCAR NARCISO FUANTOS TENIENTE',   notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'TEAMWORK',     nomina:'3073',nombre:'LUIS FELIPE RUBIO QUIROZ',         notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'TEAMWORK',     nomina:'3706',nombre:'JUAN FLORES',                      notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'TEAMWORK',     nomina:'2795',nombre:'JOSE GONZALO MUÑOZ HERNANDEZ',     notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'TECLEAN',      nomina:'2394',nombre:'JUAN CARLOS CASTAÑEDA PEREZ',      notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'TECLEAN',      nomina:'2803',nombre:'SERGIO MEDINA BARBOSA',            notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'TECLEAN',      nomina:'3072',nombre:'JOEL PABLO CASTILLO HERRERA',      notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'SOLUTION TEAM',nomina:'3075',nombre:'ALAN JAHIR ROMERO MORENO',         notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'SOLUTION TEAM',nomina:'3423',nombre:'CARLOS CHAVARRIA TAPIA',           notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'SOLUTION TEAM',nomina:'2766',nombre:'JOSE GERARDO SOLANO CASTRO',       notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'SOLUTION TEAM',nomina:'3525',nombre:'DANIEL ALEJANDRO FLORES TORRES',   notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'SOLUTION TEAM',nomina:'3519',nombre:'MOISES ISRAEL CEDILLO ALMANZA',    notif:'tecnicos@zubex.com.mx,practicantemtto@zubex.com.mx',  apr1n:'Ricardo Torres',apr1e:'r.torres@zubex.com.mx'},
+  {equipo:'SERVILEAN',    nomina:'3084',nombre:'EULALIO PEREZ MEDINA',             notif:'servicios.generales@zubex.com.mx',                    apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SERVILEAN',    nomina:'3274',nombre:'ANTONIO MERCADO MARTINEZ',         notif:'servicios.generales@zubex.com.mx',                    apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SERVILEAN',    nomina:'3590',nombre:'JAIR ALEJANDRO VILLASANA FLORES',  notif:'servicios.generales@zubex.com.mx',                    apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SERVILEAN',    nomina:'3545',nombre:'SERGIO ELIZONDO BENITO',           notif:'servicios.generales@zubex.com.mx',                    apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SMART TEAM 4.0',nomina:'2367',nombre:'J CARLOS RODRIGUEZ GOVEA',       notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SMART TEAM 4.0',nomina:'3524',nombre:'PEDRO FRANCISCO MACIAS',         notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SMART TEAM 4.0',nomina:'3577',nombre:'EVER ESAU SALAZAR AGUIRRE',      notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SMART TEAM 4.0',nomina:'2776',nombre:'JOSE FELICIANO ORTEGA SANCHEZ',  notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SMART TEAM 4.0',nomina:'2844',nombre:'LUIS LAURO LOZANO FUENTES',      notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SMART TEAM 4.0',nomina:'3648',nombre:'JORGE EMMANUEL MONTEMAYOR VAZQUEZ',notif:'proyectos@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SMART TEAM 4.0',nomina:'3712',nombre:'GERMAN RAMIREZ HERNANDEZ',       notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'SMART TEAM 4.0',nomina:'2774',nombre:'FRANCISCO JAVIER ROMERO DIAZ',   notif:'proyectos@zubex.com.mx',                              apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'ILUMINATEAM',  nomina:'2845',nombre:'JOSE LEOPOLDO SANMIGUEL MARTINEZ', notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'ILUMINATEAM',  nomina:'3540',nombre:'MAURICIO ARMANDO SANTILLAN RIVERA',notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'LEANPIEZA',    nomina:'2660',nombre:'DAVID ANTONIO MARTINEZ PEREZ',     notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'LEANPIEZA',    nomina:'3087',nombre:'AURORA BELEN LIMON OBREGON',       notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'LEANPIEZA',    nomina:'3237',nombre:'REINA ISABEL TORRES RODRIGUEZ',    notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'LEANPIEZA',    nomina:'3619',nombre:'MARÍA CONCEPCIÓN PACHICANO REYNOSA',notif:'l.sanmiguel@zubex.com.mx',                           apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+  {equipo:'LEANPIEZA',    nomina:'3662',nombre:'MARTÍN GUADALUPE MENDOZA',         notif:'l.sanmiguel@zubex.com.mx',                            apr1n:'Gilberto Davila',apr1e:'g.davila@zubex.com.mx'},
+];
+const EQUIPOS=[...new Set(EMPLEADOS.map(e=>e.equipo))];
+const APR2={nombre:'Luis López',email:'l.lopez@zubex.com.mx'};
+
+/* ═══════════════════════════════════════
    SECCIÓN 1 – Identificación + ANTES
 ══════════════════════════════════════ */
 function renderSec1(el){
+  const equiposSel=fd.equipo||'';
+  const miembros=equiposSel?EMPLEADOS.filter(e=>e.equipo===equiposSel):[];
   el.innerHTML=`
   <div class="fcard">
     <div class="fhdr">
@@ -362,15 +723,57 @@ function renderSec1(el){
     </div>
     <div class="fbody">
       <div class="stitle"><span class="snum">A</span>Datos del solicitante</div>
+
       <div class="fg2">
-        <div class="fg"><label>Nómina *</label><input type="text" id="f-nom" value="${fd.nomina||''}"></div>
-        <div class="fg"><label>Nombre completo *</label><input type="text" id="f-nom2" value="${fd.nombre||''}"></div>
-        <div class="fg"><label>Equipo Lean</label><input type="text" id="f-eq" value="${fd.equipo||''}"></div>
-        <div class="fg"><label>Fecha de identificación</label><input type="date" id="f-fi" value="${fd.fechaId||new Date().toISOString().slice(0,10)}"></div>
+        <div class="fg">
+          <label>Equipo Lean *</label>
+          <select id="f-eq" onchange="onEquipoChange()">
+            <option value="">— Selecciona equipo —</option>
+            ${EQUIPOS.map(eq=>`<option value="${eq}" ${equiposSel===eq?'selected':''}>${eq}</option>`).join('')}
+          </select>
+        </div>
+        <div class="fg">
+          <label>Fecha de identificación</label>
+          <input type="date" id="f-fi" value="${fd.fechaId||new Date().toISOString().slice(0,10)}">
+        </div>
       </div>
-      <div class="fg"><label>¿Quién identificó la mejora? *</label><input type="text" id="f-quien" placeholder="Nombre(s)" value="${fd.quien||''}"></div>
+
+      <div class="fg">
+        <label>Nombre *</label>
+        <select id="f-miembro" onchange="onMiembroChange()">
+          <option value="">— Selecciona nombre —</option>
+          ${miembros.map(m=>`<option value="${m.nomina}" ${fd.nomina===m.nomina?'selected':''}>${m.nombre} (${m.nomina})</option>`).join('')}
+        </select>
+      </div>
+
+      <div class="fg2">
+        <div class="fg"><label>Nómina</label><input type="text" id="f-nom" value="${fd.nomina||''}" readonly style="background:#f0f3f9;color:var(--text2)"></div>
+        <div class="fg"><label>Nombre completo</label><input type="text" id="f-nom2" value="${fd.nombre||''}" readonly style="background:#f0f3f9;color:var(--text2)"></div>
+      </div>
+
+      <div class="fg"><label>¿Quién identificó la mejora? *</label><input type="text" id="f-quien" placeholder="Nombre(s) — puede ser el mismo u otro colaborador" value="${fd.quien||''}"></div>
       <div class="fg"><label>¿Dónde se aplicará? *</label><input type="text" id="f-donde" placeholder="Área, línea, proceso..." value="${fd.donde||''}"></div>
-      <div class="fg"><label>Correo del Líder / Coordinador *</label><input type="email" id="f-email-lider" placeholder="lider@zubex.com.mx" value="${fd.emailLider||''}"></div>
+
+      <!-- Info auto-configurada -->
+      <div id="info-aprobadores" style="display:${fd.nomina?'block':'none'}">
+        <div class="divider"></div>
+        <div class="stitle"><span class="snum" style="background:#00c47a">✓</span>Aprobadores asignados automáticamente</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
+          <div style="background:#e8eeff;border:1px solid #b8c8f8;border-radius:8px;padding:10px 14px">
+            <div style="font-size:10px;font-weight:700;color:#1a3fa8;letter-spacing:.5px;margin-bottom:4px">APROBACIÓN 1 — LÍDER</div>
+            <div style="font-size:13px;font-weight:600;color:#0f1629" id="info-apr1n">${fd.apr1n||''}</div>
+            <div style="font-size:11px;color:#4a5470" id="info-apr1e">${fd.emailLider||''}</div>
+          </div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px">
+            <div style="font-size:10px;font-weight:700;color:#166534;letter-spacing:.5px;margin-bottom:4px">APROBACIÓN 2 — GERENTE</div>
+            <div style="font-size:13px;font-weight:600;color:#0f1629">${APR2.nombre}</div>
+            <div style="font-size:11px;color:#4a5470">${APR2.email}</div>
+          </div>
+        </div>
+        <div style="background:#fff7e6;border:1px solid #fcd34d;border-radius:8px;padding:8px 12px;font-size:12px;color:#92400e;margin-bottom:1rem">
+          📧 <strong>Notificación</strong> se enviará a: <span id="info-notif" style="font-weight:600">${fd.emailNotif||''}</span>
+        </div>
+      </div>
 
       <div class="divider"></div>
       <div class="stitle"><span class="snum">B</span>Enfoque de la mejora</div>
@@ -405,12 +808,40 @@ function renderSec1(el){
   el.querySelectorAll('.chi input').forEach(cb=>cb.addEventListener('change',function(){this.closest('.chi').classList.toggle('on',this.checked);}));
 }
 
+function onEquipoChange(){
+  const eq=gv('f-eq');
+  const sel=document.getElementById('f-miembro');
+  const miembros=EMPLEADOS.filter(e=>e.equipo===eq);
+  sel.innerHTML=`<option value="">— Selecciona nombre —</option>`+miembros.map(m=>`<option value="${m.nomina}">${m.nombre} (${m.nomina})</option>`).join('');
+  document.getElementById('f-nom').value='';
+  document.getElementById('f-nom2').value='';
+  document.getElementById('info-aprobadores').style.display='none';
+}
+
+function onMiembroChange(){
+  const nomina=gv('f-miembro');
+  const emp=EMPLEADOS.find(e=>e.nomina===nomina);
+  if(!emp)return;
+  document.getElementById('f-nom').value=emp.nomina;
+  document.getElementById('f-nom2').value=emp.nombre;
+  document.getElementById('info-apr1n').textContent=emp.apr1n;
+  document.getElementById('info-apr1e').textContent=emp.apr1e;
+  document.getElementById('info-notif').textContent=emp.notif.replace(/,/g,' — ');
+  document.getElementById('info-aprobadores').style.display='block';
+}
+
 function submitSec1(){
-  if(!gv('f-nom')||!gv('f-nom2')||!gv('f-quien')||!gv('f-donde')||!gv('f-da')){toast('Completa los campos obligatorios (*)','tr');return;}
-  if(!gv('f-email-lider')){toast('Ingresa el correo del Líder','tr');return;}
-  fd.nomina=gv('f-nom');fd.nombre=gv('f-nom2');fd.equipo=gv('f-eq');
+  const nomina=gv('f-miembro');
+  if(!gv('f-eq')){toast('Selecciona el Equipo Lean','tr');return;}
+  if(!nomina){toast('Selecciona el nombre del solicitante','tr');return;}
+  if(!gv('f-quien')||!gv('f-donde')||!gv('f-da')){toast('Completa los campos obligatorios (*)','tr');return;}
+  const emp=EMPLEADOS.find(e=>e.nomina===nomina);
+  fd.nomina=emp.nomina;fd.nombre=emp.nombre;fd.equipo=emp.equipo;
   fd.fechaId=gv('f-fi');fd.quien=gv('f-quien');fd.donde=gv('f-donde');
-  fd.emailLider=gv('f-email-lider');fd.descAntes=gv('f-da');fd.causeRoot=gv('f-cr');
+  fd.descAntes=gv('f-da');fd.causeRoot=gv('f-cr');
+  fd.emailLider=emp.apr1e;fd.apr1n=emp.apr1n;
+  fd.emailGerente=APR2.email;fd.apr2n=APR2.nombre;
+  fd.emailNotif=emp.notif;
   fd.enfoques=['rentabilidad','bienestar','sustentabilidad','proceso'].filter(k=>document.getElementById('cb-'+k)?.checked);
   fd.status='pend_l';
   saveKaizen();
@@ -647,8 +1078,15 @@ function renderSec3(el){
       </div>
 
       <div class="divider"></div>
-      <div class="stitle"><span class="snum">D</span>Correo del Gerente de Área</div>
-      <div class="fg"><label>Correo del Gerente *</label><input type="email" id="f-email-g" placeholder="gerente@zubex.com.mx" value="${fd.emailGerente||''}"></div>
+      <div class="stitle"><span class="snum">D</span>Aprobador asignado</div>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:1rem;display:flex;align-items:center;gap:12px">
+        <span style="font-size:20px">✅</span>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#166534;letter-spacing:.5px">APROBACIÓN 2 — GERENTE DE ÁREA</div>
+          <div style="font-size:13px;font-weight:600;color:#0f1629">${APR2.nombre}</div>
+          <div style="font-size:11px;color:#4a5470">${APR2.email}</div>
+        </div>
+      </div>
     </div>
     <div class="ffoot">
       <div></div>
@@ -661,10 +1099,9 @@ function renderSec3(el){
 
 function submitSec3(){
   if(!gv('f-dd')){toast('Agrega la descripción del DESPUÉS','tr');return;}
-  if(!gv('f-email-g')){toast('Ingresa el correo del Gerente','tr');return;}
   fd.descDespues=gv('f-dd');fd.beneficios=gv('f-ben');
   fd.fechaImpl=gv('f-fimpl');fd.tiempoImpl=gv('f-timp');fd.unidadTiempo=gv('f-unt');
-  fd.emailGerente=gv('f-email-g');
+  fd.emailGerente=APR2.email;
   fd.enfoquesMejora=['5s','seguridad','calidad','productividad','costos','ambiente'].filter(k=>document.getElementById('em-'+k)?.checked);
   fd.status='pend_g';
   saveKaizen();
@@ -1114,10 +1551,11 @@ function clearSig(key){const c=document.getElementById('sig-'+key);if(!c)return;
 function getSig(key){const c=document.getElementById('sig-'+key);if(!c||sigD[key]?.empty)return null;return c.toDataURL('image/png');}
 
 /* INIT */
-document.getElementById('nb-dash').addEventListener('click',()=>goTo('dash'));
+document.getElementById('nb-dash').addEventListener('click',()=>goTo('analytics'));
+document.getElementById('nb-hist').addEventListener('click',()=>goTo('dash'));
 document.getElementById('nb-new').addEventListener('click',startNew);
 document.getElementById('nb-new2').addEventListener('click',startNew);
-renderDash();
+renderHist();
 </script>
 </body>
 </html>
