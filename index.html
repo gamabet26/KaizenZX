@@ -6,6 +6,7 @@
 <title>Short Kaizen — Zubex</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -275,6 +276,35 @@ let KZ=JSON.parse(localStorage.getItem(SKDB)||'[]');
 let fd={};
 const sigD={};
 
+// EmailJS config
+const EJS_SERVICE='service_prx6zu8';
+const EJS_TEMPLATE='template_99gl3eh';
+const EJS_KEY='J_I1pNlsVBL2iQdGG';
+const APP_URL='https://gamabet26.github.io/KaizenZX/';
+
+async function sendEmail(toEmail, toName, subject, message, skId, solicitante, equipo, area){
+  try{
+    if(typeof emailjs==='undefined'){console.warn('EmailJS no cargado');return;}
+    emailjs.init(EJS_KEY);
+    const result = await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+      to_email:    toEmail,
+      to_name:     toName,
+      email:       toEmail,
+      subject:     subject,
+      message:     message + '\n\nAcceder al sistema: ' + APP_URL,
+      sk_id:       skId,
+      solicitante: solicitante,
+      equipo:      equipo,
+      area:        area,
+    });
+    console.log('Correo enviado a '+toEmail, result);
+    toast('Correo enviado a '+toName,'tg');
+  } catch(err){
+    console.error('EmailJS error:', err);
+    toast('Error correo: '+(err.text||err.message||JSON.stringify(err)),'tr');
+  }
+}
+
 const APR2={nombre:'Luis López',email:'l.lopez@zubex.com.mx'};
 
 const EMPLEADOS=[
@@ -316,7 +346,9 @@ const EMPLEADOS=[
   {eq:'LEANPIEZA',nom:'3087',name:'AURORA BELEN LIMON OBREGON',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
   {eq:'LEANPIEZA',nom:'3237',name:'REINA ISABEL TORRES RODRIGUEZ',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
   {eq:'LEANPIEZA',nom:'3619',name:'MARÍA CONCEPCIÓN PACHICANO REYNOSA',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
-  {eq:'LEANPIEZA',nom:'3662',name:'MARTÍN GUADALUPE MENDOZA',notif:'l.sanmiguel@zubex.com.mx',a1n:'Gilberto Davila',a1e:'g.davila@zubex.com.mx'},
+  {eq:'ERPZX',nom:'2554',name:'ILIANA CELESTE GARCIA',notif:'g.marquez@zubex.com.mx',a1n:'Giovanna Marquez',a1e:'g.marquez@zubex.com.mx',a2n:'Gamaliel Martinez',a2e:'g.martinez@zubex.com.mx'},
+  {eq:'ERPZX',nom:'2966',name:'GIOVANNA MARQUEZ',notif:'g.marquez@zubex.com.mx',a1n:'Giovanna Marquez',a1e:'g.marquez@zubex.com.mx',a2n:'Gamaliel Martinez',a2e:'g.martinez@zubex.com.mx'},
+  {eq:'ERPZX',nom:'2978',name:'GAMALIEL MARTINEZ',notif:'g.marquez@zubex.com.mx',a1n:'Giovanna Marquez',a1e:'g.marquez@zubex.com.mx',a2n:'Gamaliel Martinez',a2e:'g.martinez@zubex.com.mx'},
 ];
 const EQUIPOS=[...new Set(EMPLEADOS.map(e=>e.eq))];
 
@@ -483,7 +515,7 @@ function renderFormulario(el){
       <div class="stitle"><span class="snum">A</span>Datos del solicitante</div>
       <div class="fg2">
         <div class="fg"><label>Equipo Lean *</label>
-          <select id="f-eq" onchange="onEqChange()">
+          <select id="f-eq">
             <option value="">— Selecciona equipo —</option>
             ${EQUIPOS.map(eq=>`<option value="${eq}" ${eqSel===eq?'selected':''}>${eq}</option>`).join('')}
           </select>
@@ -491,7 +523,7 @@ function renderFormulario(el){
         <div class="fg"><label>Fecha de identificación</label><input type="date" id="f-fi" value="${fd.fechaId||new Date().toISOString().slice(0,10)}"></div>
       </div>
       <div class="fg"><label>Nombre *</label>
-        <select id="f-miembro" onchange="onMiembroChange()">
+        <select id="f-miembro">
           <option value="">— Selecciona nombre —</option>
           ${miembros.map(m=>`<option value="${m.nom}" ${fd.nomina===m.nom?'selected':''}>${m.name} (${m.nom})</option>`).join('')}
         </select>
@@ -513,8 +545,8 @@ function renderFormulario(el){
           </div>
           <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px">
             <div style="font-size:10px;font-weight:700;color:#166534;letter-spacing:.5px;margin-bottom:4px">APROBACIÓN 2 — GERENTE</div>
-            <div style="font-size:13px;font-weight:600">${APR2.nombre}</div>
-            <div style="font-size:11px;color:var(--text2)">${APR2.email}</div>
+            <div style="font-size:13px;font-weight:600" id="apr-2n">${fd.apr2n||APR2.nombre}</div>
+            <div style="font-size:11px;color:var(--text2)" id="apr-2e">${fd.emailGerente||APR2.email}</div>
           </div>
         </div>
       </div>
@@ -560,10 +592,7 @@ function renderFormulario(el){
         <div class="fg"><label>Descripción del ANTES *</label><textarea id="f-da" placeholder="Situación actual y problema identificado...">${fd.descAntes||''}</textarea></div>
         <div class="fg"><label>Descripción del DESPUÉS y beneficios *</label><textarea id="f-dd" placeholder="Estado mejorado y beneficios obtenidos...">${fd.descDespues||''}</textarea></div>
       </div>
-      <div class="fg2">
-        <div class="fg"><label>Causa raíz (5 Porqués)</label><textarea id="f-cr" placeholder="¿Por qué ocurre este problema?" style="min-height:60px">${fd.causeRoot||''}</textarea></div>
-        <div class="fg"><label>Beneficios cuantificables</label><textarea id="f-ben" placeholder="Ej: Reducción de 15 min en tiempo de ciclo..." style="min-height:60px">${fd.beneficios||''}</textarea></div>
-      </div>
+      <div class="fg"><label>Estandarización de la mejora</label><textarea id="f-est" placeholder="Describe cómo se estandarizó la mejora: actualización de procedimientos, controles visuales, capacitación al personal, etc." style="min-height:80px">${fd.estandarizacion||''}</textarea></div>
 
       <div class="divider"></div>
       <!-- E: IMPLEMENTACIÓN -->
@@ -591,12 +620,15 @@ function renderFormulario(el){
     </div>
     <div class="ffoot">
       <div></div>
-      <button class="btn btn-blue" onclick="submitFormulario()">Enviar para aprobación →</button>
+      <button class="btn btn-blue" id="btn-submit-form">Enviar para aprobación →</button>
     </div>
   </div>`;
   if(fd.fotoAntes){const i=document.getElementById('pi-a');i.src=fd.fotoAntes;i.style.display='block';hidePhUI('pu-a');}
   if(fd.fotoDespues){const i=document.getElementById('pi-d');i.src=fd.fotoDespues;i.style.display='block';hidePhUI('pu-d');}
   el.querySelectorAll('.chi input').forEach(cb=>cb.addEventListener('change',function(){this.closest('.chi').classList.toggle('on',this.checked);}));
+  document.getElementById('btn-submit-form').addEventListener('click', submitFormulario);
+  document.getElementById('f-eq').addEventListener('change', onEqChange);
+  document.getElementById('f-miembro').addEventListener('change', onMiembroChange);
 }
 
 function onEqChange(){
@@ -615,6 +647,8 @@ function onMiembroChange(){
   document.getElementById('f-nom2').value=emp.name;
   document.getElementById('apr-1n').textContent=emp.a1n;
   document.getElementById('apr-1e').textContent=emp.a1e;
+  document.getElementById('apr-2n').textContent=emp.a2n||APR2.nombre;
+  document.getElementById('apr-2e').textContent=emp.a2e||APR2.email;
   document.getElementById('info-apr').style.display='block';
 }
 
@@ -627,15 +661,18 @@ function submitFormulario(){
   fd.nomina=emp.nom; fd.nombre=emp.name; fd.equipo=emp.eq;
   fd.fechaId=gv('f-fi'); fd.quien=gv('f-quien'); fd.donde=gv('f-donde');
   fd.descAntes=gv('f-da'); fd.descDespues=gv('f-dd');
-  fd.causeRoot=gv('f-cr'); fd.beneficios=gv('f-ben');
+  fd.estandarizacion=gv('f-est');
   fd.fechaImpl=gv('f-fi2'); fd.tiempoImpl=gv('f-timp'); fd.unidadTiempo=gv('f-unt');
   fd.emailLider=emp.a1e; fd.apr1n=emp.a1n;
-  fd.emailGerente=APR2.email; fd.apr2n=APR2.nombre;
+  fd.emailGerente=emp.a2e||APR2.email; fd.apr2n=emp.a2n||APR2.nombre;
   fd.emailNotif=emp.notif;
   fd.enfoques=['rentabilidad','bienestar','sustentabilidad','proceso'].filter(k=>document.getElementById('cb-'+k)?.checked);
   fd.enfoquesMejora=['5s','seguridad','calidad','productividad','costos','ambiente'].filter(k=>document.getElementById('em-'+k)?.checked);
   fd.status='pend_l';
   saveKaizen();
+  // Enviar correo real al Líder
+  const msgLider=`Se ha registrado una solicitud de Short Kaizen que requiere su aprobación.\n\nDescripción ANTES:\n${fd.descAntes}\n\nDescripción DESPUÉS:\n${fd.descDespues}\n\nFecha de identificación: ${fd.fechaId}\nFecha de implementación: ${fd.fechaImpl||'—'}\n\nPor favor ingresa al sistema para Aprobar o Rechazar:`;
+  sendEmail(fd.emailLider, fd.apr1n, `[Aprobación requerida] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`, msgLider, fd.id.slice(-4).toUpperCase(), fd.nombre, fd.equipo, fd.donde);
   showModalLider();
 }
 
@@ -685,7 +722,7 @@ function showModalLider(){
             <div style="padding:8px;font-size:12px">${fd.descDespues||'—'}</div>
           </div>
         </div>
-        ${fd.causeRoot?`<p style="font-size:12px"><strong>Causa raíz:</strong> ${fd.causeRoot}</p><br>`:''}
+        ${fd.estandarizacion?`<p style="font-size:12px"><strong>Estandarización:</strong> ${fd.estandarizacion}</p><br>`:''}
         <p>Por favor responde con Aprobar o Rechazar:</p>
       </div>
       <div class="ep-btns">
@@ -720,9 +757,12 @@ function confirmarLider(){
   fd.firmaLiderFecha=new Date().toLocaleDateString('es-MX');
   fd.status='pend_g';
   saveKaizen(); closeModal();
+  // Enviar correo real al Gerente
+  const msgGerente=`El siguiente Short Kaizen fue aprobado por el Líder (${fd.firmaLiderNombre}) y requiere su autorización final.\n\nDescripción ANTES:\n${fd.descAntes}\n\nDescripción DESPUÉS:\n${fd.descDespues}\n\nFecha de identificación: ${fd.fechaId}\nFecha de implementación: ${fd.fechaImpl||'—'}\nTiempo: ${fd.tiempoImpl?fd.tiempoImpl+' '+fd.unidadTiempo:'—'}\nAprobado por Líder: ${fd.firmaLiderNombre} — ${fd.firmaLiderFecha}\n\nPor favor ingresa al sistema para Autorizar o Rechazar:`;
+  sendEmail(fd.emailGerente, fd.apr2n, `[Autorización Final] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`, msgGerente, fd.id.slice(-4).toUpperCase(), fd.nombre, fd.equipo, fd.donde);
   updateFlow('pend_g');
   renderForm();
-  toast('¡Aprobado por Líder! Enviando al Gerente...','tg');
+  toast('¡Aprobado por Líder! Correo enviado al Gerente','tg');
   setTimeout(()=>showModalGerente(),800);
 }
 
@@ -776,7 +816,7 @@ function showModalGerente(){
             <div style="padding:8px;font-size:12px">${fd.descDespues||'—'}</div>
           </div>
         </div>
-        ${fd.beneficios?`<p style="font-size:12px"><strong>Beneficios:</strong> ${fd.beneficios}</p><br>`:''}
+        ${fd.estandarizacion?`<p style="font-size:12px"><strong>Estandarización:</strong> ${fd.estandarizacion}</p><br>`:''}
       </div>
       <div class="ep-btns">
         <button class="ep-btn-a" onclick="gerenteAprueba()">✓ AUTORIZAR Y CERRAR</button>
@@ -810,6 +850,9 @@ function confirmarGerente(){
   fd.firmaGerenteFecha=new Date().toLocaleDateString('es-MX');
   fd.status='done';
   saveKaizen(); closeModal();
+  // Notificar al equipo de Mejora Continua
+  const msgMC=`El Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} ha sido cerrado y aprobado.\n\nSolicitante: ${fd.nombre}\nEquipo: ${fd.equipo}\nÁrea: ${fd.donde}\nAprobado por Líder: ${fd.firmaLiderNombre}\nAutorizado por Gerente: ${fd.firmaGerenteNombre}\nFecha de cierre: ${new Date().toLocaleDateString('es-MX')}\n\nEstandarización: ${fd.estandarizacion||'—'}`;
+  sendEmail('mejora.continua@zubex.com.mx','Equipo Mejora Continua',`✅ Kaizen Cerrado SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`, msgMC, fd.id.slice(-4).toUpperCase(), fd.nombre, fd.equipo, fd.donde);
   showModalMC();
 }
 
@@ -950,14 +993,13 @@ function showDet(id){
         <div>
           ${k.fotoAntes?`<img src="${k.fotoAntes}" class="det-img" style="margin-bottom:8px" alt="Antes">`:''}
           <div class="dl">Descripción ANTES</div><div class="dv" style="white-space:pre-wrap">${k.descAntes||'—'}</div>
-          ${k.causeRoot?`<br><div class="dl">Causa raíz</div><div class="dv">${k.causeRoot}</div>`:''}
         </div>
         <div>
           ${k.fotoDespues?`<img src="${k.fotoDespues}" class="det-img" style="margin-bottom:8px" alt="Después">`:''}
           <div class="dl">Descripción DESPUÉS</div><div class="dv" style="white-space:pre-wrap">${k.descDespues||'—'}</div>
-          ${k.beneficios?`<br><div class="dl">Beneficios</div><div class="dv">${k.beneficios}</div>`:''}
         </div>
       </div>
+      ${k.estandarizacion?`<div style="margin-bottom:1rem"><div class="dl">Estandarización de la mejora</div><div class="dv" style="white-space:pre-wrap">${k.estandarizacion}</div></div>`:''}
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
         <div><div class="dl">Fecha Impl.</div><div class="dv">${k.fechaImpl||'—'}</div></div>
         <div><div class="dl">Tiempo</div><div class="dv">${k.tiempoImpl?k.tiempoImpl+' '+k.unidadTiempo:'—'}</div></div>
@@ -1048,7 +1090,7 @@ async function exportPDF(id){
     // Fila 3: Descripciones
     const DH=28;
     blueHdr(ML,y,FW,7,'DESCRIPCIÓN DEL ANTES');blueHdr(ML+FW,y,FW,7,'DESCRIPCIÓN DEL DESPUÉS Y BENEFICIOS');
-    textCell(ML,y+7,FW,DH,k.descAntes||'');textCell(ML+FW,y+7,FW,DH,(k.descDespues||'')+(k.beneficios?'\n'+k.beneficios:''));
+    textCell(ML,y+7,FW,DH,k.descAntes||'');textCell(ML+FW,y+7,FW,DH,k.descDespues||'');
     y+=7+DH;
     // Fila 4: Enfoque mejoras | Estandarización | Fechas + Firmas
     const BH=50,EM=48,ES=52,ER=CW-EM-ES,XES=ML+EM,XER=ML+EM+ES;
@@ -1064,6 +1106,7 @@ async function exportPDF(id){
     if(pts.length>=2){doc.setFillColor(173,216,255);doc.setDrawColor(26,63,168);doc.setLineWidth(0.5);doc.lines(pts.slice(1).map((p,i)=>[p[0]-pts[i][0],p[1]-pts[i][1]]),pts[0][0],pts[0][1],null,'FD',true);}
     doc.setFillColor(235,240,255);doc.rect(XES,y,ES,6,'F');border(XES,y,ES,BH);
     doc.setTextColor(26,63,168);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text('Estandarización:',XES+2,y+4.5);
+    if(k.estandarizacion){doc.setTextColor(15,22,41);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.splitTextToSize(k.estandarizacion,ES-4).slice(0,7).forEach((l,i)=>doc.text(l,XES+2,y+10+i*5));}
     doc.setFillColor(255,255,255);doc.rect(XER,y,ER,BH,'F');border(XER,y,ER,BH);
     fRow(XER,y,ER,'Fecha de Identificación:',k.fechaId,50);
     fRow(XER,y+8,ER,'Fecha implementación:',k.fechaImpl,50);
