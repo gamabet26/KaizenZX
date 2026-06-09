@@ -339,20 +339,20 @@ function saveKaizen(){
   const i=KZ.findIndex(x=>x.id===fd.id);
   if(i>=0)KZ[i]={...fd};else KZ.push({...fd});
   save();
-  // Intentar guardar en Firestore, con retry si db no está listo
+  const snapshot={...fd}; // capturar copia en este momento exacto
+  console.log('saveKaizen llamado, db=',!!db,'_fsDoc=',!!window._fsDoc,'id=',snapshot.id);
   if(db&&window._fsDoc){
-    fsSave({...fd});
+    fsSave(snapshot);
   } else {
-    // Esperar hasta 5 segundos a que Firebase esté listo
     let intentos=0;
     const retry=setInterval(()=>{
       intentos++;
       if(db&&window._fsDoc){
         clearInterval(retry);
-        fsSave({...fd});
-      } else if(intentos>10){
+        fsSave(snapshot);
+      } else if(intentos>20){
         clearInterval(retry);
-        console.warn('Firebase no disponible, guardado solo local');
+        console.warn('Firebase no disponible después de 10s');
       }
     },500);
   }
