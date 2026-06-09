@@ -166,6 +166,7 @@ canvas.sigpad{border:1px solid var(--border);border-radius:8px;background:#fff;c
     <button class="nb" id="nb-dash">📊 Dashboard</button>
     <button class="nb on" id="nb-hist">Solicitudes</button>
     <button class="nb" id="nb-new">+ Nueva Solicitud</button>
+    <button class="nb" id="nb-cfg">⚙️ Configuración</button>
   </nav>
 </header>
 
@@ -254,6 +255,14 @@ canvas.sigpad{border:1px solid var(--border);border-radius:8px;background:#fff;c
     <div id="det-body"></div>
   </div>
 
+  <!-- ═══ CONFIGURACIÓN ═══ -->
+  <div id="v-cfg" class="view">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <div><p class="ptitle">⚙️ Configuración</p><p class="psub">Gestión de equipos, miembros y aprobadores</p></div>
+    </div>
+    <div id="cfg-body"></div>
+  </div>
+
 </div>
 
 <!-- MODAL -->
@@ -282,7 +291,7 @@ const EJS_TEMPLATE='template_99gl3eh';
 const EJS_KEY='J_I1pNlsVBL2iQdGG';
 const APP_URL='https://gamabet26.github.io/KaizenZX/';
 
-async function sendEmail(toEmail, toName, subject, message, skId, solicitante, equipo, area){
+async function sendEmail(toEmail, toName, subject, message, skId, solicitante, equipo, area, approveUrl='', rejectUrl=''){
   try{
     if(typeof emailjs==='undefined'){console.warn('EmailJS no cargado');return;}
     emailjs.init(EJS_KEY);
@@ -291,11 +300,13 @@ async function sendEmail(toEmail, toName, subject, message, skId, solicitante, e
       to_name:     toName,
       email:       toEmail,
       subject:     subject,
-      message:     message + '\n\nAcceder al sistema: ' + APP_URL,
+      message:     message,
       sk_id:       skId,
       solicitante: solicitante,
       equipo:      equipo,
       area:        area,
+      approve_url: approveUrl,
+      reject_url:  rejectUrl,
     });
     console.log('Correo enviado a '+toEmail, result);
     toast('Correo enviado a '+toName,'tg');
@@ -350,7 +361,45 @@ const EMPLEADOS=[
   {eq:'ERPZX',nom:'2966',name:'GIOVANNA MARQUEZ',notif:'g.marquez@zubex.com.mx',a1n:'Giovanna Marquez',a1e:'g.marquez@zubex.com.mx',a2n:'Gamaliel Martinez',a2e:'g.martinez@zubex.com.mx'},
   {eq:'ERPZX',nom:'2978',name:'GAMALIEL MARTINEZ',notif:'g.marquez@zubex.com.mx',a1n:'Giovanna Marquez',a1e:'g.marquez@zubex.com.mx',a2n:'Gamaliel Martinez',a2e:'g.martinez@zubex.com.mx'},
 ];
-const EQUIPOS=[...new Set(EMPLEADOS.map(e=>e.eq))];
+
+// ── Catálogo dinámico desde localStorage ──────────────────
+const CFG_DB='zubex_sk_config';
+function loadConfig(){return JSON.parse(localStorage.getItem(CFG_DB)||'{"equipos":[],"lideres":[],"gerentes":[]}');}
+function saveConfig(cfg){localStorage.setItem(CFG_DB,JSON.stringify(cfg));}
+
+// Merge EMPLEADOS base con configuración dinámica
+function getEmpleados(){
+  const cfg=loadConfig();
+  const base=[...EMPLEADOS];
+  (cfg.equipos||[]).forEach(eq=>{
+    (eq.miembros||[]).forEach(m=>{
+      // Siempre agregar miembros de equipos configurados (pueden tener misma nómina en otro equipo)
+      const existe=base.find(e=>e.nom===m.nom&&e.eq===eq.nombre);
+      if(!existe){
+        base.push({
+          eq:   eq.nombre,
+          nom:  m.nom,
+          name: m.name,
+          notif:eq.notifEmail||'',
+          a1n:  eq.liderNombre||'',
+          a1e:  eq.liderEmail||'',
+          a2n:  eq.gerenteNombre||'',
+          a2e:  eq.gerenteEmail||''
+        });
+      }
+    });
+  });
+  return base;
+}
+
+function getEquipos(){
+  const cfg=loadConfig();
+  const base=[...new Set(EMPLEADOS.map(e=>e.eq))];
+  const cfgEqs=(cfg.equipos||[]).map(e=>e.nombre);
+  return [...new Set([...base,...cfgEqs])];
+}
+
+const EQUIPOS_BASE=[...new Set(EMPLEADOS.map(e=>e.eq))];
 
 const STATUS={
   nuevo:  ['b1','📝 Nuevo'],
@@ -378,6 +427,133 @@ function goTo(v){
   if(v==='hist'){document.getElementById('nb-hist').classList.add('on');renderHist();}
   else if(v==='dash'){document.getElementById('nb-dash').classList.add('on');renderDash();}
   else if(v==='form'){document.getElementById('nb-new').classList.add('on');}
+  else if(v==='cfg'){document.getElementById('nb-cfg').classList.add('on');renderCfg();}
+}
+
+/* ══════════════════════════════════════
+   CONFIGURACIÓN
+══════════════════════════════════════ */
+function renderCfg(){
+  const cfg=loadConfig();
+  const el=document.getElementById('cfg-body');
+
+  // Construir tabla de equipos configurados
+  const equiposList=cfg.equipos||[];
+
+  el.innerHTML=`
+  <!-- Nuevo equipo -->
+  <div class="fcard" style="margin-bottom:1.5rem">
+    <div class="fhdr"><span class="ftitle">➕ Agregar nuevo equipo</span></div>
+    <div class="fbody">
+      <div class="fg2">
+        <div class="fg"><label>Nombre del equipo *</label><input type="text" id="cfg-eq-nombre" placeholder="Ej: MANTENIMIENTO"></div>
+        <div class="fg"><label>Correo de notificación *</label><input type="email" id="cfg-eq-notif" placeholder="equipo@zubex.com.mx"></div>
+      </div>
+      <div class="fg2">
+        <div class="fg"><label>Líder — Nombre *</label><input type="text" id="cfg-l-nombre" placeholder="Nombre del líder"></div>
+        <div class="fg"><label>Líder — Correo *</label><input type="email" id="cfg-l-email" placeholder="lider@zubex.com.mx"></div>
+      </div>
+      <div class="fg2">
+        <div class="fg"><label>Gerente — Nombre *</label><input type="text" id="cfg-g-nombre" placeholder="Nombre del gerente"></div>
+        <div class="fg"><label>Gerente — Correo *</label><input type="email" id="cfg-g-email" placeholder="gerente@zubex.com.mx"></div>
+      </div>
+    </div>
+    <div class="ffoot"><div></div><button class="btn btn-blue" id="btn-add-eq">Guardar equipo</button></div>
+  </div>
+
+  <!-- Equipos configurados -->
+  <div id="cfg-equipos-list">
+    ${equiposList.length===0?`<div class="empty" style="padding:2rem;font-size:13px">No hay equipos configurados aún.</div>`:
+      equiposList.map((eq,ei)=>`
+      <div class="fcard" style="margin-bottom:1rem">
+        <div class="fhdr" style="padding:1rem 1.5rem">
+          <span class="ftitle">${eq.nombre}</span>
+          <button class="btn btn-danger" style="padding:6px 14px;font-size:12px" onclick="deleteEquipo(${ei})">Eliminar equipo</button>
+        </div>
+        <div class="fbody">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div style="background:var(--blue-l);border:1px solid var(--blue-m);border-radius:8px;padding:10px 14px">
+              <div style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.5px;margin-bottom:4px">LÍDER / COORDINADOR</div>
+              <div style="font-size:13px;font-weight:600">${eq.liderNombre||'—'}</div>
+              <div style="font-size:11px;color:var(--text2)">${eq.liderEmail||'—'}</div>
+            </div>
+            <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px">
+              <div style="font-size:10px;font-weight:700;color:#166534;letter-spacing:.5px;margin-bottom:4px">GERENTE DE ÁREA</div>
+              <div style="font-size:13px;font-weight:600">${eq.gerenteNombre||'—'}</div>
+              <div style="font-size:11px;color:var(--text2)">${eq.gerenteEmail||'—'}</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px">📧 Notificación: ${eq.notifEmail||'—'}</div>
+
+          <!-- Miembros -->
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:12px;color:var(--blue2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Miembros del equipo (${(eq.miembros||[]).length})</div>
+          ${(eq.miembros||[]).length>0?`
+          <div style="margin-bottom:12px">
+            ${(eq.miembros||[]).map((m,mi)=>`
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);margin-bottom:6px">
+              <span style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--blue2);background:var(--blue-l);padding:2px 8px;border-radius:4px">${m.nom}</span>
+              <span style="flex:1;font-size:13px">${m.name}</span>
+              <button class="btn-clr" onclick="deleteMiembro(${ei},${mi})">✕</button>
+            </div>`).join('')}
+          </div>`:'<div style="font-size:12px;color:var(--text3);margin-bottom:12px">Sin miembros aún.</div>'}
+
+          <!-- Agregar miembro -->
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end">
+            <div class="fg" style="margin-bottom:0"><label>Nómina *</label><input type="text" id="cfg-m-nom-${ei}" placeholder="Ej: 1234"></div>
+            <div class="fg" style="margin-bottom:0"><label>Nombre completo *</label><input type="text" id="cfg-m-name-${ei}" placeholder="Nombre del colaborador"></div>
+            <button class="btn btn-green" style="padding:8px 14px" onclick="addMiembro(${ei})">+ Agregar</button>
+          </div>
+        </div>
+      </div>`).join('')}
+  </div>`;
+
+  document.getElementById('btn-add-eq').addEventListener('click', addEquipo);
+}
+
+function addEquipo(){
+  const nombre=gv('cfg-eq-nombre').trim().toUpperCase();
+  const notif=gv('cfg-eq-notif').trim();
+  const lNombre=gv('cfg-l-nombre').trim();
+  const lEmail=gv('cfg-l-email').trim();
+  const gNombre=gv('cfg-g-nombre').trim();
+  const gEmail=gv('cfg-g-email').trim();
+  if(!nombre||!lNombre||!lEmail||!gNombre||!gEmail) return toast('Completa todos los campos del equipo','tr');
+  const cfg=loadConfig();
+  if((cfg.equipos||[]).find(e=>e.nombre===nombre)) return toast('Ya existe un equipo con ese nombre','tr');
+  cfg.equipos=cfg.equipos||[];
+  cfg.equipos.push({nombre,notifEmail:notif,liderNombre:lNombre,liderEmail:lEmail,gerenteNombre:gNombre,gerenteEmail:gEmail,miembros:[]});
+  saveConfig(cfg);
+  toast('Equipo '+nombre+' creado ✓','tg');
+  renderCfg();
+}
+
+function addMiembro(ei){
+  const nom=document.getElementById('cfg-m-nom-'+ei)?.value.trim();
+  const name=document.getElementById('cfg-m-name-'+ei)?.value.trim().toUpperCase();
+  if(!nom||!name) return toast('Ingresa nómina y nombre','tr');
+  const cfg=loadConfig();
+  cfg.equipos[ei].miembros=cfg.equipos[ei].miembros||[];
+  if(cfg.equipos[ei].miembros.find(m=>m.nom===nom)) return toast('Esa nómina ya existe en el equipo','tr');
+  cfg.equipos[ei].miembros.push({nom,name});
+  saveConfig(cfg);
+  toast('Miembro agregado ✓','tg');
+  renderCfg();
+}
+
+function deleteMiembro(ei,mi){
+  const cfg=loadConfig();
+  cfg.equipos[ei].miembros.splice(mi,1);
+  saveConfig(cfg);
+  renderCfg();
+}
+
+function deleteEquipo(ei){
+  if(!confirm('¿Eliminar este equipo y todos sus miembros?')) return;
+  const cfg=loadConfig();
+  cfg.equipos.splice(ei,1);
+  saveConfig(cfg);
+  toast('Equipo eliminado','tw');
+  renderCfg();
 }
 
 /* ══════════════════════════════════════
@@ -505,7 +681,8 @@ function renderForm(){
 
 function renderFormulario(el){
   const eqSel=fd.equipo||'';
-  const miembros=eqSel?EMPLEADOS.filter(e=>e.eq===eqSel):[];
+  const todosEquipos=getEquipos();
+  const miembros=eqSel?getEmpleados().filter(e=>e.eq===eqSel):[];
   el.innerHTML=`
   <div class="fcard">
     <div class="fhdr"><span class="ftitle">Short Kaizen — Solicitud Completa</span><span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:#fff">SK</span></div>
@@ -517,7 +694,7 @@ function renderFormulario(el){
         <div class="fg"><label>Equipo Lean *</label>
           <select id="f-eq">
             <option value="">— Selecciona equipo —</option>
-            ${EQUIPOS.map(eq=>`<option value="${eq}" ${eqSel===eq?'selected':''}>${eq}</option>`).join('')}
+            ${todosEquipos.map(eq=>`<option value="${eq}" ${eqSel===eq?'selected':''}>${eq}</option>`).join('')}
           </select>
         </div>
         <div class="fg"><label>Fecha de identificación</label><input type="date" id="f-fi" value="${fd.fechaId||new Date().toISOString().slice(0,10)}"></div>
@@ -634,19 +811,22 @@ function renderFormulario(el){
 function onEqChange(){
   const eq=gv('f-eq');
   const sel=document.getElementById('f-miembro');
-  sel.innerHTML='<option value="">— Selecciona nombre —</option>'+EMPLEADOS.filter(e=>e.eq===eq).map(m=>`<option value="${m.nom}">${m.name} (${m.nom})</option>`).join('');
+  sel.innerHTML='<option value="">— Selecciona nombre —</option>'+getEmpleados().filter(e=>e.eq===eq).map(m=>`<option value="${m.nom}">${m.name} (${m.nom})</option>`).join('');
   document.getElementById('f-nom').value='';
   document.getElementById('f-nom2').value='';
   document.getElementById('info-apr').style.display='none';
 }
 
 function onMiembroChange(){
-  const emp=EMPLEADOS.find(e=>e.nom===gv('f-miembro'));
+  const eq=gv('f-eq');
+  const nom=gv('f-miembro');
+  // Buscar por nómina Y equipo para evitar confusión con misma nómina en otro equipo
+  const emp=getEmpleados().find(e=>e.nom===nom && e.eq===eq) || getEmpleados().find(e=>e.nom===nom);
   if(!emp)return;
   document.getElementById('f-nom').value=emp.nom;
   document.getElementById('f-nom2').value=emp.name;
-  document.getElementById('apr-1n').textContent=emp.a1n;
-  document.getElementById('apr-1e').textContent=emp.a1e;
+  document.getElementById('apr-1n').textContent=emp.a1n||'Sin asignar';
+  document.getElementById('apr-1e').textContent=emp.a1e||'—';
   document.getElementById('apr-2n').textContent=emp.a2n||APR2.nombre;
   document.getElementById('apr-2e').textContent=emp.a2e||APR2.email;
   document.getElementById('info-apr').style.display='block';
@@ -657,7 +837,11 @@ function submitFormulario(){
   if(!gv('f-miembro'))return toast('Selecciona el solicitante','tr');
   if(!gv('f-quien')||!gv('f-donde'))return toast('Completa ¿Quién? y ¿Dónde?','tr');
   if(!gv('f-da')||!gv('f-dd'))return toast('Completa las descripciones ANTES y DESPUÉS','tr');
-  const emp=EMPLEADOS.find(e=>e.nom===gv('f-miembro'));
+  const eqSel=gv('f-eq');
+  const nomSel=gv('f-miembro');
+  const emp=getEmpleados().find(e=>e.nom===nomSel && e.eq===eqSel) || getEmpleados().find(e=>e.nom===nomSel);
+  if(!emp){toast('No se encontró el colaborador seleccionado','tr');return;}
+  if(!emp.a1n||!emp.a1e){toast('El equipo no tiene Líder configurado. Ve a Configuración.','tr');return;}
   fd.nomina=emp.nom; fd.nombre=emp.name; fd.equipo=emp.eq;
   fd.fechaId=gv('f-fi'); fd.quien=gv('f-quien'); fd.donde=gv('f-donde');
   fd.descAntes=gv('f-da'); fd.descDespues=gv('f-dd');
@@ -670,10 +854,29 @@ function submitFormulario(){
   fd.enfoquesMejora=['5s','seguridad','calidad','productividad','costos','ambiente'].filter(k=>document.getElementById('em-'+k)?.checked);
   fd.status='pend_l';
   saveKaizen();
-  // Enviar correo real al Líder
-  const msgLider=`Se ha registrado una solicitud de Short Kaizen que requiere su aprobación.\n\nDescripción ANTES:\n${fd.descAntes}\n\nDescripción DESPUÉS:\n${fd.descDespues}\n\nFecha de identificación: ${fd.fechaId}\nFecha de implementación: ${fd.fechaImpl||'—'}\n\nPor favor ingresa al sistema para Aprobar o Rechazar:`;
-  sendEmail(fd.emailLider, fd.apr1n, `[Aprobación requerida] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`, msgLider, fd.id.slice(-4).toUpperCase(), fd.nombre, fd.equipo, fd.donde);
-  showModalLider();
+
+  // Correo de notificación simple al Líder
+  const msgLider=`Se ha registrado una nueva solicitud de Short Kaizen.\n\nSolicitante: ${fd.nombre} (${fd.nomina})\nEquipo: ${fd.equipo}\nÁrea: ${fd.donde}\nFecha: ${fd.fechaId}\n\nANTES: ${fd.descAntes}\n\nDESPUÉS: ${fd.descDespues}\n${fd.estandarizacion?'\nEstandarización: '+fd.estandarizacion:''}`;
+  sendEmail(fd.emailLider, fd.apr1n,
+    `[Notificación] Nueva solicitud Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`,
+    msgLider, fd.id.slice(-4).toUpperCase(), fd.nombre, fd.equipo, fd.donde, '', '');
+
+  // Mostrar confirmación
+  document.getElementById('form-area').innerHTML=`
+    <div style="text-align:center;padding:3rem 2rem">
+      <div style="font-size:64px;margin-bottom:1rem">📧</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;color:var(--blue2);margin-bottom:8px">Solicitud enviada correctamente</div>
+      <p style="color:var(--text2);margin-bottom:1.5rem">
+        Se notificó a <strong>${fd.apr1n}</strong> (${fd.emailLider})
+      </p>
+      <div style="background:var(--blue-l);border:1px solid var(--blue-m);border-radius:10px;padding:1rem 1.5rem;font-size:13px;text-align:left;max-width:400px;margin:0 auto 1.5rem">
+        <div><strong>Kaizen:</strong> SK-${fd.id.slice(-4).toUpperCase()}</div>
+        <div><strong>Solicitante:</strong> ${fd.nombre}</div>
+        <div><strong>Área:</strong> ${fd.donde}</div>
+        <div><strong>Líder notificado:</strong> ${fd.apr1n}</div>
+      </div>
+      <button class="btn btn-blue" onclick="goTo('hist')">← Ver solicitudes</button>
+    </div>`;
 }
 
 /* ══════════════════════════════════════
@@ -681,12 +884,25 @@ function submitFormulario(){
 ══════════════════════════════════════ */
 function renderPendLider(el){
   el.innerHTML=`<div class="fcard"><div class="fhdr"><span class="ftitle">⏳ Esperando aprobación del Líder</span></div><div class="fbody">
-    <div class="alert al-warn">Correo enviado a <strong>${fd.apr1n}</strong> (${fd.emailLider}). Simula su respuesta:</div>
-    <div style="display:flex;gap:10px">
-      <button class="btn btn-green" onclick="showModalLider()">✓ Simular: Líder aprueba</button>
-      <button class="btn btn-danger" onclick="showModalRejForm('lider')">✕ Simular: Líder rechaza</button>
+    <div class="alert al-warn" style="margin-bottom:1rem">
+      Se ha enviado un correo de aprobación a <strong>${fd.apr1n}</strong> (${fd.emailLider}).<br>
+      El Líder debe hacer clic en el link de su correo para aprobar o rechazar.
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:13px">
+      <div style="margin-bottom:6px"><strong>Kaizen:</strong> SK-${fd.id.slice(-4).toUpperCase()}</div>
+      <div style="margin-bottom:6px"><strong>Solicitante:</strong> ${fd.nombre}</div>
+      <div><strong>Área:</strong> ${fd.donde}</div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:10px">
+      <button class="btn btn-out" onclick="reenviarCorreoLider()">📧 Reenviar correo al Líder</button>
     </div>
   </div></div>`;
+}
+
+function reenviarCorreoLider(){
+  const msg=`Recordatorio: Tienes pendiente una solicitud de Short Kaizen esperando tu aprobación.\n\nSolicitante: ${fd.nombre}\nÁrea: ${fd.donde}\n\nANTES: ${fd.descAntes}\n\nDESPUÉS: ${fd.descDespues}`;
+  sendEmail(fd.emailLider,fd.apr1n,`[Recordatorio] Aprobación pendiente SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`,msg,fd.id.slice(-4).toUpperCase(),fd.nombre,fd.equipo,fd.donde,'','');
+  toast('Correo reenviado al Líder','tg');
 }
 
 function showModalLider(){
@@ -757,27 +973,44 @@ function confirmarLider(){
   fd.firmaLiderFecha=new Date().toLocaleDateString('es-MX');
   fd.status='pend_g';
   saveKaizen(); closeModal();
-  // Enviar correo real al Gerente
-  const msgGerente=`El siguiente Short Kaizen fue aprobado por el Líder (${fd.firmaLiderNombre}) y requiere su autorización final.\n\nDescripción ANTES:\n${fd.descAntes}\n\nDescripción DESPUÉS:\n${fd.descDespues}\n\nFecha de identificación: ${fd.fechaId}\nFecha de implementación: ${fd.fechaImpl||'—'}\nTiempo: ${fd.tiempoImpl?fd.tiempoImpl+' '+fd.unidadTiempo:'—'}\nAprobado por Líder: ${fd.firmaLiderNombre} — ${fd.firmaLiderFecha}\n\nPor favor ingresa al sistema para Autorizar o Rechazar:`;
-  sendEmail(fd.emailGerente, fd.apr2n, `[Autorización Final] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`, msgGerente, fd.id.slice(-4).toUpperCase(), fd.nombre, fd.equipo, fd.donde);
+  const msgGerente=`El Short Kaizen fue aprobado por el Líder y requiere su autorización final.\n\nSolicitante: ${fd.nombre} (${fd.nomina})\nEquipo: ${fd.equipo}\nÁrea: ${fd.donde}\nFecha ID: ${fd.fechaId}\nAprobado por Líder: ${fd.firmaLiderNombre} — ${fd.firmaLiderFecha}\n\nANTES: ${fd.descAntes}\n\nDESPUÉS: ${fd.descDespues}\n${fd.estandarizacion?'\nEstandarización: '+fd.estandarizacion:''}`;
+  sendEmail(fd.emailGerente, fd.apr2n,
+    `[Notificación] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} listo para autorización — ${fd.donde}`,
+    msgGerente, fd.id.slice(-4).toUpperCase(), fd.nombre, fd.equipo, fd.donde, '', '');
+  sendEmail(fd.emailGerente, fd.apr2n,
+    `[Autorización Final] Short Kaizen SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`,
+    msgGerente, fd.id.slice(-4).toUpperCase(), fd.nombre, fd.equipo, fd.donde,
+    approveLinkG, rejectLinkG);
   updateFlow('pend_g');
   renderForm();
   toast('¡Aprobado por Líder! Correo enviado al Gerente','tg');
-  setTimeout(()=>showModalGerente(),800);
 }
 
 /* ══════════════════════════════════════
    APROBACIÓN GERENTE
 ══════════════════════════════════════ */
 function renderPendGerente(el){
-  el.innerHTML=`<div class="fcard"><div class="fhdr"><span class="ftitle">⏳ Esperando aprobación del Gerente</span></div><div class="fbody">
+  el.innerHTML=`<div class="fcard"><div class="fhdr"><span class="ftitle">⏳ Esperando autorización del Gerente</span></div><div class="fbody">
     <div class="alert al-success" style="margin-bottom:1rem">✅ Aprobado por Líder: <strong>${fd.firmaLiderNombre}</strong> · ${fd.firmaLiderFecha}</div>
-    <div class="alert al-warn">Correo enviado a <strong>${APR2.nombre}</strong> (${APR2.email}). Simula su respuesta:</div>
-    <div style="display:flex;gap:10px">
-      <button class="btn btn-green" onclick="showModalGerente()">✓ Simular: Gerente autoriza</button>
-      <button class="btn btn-danger" onclick="showModalRejForm('gerente')">✕ Simular: Gerente rechaza</button>
+    <div class="alert al-warn" style="margin-bottom:1rem">
+      Se ha enviado un correo de autorización a <strong>${fd.apr2n}</strong> (${fd.emailGerente}).<br>
+      El Gerente debe hacer clic en el link de su correo para autorizar o rechazar.
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem;font-size:13px">
+      <div style="margin-bottom:6px"><strong>Kaizen:</strong> SK-${fd.id.slice(-4).toUpperCase()}</div>
+      <div style="margin-bottom:6px"><strong>Solicitante:</strong> ${fd.nombre}</div>
+      <div><strong>Área:</strong> ${fd.donde}</div>
+    </div>
+    <div style="margin-top:1rem;display:flex;gap:10px">
+      <button class="btn btn-out" onclick="reenviarCorreoGerente()">📧 Reenviar correo al Gerente</button>
     </div>
   </div></div>`;
+}
+
+function reenviarCorreoGerente(){
+  const msg=`Recordatorio: Tienes pendiente una solicitud de Short Kaizen esperando tu autorización final.\n\nSolicitante: ${fd.nombre}\nÁrea: ${fd.donde}\nAprobado por Líder: ${fd.firmaLiderNombre} — ${fd.firmaLiderFecha}\n\nANTES: ${fd.descAntes}\n\nDESPUÉS: ${fd.descDespues}`;
+  sendEmail(fd.emailGerente,fd.apr2n,`[Recordatorio] Autorización pendiente SK-${fd.id.slice(-4).toUpperCase()} — ${fd.donde}`,msg,fd.id.slice(-4).toUpperCase(),fd.nombre,fd.equipo,fd.donde,'','');
+  toast('Correo reenviado al Gerente','tg');
 }
 
 function showModalGerente(){
@@ -1162,7 +1395,260 @@ function getSig(key){const c=document.getElementById('sig-'+key);if(!c||sigD[key
 document.getElementById('nb-dash').addEventListener('click',()=>goTo('dash'));
 document.getElementById('nb-hist').addEventListener('click',()=>goTo('hist'));
 document.getElementById('nb-new').addEventListener('click',startNew);
-renderHist();
+document.getElementById('nb-cfg').addEventListener('click',()=>goTo('cfg'));
+
+// Detectar si viene desde link de aprobación en correo
+(function checkApprovalLink(){
+  const params=new URLSearchParams(window.location.search);
+  const act=params.get('act');
+
+  // Nuevo formato con datos embebidos: ?kd=BASE64&act=apr_lider|rej_lider|apr_gerente|rej_gerente
+  const kdParam=params.get('kd');
+  if(kdParam&&act){
+    try{
+      const kData=JSON.parse(atob(decodeURIComponent(kdParam)));
+      const isReject=act.startsWith('rej');
+      kData.action=act.includes('gerente')?'approve_gerente':'approve_lider';
+      showApprovalPage(kData, isReject);
+      return;
+    } catch(e){
+      console.error('Error kd:',e);
+      showApprovalManual('unknown',act);
+      return;
+    }
+  }
+
+  // Formato con solo ID: buscar en localStorage
+  const aprid=params.get('aprid');
+  if(aprid&&act){
+    const kz=KZ.find(x=>x.id===aprid);
+    if(kz){
+      const isReject=act.startsWith('rej');
+      const action=act.includes('gerente')?'approve_gerente':'approve_lider';
+      showApprovalPage({...kz,action}, isReject);
+      return;
+    }
+    // No está en localStorage de este dispositivo
+    showApprovalManual(aprid,act);
+    return;
+  }
+
+  // Formato antiguo con ?k=
+  const kParam=params.get('k');
+  if(kParam){
+    try{
+      const kData=JSON.parse(decodeURIComponent(escape(atob(kParam))));
+      const isReject=params.get('reject')==='1';
+      showApprovalPage(kData, isReject);
+    } catch(e){renderHist();}
+    return;
+  }
+
+  renderHist();
+})();
+
+function showApprovalManual(aprid, act){
+  // Quitar todas las vistas activas
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+
+  // Usar v-det como contenedor para no crear divs dinámicos
+  const aprDiv=document.getElementById('v-det');
+  aprDiv.classList.add('on');
+
+  const isReject=act.startsWith('rej');
+  const tipo=act.includes('gerente')?'gerente':'líder';
+
+  aprDiv.innerHTML=`
+  <div style="max-width:620px;margin:0 auto">
+    <div class="fcard">
+      <div class="fhdr" style="background:${isReject?'var(--danger)':'var(--blue)'}">
+        <span class="ftitle">${isReject?'❌ Rechazar':'✅ Aprobar'} — SK-${aprid.slice(-4).toUpperCase()}</span>
+      </div>
+      <div class="fbody">
+        <div class="alert al-warn" style="margin-bottom:1rem">
+          Ingresa tu nombre y firma para ${isReject?'rechazar':'aprobar'} esta solicitud como <strong>${tipo}</strong>.
+        </div>
+        <div class="fg"><label>Tu nombre completo *</label><input type="text" id="apr-nombre" placeholder="Nombre completo"></div>
+        ${isReject?`<div class="fg"><label>Motivo del rechazo *</label><textarea id="apr-motivo" placeholder="Explica el motivo..." style="min-height:80px"></textarea></div>`:''}
+        ${!isReject?`
+        <div class="firmabox">
+          <div class="frmhdr"><span class="frmtitle">Firma digital</span><span class="bp" id="fs-apr">Pendiente</span></div>
+          <canvas class="sigpad" id="sig-apr" width="500" height="100"></canvas>
+          <div class="sigact"><button class="btn-clr" onclick="clearSig('apr')">Limpiar</button></div>
+          <p style="font-size:11px;color:var(--text3);margin-top:6px">Dibuja tu firma con mouse o dedo</p>
+        </div>`:''}
+      </div>
+      <div class="ffoot">
+        <button class="btn btn-out" onclick="window.location.href='${APP_URL}'">← Cancelar</button>
+        <button class="btn ${isReject?'btn-danger':'btn-green'}" id="btn-manual-apr">
+          ${isReject?'✕ Confirmar rechazo':'✓ Confirmar aprobación'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+
+  if(!isReject) initSig('apr');
+  document.getElementById('btn-manual-apr').addEventListener('click',()=>{
+    const nombre=document.getElementById('apr-nombre')?.value.trim();
+    if(!nombre) return toast('Ingresa tu nombre','tr');
+    if(isReject){
+      const motivo=document.getElementById('apr-motivo')?.value.trim();
+      if(!motivo) return toast('Ingresa el motivo','tr');
+      aprDiv.innerHTML=`<div style="text-align:center;padding:3rem"><div style="font-size:64px">❌</div><p style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--danger);margin-top:1rem">Rechazo registrado</p><p style="color:var(--text2);margin-top:8px">Gracias <strong>${nombre}</strong>. El solicitante será notificado.</p></div>`;
+    } else {
+      aprDiv.innerHTML=`<div style="text-align:center;padding:3rem"><div style="font-size:64px">✅</div><p style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--green-d);margin-top:1rem">Aprobación registrada</p><p style="color:var(--text2);margin-top:8px">Gracias <strong>${nombre}</strong>. Tu ${tipo} fue registrada correctamente.</p></div>`;
+    }
+  });
+}
+
+function showApprovalPage(kData, isReject){
+  document.querySelectorAll('.view').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  // Usar v-det como contenedor
+  const aprDiv=document.getElementById('v-det');
+  aprDiv.classList.add('on');
+
+  if(isReject){
+    aprDiv.innerHTML=`
+    <div style="max-width:600px;margin:0 auto">
+      <div class="fcard">
+        <div class="fhdr" style="background:var(--danger)"><span class="ftitle">❌ Rechazar Kaizen SK-${kData.id.slice(-4).toUpperCase()}</span></div>
+        <div class="fbody">
+          <div class="alert al-danger">Estás a punto de rechazar esta solicitud. El proceso se detendrá.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;font-size:13px">
+            <div><div class="dl">Solicitante</div><div class="dv">${kData.nombre}</div></div>
+            <div><div class="dl">Área</div><div class="dv">${kData.donde}</div></div>
+          </div>
+          <div class="fg"><label>Tu nombre *</label><input type="text" id="apr-nombre" placeholder="Nombre completo"></div>
+          <div class="fg"><label>Motivo del rechazo *</label><textarea id="apr-motivo" placeholder="Explica el motivo..." style="min-height:100px"></textarea></div>
+        </div>
+        <div class="ffoot">
+          <button class="btn btn-out" onclick="window.location.href='${APP_URL}'">← Cancelar</button>
+          <button class="btn btn-danger" onclick="confirmarRechazoCorreo('${kData.action==='approve_lider'?'lider':'gerente'}', ${JSON.stringify(kData).replace(/"/g,'&quot;')})">Confirmar rechazo</button>
+        </div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  // Pantalla de aprobación
+  aprDiv.innerHTML=`
+  <div style="max-width:700px;margin:0 auto">
+    <div class="fcard">
+      <div class="fhdr" style="background:${kData.action==='approve_lider'?'var(--blue)':'var(--green-d)'}">
+        <span class="ftitle">${kData.action==='approve_lider'?'✅ Aprobación Líder':'✅ Autorización Gerente'} — SK-${kData.id.slice(-4).toUpperCase()}</span>
+      </div>
+      <div class="fbody">
+        <div class="alert al-info">Revisa la solicitud y firma para ${kData.action==='approve_lider'?'aprobar':'autorizar'}.</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem">
+          <div><div class="dl">Solicitante</div><div class="dv">${kData.nombre} (${kData.nomina})</div></div>
+          <div><div class="dl">Equipo</div><div class="dv">${kData.equipo}</div></div>
+          <div><div class="dl">Área</div><div class="dv">${kData.donde}</div></div>
+          <div><div class="dl">Fecha ID</div><div class="dv">${kData.fechaId}</div></div>
+          <div><div class="dl">Fecha Impl.</div><div class="dv">${kData.fechaImpl||'—'}</div></div>
+          <div><div class="dl">Tiempo</div><div class="dv">${kData.tiempoImpl?kData.tiempoImpl+' '+kData.unidadTiempo:'—'}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+          <div style="border:1px solid #fecaca;border-radius:8px;overflow:hidden">
+            <div style="background:#fef2f2;padding:5px 10px;font-size:11px;font-weight:700;color:#991b1b">ANTES</div>
+            <div style="padding:10px;font-size:13px">${kData.descAntes||'—'}</div>
+          </div>
+          <div style="border:1px solid #bbf7d0;border-radius:8px;overflow:hidden">
+            <div style="background:#f0fdf4;padding:5px 10px;font-size:11px;font-weight:700;color:#166534">DESPUÉS</div>
+            <div style="padding:10px;font-size:13px">${kData.descDespues||'—'}</div>
+          </div>
+        </div>
+        ${kData.estandarizacion?`<div class="fg"><div class="dl">Estandarización</div><div class="dv">${kData.estandarizacion}</div></div>`:''}
+        ${kData.firmaLiderNombre?`<div class="alert al-success">✅ Ya aprobado por Líder: <strong>${kData.firmaLiderNombre}</strong> · ${kData.firmaLiderFecha}</div>`:''}
+        <div class="divider"></div>
+        <div class="stitle"><span class="snum">✎</span>Firma de ${kData.action==='approve_lider'?'Líder / Coordinador':'Gerente de Área'}</div>
+        <div class="fg"><label>Nombre completo *</label><input type="text" id="apr-nombre" placeholder="Tu nombre completo"></div>
+        <div class="firmabox">
+          <div class="frmhdr"><span class="frmtitle">Firma digital</span><span class="bp" id="fs-apr">Pendiente</span></div>
+          <canvas class="sigpad" id="sig-apr" width="500" height="100"></canvas>
+          <div class="sigact"><button class="btn-clr" onclick="clearSig('apr')">Limpiar</button></div>
+          <p style="font-size:11px;color:var(--text3);margin-top:6px">Dibuja tu firma con mouse o dedo</p>
+        </div>
+      </div>
+      <div class="ffoot">
+        <button class="btn btn-danger btn-out" onclick="window.location.href='${APP_URL}?k=${kParamGlobal}&reject=1'">✕ Rechazar</button>
+        <button class="btn ${kData.action==='approve_lider'?'btn-blue':'btn-green'}" id="btn-confirmar-apr">
+          ${kData.action==='approve_lider'?'✓ Aprobar solicitud':'✓ Autorizar y cerrar Kaizen'}
+        </button>
+      </div>
+    </div>
+  </div>`;
+
+  initSig('apr');
+  document.getElementById('btn-confirmar-apr').addEventListener('click',()=>{
+    confirmarAprobacionCorreo(kData);
+  });
+}
+
+const kParamGlobal = new URLSearchParams(window.location.search).get('k');
+
+async function confirmarAprobacionCorreo(kData){
+  const nombre=document.getElementById('apr-nombre').value.trim();
+  if(!nombre)return toast('Ingresa tu nombre','tr');
+  const sig=getSig('apr');
+  const fecha=new Date().toLocaleDateString('es-MX');
+
+  if(kData.action==='approve_lider'){
+    // Enviar correo al Gerente con link de aprobación
+    const kgData=btoa(unescape(encodeURIComponent(JSON.stringify({
+      ...kData,
+      firmaLiderNombre:nombre, firmaLiderFecha:fecha,
+      action:'approve_gerente'
+    }))));
+    const approveLinkG=`${APP_URL}?k=${kgData}`;
+    const rejectLinkG=`${APP_URL}?k=${kgData}&reject=1`;
+    const msgG=`El Short Kaizen fue aprobado por el Líder (${nombre}) y requiere su autorización final.\n\nSolicitante: ${kData.nombre} (${kData.nomina})\nEquipo: ${kData.equipo}\nÁrea: ${kData.donde}\nFecha ID: ${kData.fechaId}\nAprobado por Líder: ${nombre} — ${fecha}\n\nDescripción ANTES:\n${kData.descAntes}\n\nDescripción DESPUÉS:\n${kData.descDespues}\n\n✅ AUTORIZAR:\n${approveLinkG}\n\n❌ RECHAZAR:\n${rejectLinkG}`;
+    await sendEmail(kData.emailGerente, kData.apr2n, `[Autorización Final] Short Kaizen SK-${kData.id.slice(-4).toUpperCase()} — ${kData.donde}`, msgG, kData.id.slice(-4).toUpperCase(), kData.nombre, kData.equipo, kData.donde);
+    document.getElementById('v-approval').innerHTML=`
+    <div style="max-width:600px;margin:0 auto;text-align:center;padding:3rem">
+      <div style="font-size:64px;margin-bottom:1rem">✅</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;color:var(--green-d);margin-bottom:8px">¡Aprobado correctamente!</div>
+      <p style="color:var(--text2);margin-bottom:1.5rem">Se ha enviado la solicitud al Gerente de Área para su autorización final.</p>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem;font-size:13px;text-align:left">
+        <div><strong>Aprobado por:</strong> ${nombre}</div>
+        <div><strong>Fecha:</strong> ${fecha}</div>
+        <div><strong>Kaizen:</strong> SK-${kData.id.slice(-4).toUpperCase()} — ${kData.donde}</div>
+      </div>
+    </div>`;
+  } else {
+    // Gerente autoriza — notificar a MC
+    const msgMC=`El Short Kaizen SK-${kData.id.slice(-4).toUpperCase()} ha sido cerrado y aprobado.\n\nSolicitante: ${kData.nombre}\nEquipo: ${kData.equipo}\nÁrea: ${kData.donde}\nAprobado por Líder: ${kData.firmaLiderNombre}\nAutorizado por Gerente: ${nombre}\nFecha cierre: ${fecha}\n\nEstandarización: ${kData.estandarizacion||'—'}`;
+    await sendEmail('mejora.continua@zubex.com.mx','Equipo Mejora Continua',`✅ Kaizen Cerrado SK-${kData.id.slice(-4).toUpperCase()} — ${kData.donde}`, msgMC, kData.id.slice(-4).toUpperCase(), kData.nombre, kData.equipo, kData.donde);
+    document.getElementById('v-approval').innerHTML=`
+    <div style="max-width:600px;margin:0 auto;text-align:center;padding:3rem">
+      <div style="font-size:64px;margin-bottom:1rem">🎉</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;color:var(--green-d);margin-bottom:8px">¡Kaizen Autorizado y Cerrado!</div>
+      <p style="color:var(--text2);margin-bottom:1.5rem">El equipo de Mejora Continua ha sido notificado.</p>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:1rem;font-size:13px;text-align:left">
+        <div><strong>Autorizado por:</strong> ${nombre}</div>
+        <div><strong>Fecha:</strong> ${fecha}</div>
+        <div><strong>Kaizen:</strong> SK-${kData.id.slice(-4).toUpperCase()} — ${kData.donde}</div>
+      </div>
+    </div>`;
+  }
+}
+
+function confirmarRechazoCorreo(tipo, kData){
+  const nombre=document.getElementById('apr-nombre').value.trim();
+  const motivo=document.getElementById('apr-motivo').value.trim();
+  if(!nombre||!motivo)return toast('Completa nombre y motivo','tr');
+  const fecha=new Date().toLocaleDateString('es-MX');
+  const solicitanteEmail = kData.a1e||kData.emailLider||'';
+  const msgRej=`La solicitud de Short Kaizen SK-${kData.id.slice(-4).toUpperCase()} fue RECHAZADA.\n\nRechazado por: ${nombre} (${tipo==='lider'?'Líder':'Gerente'})\nFecha: ${fecha}\nMotivo: ${motivo}\n\nSolicitante: ${kData.nombre}\nÁrea: ${kData.donde}`;
+  sendEmail(solicitanteEmail, kData.nombre, `[Rechazado] Short Kaizen SK-${kData.id.slice(-4).toUpperCase()} — ${kData.donde}`, msgRej, kData.id.slice(-4).toUpperCase(), kData.nombre, kData.equipo, kData.donde);
+  document.getElementById('v-approval').innerHTML=`
+  <div style="max-width:600px;margin:0 auto;text-align:center;padding:3rem">
+    <div style="font-size:64px;margin-bottom:1rem">❌</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;color:var(--danger);margin-bottom:8px">Solicitud Rechazada</div>
+    <p style="color:var(--text2)">Se notificó al solicitante del rechazo.</p>
+  </div>`;
+}
 </script>
 </body>
 </html>
