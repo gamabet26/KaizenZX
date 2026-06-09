@@ -286,18 +286,18 @@ let fd={};
 const sigD={};
 let db=null; // Se inicializa cuando Firebase cargue
 
-// ── Firestore helpers ──────────────────────────────────────
+// ── Realtime Database helpers ──────────────────────────────
 async function fsSave(kaizen){
   try{
-    if(!db||!window._fsDoc){console.warn('Firestore no listo');return;}
+    if(!window._rtdb){console.warn('RTDB no listo');return;}
     const data={...kaizen};
     if(data.fotoAntes&&data.fotoAntes!=='[local]'){localStorage.setItem('foto_a_'+data.id,data.fotoAntes);data.fotoAntes='[local]';}
     if(data.fotoDespues&&data.fotoDespues!=='[local]'){localStorage.setItem('foto_d_'+data.id,data.fotoDespues);data.fotoDespues='[local]';}
     if(data.firmaLider&&data.firmaLider!=='[local]'){localStorage.setItem('firma_l_'+data.id,data.firmaLider);data.firmaLider='[local]';}
     if(data.firmaGerente&&data.firmaGerente!=='[local]'){localStorage.setItem('firma_g_'+data.id,data.firmaGerente);data.firmaGerente='[local]';}
-    await window._fsSet(window._fsDoc(db,'kaizens',data.id),data);
-    console.log('✅ Guardado en Firestore:',data.id);
-  } catch(e){console.error('Firestore save error:',e);toast('Error nube: '+e.message,'tr');}
+    await window._rtSet(window._rtRef(window._rtdb,'kaizens/'+data.id),data);
+    console.log('✅ Guardado en RTDB:',data.id);
+  } catch(e){console.error('RTDB save error:',e);toast('Error nube: '+e.message,'tr');}
 }
 
 function fsRestoreLocal(k){
@@ -308,27 +308,37 @@ function fsRestoreLocal(k){
   return k;
 }
 
-async function fsLoadAll(){
+async function rtLoadAll(){
   try{
-    if(!db||!window._fsGet){return;}
-    const snap=await window._fsGet(window._fsCol(db,'kaizens'));
-    KZ=snap.docs.map(d=>fsRestoreLocal(d.data()));
-    localStorage.setItem(SKDB,JSON.stringify(KZ));
-    renderHist();
-    console.log('✅ Cargados:',KZ.length,'kaizens');
-  } catch(e){console.error('Firestore load error:',e);}
+    if(!window._rtdb) return;
+    const snap=await window._rtGet(window._rtChild(window._rtRef(window._rtdb),'kaizens'));
+    if(snap.exists()){
+      KZ=Object.values(snap.val()).map(k=>fsRestoreLocal(k));
+      localStorage.setItem(SKDB,JSON.stringify(KZ));
+      renderHist();
+      console.log('✅ Cargados:',KZ.length,'kaizens');
+    }
+  } catch(e){console.error('RTDB load error:',e);}
 }
 
-function fsListen(){
-  if(!db||!window._fsSnap){return;}
-  window._fsSnap(window._fsCol(db,'kaizens'),snap=>{
-    KZ=snap.docs.map(d=>fsRestoreLocal(d.data()));
+function rtListen(){
+  if(!window._rtdb) return;
+  window._rtOnValue(window._rtRef(window._rtdb,'kaizens'),snap=>{
+    if(snap.exists()){
+      KZ=Object.values(snap.val()).map(k=>fsRestoreLocal(k));
+    } else {
+      KZ=[];
+    }
     localStorage.setItem(SKDB,JSON.stringify(KZ));
     if(document.getElementById('v-hist')?.classList.contains('on')) renderHist();
     if(document.getElementById('v-dash')?.classList.contains('on')) renderDash();
-    console.log('🔄 Sync:',KZ.length,'kaizens');
+    console.log('🔄 RTDB sync:',KZ.length,'kaizens');
   });
 }
+
+// Alias para compatibilidad
+const fsLoadAll=rtLoadAll;
+const fsListen=rtListen;
 
 function save(){localStorage.setItem(SKDB,JSON.stringify(KZ));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
@@ -1721,23 +1731,13 @@ function confirmarRechazoCorreo(tipo, kData){
     <p style="color:var(--text2)">Se notificó al solicitante del rechazo.</p>
   </div>`;
 }
-// Firebase callback — llamado desde script module abajo
-function onFirebaseReady(firestoreDb,col,docFn,setDocFn,getDocsFn,onSnapFn){
-  db=firestoreDb;
-  window._fsCol=col;
-  window._fsDoc=docFn;
-  window._fsSet=setDocFn;
-  window._fsGet=getDocsFn;
-  window._fsSnap=onSnapFn;
-  console.log('✅ Firebase listo');
-  fsLoadAll().then(()=>fsListen());
-}
+// Firebase Realtime DB inicializado desde script module al final
 </script>
 
-<!-- Firebase como type=module — única forma que funciona en GitHub Pages -->
+<!-- Firebase Realtime Database -->
 <script type="module">
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import {initializeFirestore,collection,doc,setDoc,getDocs,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import {getDatabase,ref,set,onValue,get,child} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js';
 try{
   const cfg={
     apiKey:"AIzaSyAZXhGAKmOqBPFLCF8L6m1BRgYUjdylF6Y",
@@ -1745,20 +1745,22 @@ try{
     projectId:"zx-kaizen",
     storageBucket:"zx-kaizen.firebasestorage.app",
     messagingSenderId:"324234721853",
-    appId:"1:324234721853:web:a3ae74eb8eca7f043a4854"
+    appId:"1:324234721853:web:a3ae74eb8eca7f043a4854",
+    databaseURL:"https://zx-kaizen-default-rtdb.firebaseio.com"
   };
   const app=initializeApp(cfg);
-  const db=initializeFirestore(app,{experimentalForceLongPolling:true});
-  window.onFirebaseReady(
-    db,
-    (d,c)=>collection(d,c),
-    (d,c,id)=>doc(d,c,id),
-    setDoc,
-    getDocs,
-    onSnapshot
-  );
+  const rtdb=getDatabase(app);
+  window._rtdb=rtdb;
+  window._rtRef=ref;
+  window._rtSet=set;
+  window._rtOnValue=onValue;
+  window._rtGet=get;
+  window._rtChild=child;
+  console.log('✅ Firebase Realtime DB listo');
+  rtLoadAll();
+  rtListen();
 } catch(e){
-  console.error('Firebase module error:',e);
+  console.error('Firebase error:',e);
 }
 </script>
 </body>
