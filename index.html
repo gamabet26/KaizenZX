@@ -7,35 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAZXhGAKmOqBPFLCF8L6m1BRgYUjdylF6Y",
-  authDomain: "zx-kaizen.firebaseapp.com",
-  projectId: "zx-kaizen",
-  storageBucket: "zx-kaizen.firebasestorage.app",
-  messagingSenderId: "324234721853",
-  appId: "1:324234721853:web:a3ae74eb8eca7f043a4854"
-};
-
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-
-// Exponer funciones de Firestore al scope global para el resto del código
-window.FSdb = db;
-window.FSsetDoc = setDoc;
-window.FSdoc = doc;
-window.FScollection = collection;
-window.FSgetDoc = getDoc;
-window.FSgetDocs = getDocs;
-window.FSonSnapshot = onSnapshot;
-window.FSquery = query;
-window.FSorderBy = orderBy;
-window.firebaseReady = true;
-document.dispatchEvent(new Event('firebase-ready'));
-</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -313,24 +284,23 @@ const SKDB='zubex_sk_v5';
 let KZ=JSON.parse(localStorage.getItem(SKDB)||'[]');
 let fd={};
 const sigD={};
+let db=null; // Se inicializa cuando Firebase cargue
 
 // ── Firestore helpers ──────────────────────────────────────
 async function fsSave(kaizen){
   try{
-    if(!window.FSdb) return;
-    // No guardar fotos en Firestore (muy pesadas) — solo metadatos
+    if(!db){console.warn('Firestore no disponible aún');return;}
     const data={...kaizen};
-    // Guardar fotos en localStorage por ID, solo metadatos en Firestore
-    if(data.fotoAntes){localStorage.setItem('foto_a_'+data.id, data.fotoAntes); data.fotoAntes='[local]';}
-    if(data.fotoDespues){localStorage.setItem('foto_d_'+data.id, data.fotoDespues); data.fotoDespues='[local]';}
-    if(data.firmaLider){localStorage.setItem('firma_l_'+data.id, data.firmaLider); data.firmaLider='[local]';}
-    if(data.firmaGerente){localStorage.setItem('firma_g_'+data.id, data.firmaGerente); data.firmaGerente='[local]';}
-    await window.FSsetDoc(window.FSdoc(window.FSdb,'kaizens',data.id), data);
-  } catch(e){console.error('Firestore save error:',e);}
+    if(data.fotoAntes&&data.fotoAntes!=='[local]'){localStorage.setItem('foto_a_'+data.id,data.fotoAntes);data.fotoAntes='[local]';}
+    if(data.fotoDespues&&data.fotoDespues!=='[local]'){localStorage.setItem('foto_d_'+data.id,data.fotoDespues);data.fotoDespues='[local]';}
+    if(data.firmaLider&&data.firmaLider!=='[local]'){localStorage.setItem('firma_l_'+data.id,data.firmaLider);data.firmaLider='[local]';}
+    if(data.firmaGerente&&data.firmaGerente!=='[local]'){localStorage.setItem('firma_g_'+data.id,data.firmaGerente);data.firmaGerente='[local]';}
+    await db.collection('kaizens').doc(data.id).set(data);
+    console.log('✅ Guardado en Firestore:', data.id);
+  } catch(e){console.error('Firestore save error:',e);toast('Error al guardar en nube: '+e.message,'tr');}
 }
 
 function fsRestoreLocal(k){
-  // Restaurar fotos y firmas desde localStorage si existen
   if(k.fotoAntes==='[local]') k.fotoAntes=localStorage.getItem('foto_a_'+k.id)||null;
   if(k.fotoDespues==='[local]') k.fotoDespues=localStorage.getItem('foto_d_'+k.id)||null;
   if(k.firmaLider==='[local]') k.firmaLider=localStorage.getItem('firma_l_'+k.id)||null;
@@ -340,27 +310,26 @@ function fsRestoreLocal(k){
 
 async function fsLoadAll(){
   try{
-    if(!window.FSdb) return;
-    const snap=await window.FSgetDocs(window.FScollection(window.FSdb,'kaizens'));
+    if(!db){console.warn('db no listo');return;}
+    const snap=await db.collection('kaizens').get();
     KZ=snap.docs.map(d=>fsRestoreLocal(d.data()));
     localStorage.setItem(SKDB,JSON.stringify(KZ));
     renderHist();
+    console.log('✅ Cargados desde Firestore:',KZ.length,'kaizens');
   } catch(e){console.error('Firestore load error:',e);}
 }
 
 function fsListen(){
-  try{
-    if(!window.FSdb) return;
-    window.FSonSnapshot(window.FScollection(window.FSdb,'kaizens'), snap=>{
-      KZ=snap.docs.map(d=>fsRestoreLocal(d.data()));
-      localStorage.setItem(SKDB,JSON.stringify(KZ));
-      // Refrescar vista actual si está en historial o dashboard
-      const histActive=document.getElementById('v-hist')?.classList.contains('on');
-      const dashActive=document.getElementById('v-dash')?.classList.contains('on');
-      if(histActive) renderHist();
-      if(dashActive) renderDash();
-    });
-  } catch(e){console.error('Firestore listen error:',e);}
+  if(!db){console.warn('db no listo para escuchar');return;}
+  db.collection('kaizens').onSnapshot(snap=>{
+    KZ=snap.docs.map(d=>fsRestoreLocal(d.data()));
+    localStorage.setItem(SKDB,JSON.stringify(KZ));
+    const histActive=document.getElementById('v-hist')?.classList.contains('on');
+    const dashActive=document.getElementById('v-dash')?.classList.contains('on');
+    if(histActive) renderHist();
+    if(dashActive) renderDash();
+    console.log('🔄 Firestore actualizado:',KZ.length,'kaizens');
+  });
 }
 
 function save(){localStorage.setItem(SKDB,JSON.stringify(KZ));}
@@ -1535,9 +1504,35 @@ document.getElementById('nb-cfg').addEventListener('click',()=>goTo('cfg'));
   renderHist();
 })();
 
-// Cuando Firebase esté listo, cargar desde Firestore y escuchar cambios en tiempo real
-document.addEventListener('firebase-ready',()=>{
-  fsLoadAll().then(()=>fsListen());
+// Cargar Firebase dinámicamente y esperar a que ambos scripts carguen
+function loadScript(src){
+  return new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src=src; s.onload=resolve; s.onerror=reject;
+    document.head.appendChild(s);
+  });
+}
+
+window.addEventListener('load',async()=>{
+  try{
+    await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
+    await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js');
+    const firebaseConfig={
+      apiKey:"AIzaSyAZXhGAKmOqBPFLCF8L6m1BRgYUjdylF6Y",
+      authDomain:"zx-kaizen.firebaseapp.com",
+      projectId:"zx-kaizen",
+      storageBucket:"zx-kaizen.firebasestorage.app",
+      messagingSenderId:"324234721853",
+      appId:"1:324234721853:web:a3ae74eb8eca7f043a4854"
+    };
+    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    db=firebase.firestore();
+    console.log('✅ Firebase listo');
+    fsLoadAll().then(()=>fsListen());
+  } catch(e){
+    console.error('Firebase init error:',e);
+    toast('Modo sin conexión — los datos son locales','tw');
+  }
 });
 
 function showApprovalManual(aprid, act){
