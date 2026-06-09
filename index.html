@@ -339,7 +339,23 @@ function saveKaizen(){
   const i=KZ.findIndex(x=>x.id===fd.id);
   if(i>=0)KZ[i]={...fd};else KZ.push({...fd});
   save();
-  fsSave({...fd}); // guardar en Firestore también
+  // Intentar guardar en Firestore, con retry si db no está listo
+  if(db&&window._fsDoc){
+    fsSave({...fd});
+  } else {
+    // Esperar hasta 5 segundos a que Firebase esté listo
+    let intentos=0;
+    const retry=setInterval(()=>{
+      intentos++;
+      if(db&&window._fsDoc){
+        clearInterval(retry);
+        fsSave({...fd});
+      } else if(intentos>10){
+        clearInterval(retry);
+        console.warn('Firebase no disponible, guardado solo local');
+      }
+    },500);
+  }
 }
 const EJS_SERVICE='service_prx6zu8';
 const EJS_TEMPLATE='template_99gl3eh';
