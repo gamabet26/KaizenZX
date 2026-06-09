@@ -349,20 +349,20 @@ function saveKaizen(){
   const i=KZ.findIndex(x=>x.id===fd.id);
   if(i>=0)KZ[i]={...fd};else KZ.push({...fd});
   save();
-  const snapshot={...fd}; // capturar copia en este momento exacto
-  console.log('saveKaizen llamado, db=',!!db,'_fsDoc=',!!window._fsDoc,'id=',snapshot.id);
-  if(db&&window._fsDoc){
+  const snapshot={...fd};
+  console.log('saveKaizen llamado, _rtdb=',!!window._rtdb,'id=',snapshot.id);
+  if(window._rtdb){
     fsSave(snapshot);
   } else {
     let intentos=0;
     const retry=setInterval(()=>{
       intentos++;
-      if(db&&window._fsDoc){
+      if(window._rtdb){
         clearInterval(retry);
         fsSave(snapshot);
       } else if(intentos>20){
         clearInterval(retry);
-        console.warn('Firebase no disponible después de 10s');
+        console.warn('RTDB no disponible después de 10s');
       }
     },500);
   }
@@ -494,11 +494,6 @@ const STATUS={
 /* ══════════════════════════════════════
    UTILS
 ══════════════════════════════════════ */
-function save(){localStorage.setItem(SKDB,JSON.stringify(KZ));}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
-function toast(m,t=''){const el=document.getElementById('toast');el.textContent=m;el.className='toast show '+(t||'');setTimeout(()=>el.classList.remove('show'),3200);}
-function gv(id){const e=document.getElementById(id);return e?e.value:'';}
-function saveKaizen(){const i=KZ.findIndex(x=>x.id===fd.id);if(i>=0)KZ[i]={...fd};else KZ.push({...fd});save();}
 function closeModal(){document.getElementById('modal').style.display='none';}
 
 function goTo(v){
