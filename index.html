@@ -1518,35 +1518,6 @@ document.getElementById('nb-cfg').addEventListener('click',()=>goTo('cfg'));
   renderHist();
 })();
 
-// Cargar Firebase como módulo ES — funciona en GitHub Pages
-(async function initFirebase(){
-  try{
-    const {initializeApp}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
-    const {getFirestore,initializeFirestore,collection,doc,setDoc,getDocs,onSnapshot}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-    const cfg={
-      apiKey:"AIzaSyAZXhGAKmOqBPFLCF8L6m1BRgYUjdylF6Y",
-      authDomain:"zx-kaizen.firebaseapp.com",
-      projectId:"zx-kaizen",
-      storageBucket:"zx-kaizen.firebasestorage.app",
-      messagingSenderId:"324234721853",
-      appId:"1:324234721853:web:a3ae74eb8eca7f043a4854"
-    };
-    const app=initializeApp(cfg);
-    // Usar long polling para evitar ERR_QUIC_PROTOCOL_ERROR
-    db=initializeFirestore(app,{experimentalForceLongPolling:true});
-    // Guardar helpers en closures
-    window._fsCol=(d,c)=>collection(d,c);
-    window._fsDoc=(d,c,id)=>doc(d,c,id);
-    window._fsSet=setDoc;
-    window._fsGet=getDocs;
-    window._fsSnap=onSnapshot;
-    console.log('✅ Firebase listo');
-    fsLoadAll().then(()=>fsListen());
-  } catch(e){
-    console.error('Firebase init error:',e);
-    toast('Sin conexión a nube — modo local','tw');
-  }
-})();
 
 function showApprovalManual(aprid, act){
   // Quitar todas las vistas activas
@@ -1749,6 +1720,45 @@ function confirmarRechazoCorreo(tipo, kData){
     <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;color:var(--danger);margin-bottom:8px">Solicitud Rechazada</div>
     <p style="color:var(--text2)">Se notificó al solicitante del rechazo.</p>
   </div>`;
+}
+// Firebase callback — llamado desde script module abajo
+function onFirebaseReady(firestoreDb,col,docFn,setDocFn,getDocsFn,onSnapFn){
+  db=firestoreDb;
+  window._fsCol=col;
+  window._fsDoc=docFn;
+  window._fsSet=setDocFn;
+  window._fsGet=getDocsFn;
+  window._fsSnap=onSnapFn;
+  console.log('✅ Firebase listo');
+  fsLoadAll().then(()=>fsListen());
+}
+</script>
+
+<!-- Firebase como type=module — única forma que funciona en GitHub Pages -->
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {initializeFirestore,collection,doc,setDoc,getDocs,onSnapshot} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+try{
+  const cfg={
+    apiKey:"AIzaSyAZXhGAKmOqBPFLCF8L6m1BRgYUjdylF6Y",
+    authDomain:"zx-kaizen.firebaseapp.com",
+    projectId:"zx-kaizen",
+    storageBucket:"zx-kaizen.firebasestorage.app",
+    messagingSenderId:"324234721853",
+    appId:"1:324234721853:web:a3ae74eb8eca7f043a4854"
+  };
+  const app=initializeApp(cfg);
+  const db=initializeFirestore(app,{experimentalForceLongPolling:true});
+  window.onFirebaseReady(
+    db,
+    (d,c)=>collection(d,c),
+    (d,c,id)=>doc(d,c,id),
+    setDoc,
+    getDocs,
+    onSnapshot
+  );
+} catch(e){
+  console.error('Firebase module error:',e);
 }
 </script>
 </body>
