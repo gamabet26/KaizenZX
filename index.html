@@ -289,15 +289,15 @@ let db=null; // Se inicializa cuando Firebase cargue
 // ── Firestore helpers ──────────────────────────────────────
 async function fsSave(kaizen){
   try{
-    if(!db){console.warn('Firestore no disponible aún');return;}
+    if(!db||!window._fsDoc){console.warn('Firestore no listo');return;}
     const data={...kaizen};
     if(data.fotoAntes&&data.fotoAntes!=='[local]'){localStorage.setItem('foto_a_'+data.id,data.fotoAntes);data.fotoAntes='[local]';}
     if(data.fotoDespues&&data.fotoDespues!=='[local]'){localStorage.setItem('foto_d_'+data.id,data.fotoDespues);data.fotoDespues='[local]';}
     if(data.firmaLider&&data.firmaLider!=='[local]'){localStorage.setItem('firma_l_'+data.id,data.firmaLider);data.firmaLider='[local]';}
     if(data.firmaGerente&&data.firmaGerente!=='[local]'){localStorage.setItem('firma_g_'+data.id,data.firmaGerente);data.firmaGerente='[local]';}
-    await db.collection('kaizens').doc(data.id).set(data);
-    console.log('✅ Guardado en Firestore:', data.id);
-  } catch(e){console.error('Firestore save error:',e);toast('Error al guardar en nube: '+e.message,'tr');}
+    await window._fsSet(window._fsDoc(db,'kaizens',data.id),data);
+    console.log('✅ Guardado en Firestore:',data.id);
+  } catch(e){console.error('Firestore save error:',e);toast('Error nube: '+e.message,'tr');}
 }
 
 function fsRestoreLocal(k){
@@ -310,25 +310,23 @@ function fsRestoreLocal(k){
 
 async function fsLoadAll(){
   try{
-    if(!db){console.warn('db no listo');return;}
-    const snap=await db.collection('kaizens').get();
+    if(!db||!window._fsGet){return;}
+    const snap=await window._fsGet(window._fsCol(db,'kaizens'));
     KZ=snap.docs.map(d=>fsRestoreLocal(d.data()));
     localStorage.setItem(SKDB,JSON.stringify(KZ));
     renderHist();
-    console.log('✅ Cargados desde Firestore:',KZ.length,'kaizens');
+    console.log('✅ Cargados:',KZ.length,'kaizens');
   } catch(e){console.error('Firestore load error:',e);}
 }
 
 function fsListen(){
-  if(!db){console.warn('db no listo para escuchar');return;}
-  db.collection('kaizens').onSnapshot(snap=>{
+  if(!db||!window._fsSnap){return;}
+  window._fsSnap(window._fsCol(db,'kaizens'),snap=>{
     KZ=snap.docs.map(d=>fsRestoreLocal(d.data()));
     localStorage.setItem(SKDB,JSON.stringify(KZ));
-    const histActive=document.getElementById('v-hist')?.classList.contains('on');
-    const dashActive=document.getElementById('v-dash')?.classList.contains('on');
-    if(histActive) renderHist();
-    if(dashActive) renderDash();
-    console.log('🔄 Firestore actualizado:',KZ.length,'kaizens');
+    if(document.getElementById('v-hist')?.classList.contains('on')) renderHist();
+    if(document.getElementById('v-dash')?.classList.contains('on')) renderDash();
+    console.log('🔄 Sync:',KZ.length,'kaizens');
   });
 }
 
@@ -1504,20 +1502,12 @@ document.getElementById('nb-cfg').addEventListener('click',()=>goTo('cfg'));
   renderHist();
 })();
 
-// Cargar Firebase dinámicamente y esperar a que ambos scripts carguen
-function loadScript(src){
-  return new Promise((resolve,reject)=>{
-    const s=document.createElement('script');
-    s.src=src; s.onload=resolve; s.onerror=reject;
-    document.head.appendChild(s);
-  });
-}
-
-window.addEventListener('load',async()=>{
+// Cargar Firebase como módulo ES — funciona en GitHub Pages
+(async function initFirebase(){
   try{
-    await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
-    await loadScript('https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js');
-    const firebaseConfig={
+    const {initializeApp}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+    const {getFirestore,collection,doc,setDoc,getDocs,onSnapshot}=await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const cfg={
       apiKey:"AIzaSyAZXhGAKmOqBPFLCF8L6m1BRgYUjdylF6Y",
       authDomain:"zx-kaizen.firebaseapp.com",
       projectId:"zx-kaizen",
@@ -1525,15 +1515,21 @@ window.addEventListener('load',async()=>{
       messagingSenderId:"324234721853",
       appId:"1:324234721853:web:a3ae74eb8eca7f043a4854"
     };
-    if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    db=firebase.firestore();
+    const app=initializeApp(cfg);
+    db=getFirestore(app);
+    // Guardar helpers en closures
+    window._fsCol=(d,c)=>collection(d,c);
+    window._fsDoc=(d,c,id)=>doc(d,c,id);
+    window._fsSet=setDoc;
+    window._fsGet=getDocs;
+    window._fsSnap=onSnapshot;
     console.log('✅ Firebase listo');
     fsLoadAll().then(()=>fsListen());
   } catch(e){
     console.error('Firebase init error:',e);
-    toast('Modo sin conexión — los datos son locales','tw');
+    toast('Sin conexión a nube — modo local','tw');
   }
-});
+})();
 
 function showApprovalManual(aprid, act){
   // Quitar todas las vistas activas
